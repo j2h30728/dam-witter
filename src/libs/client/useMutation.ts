@@ -1,0 +1,39 @@
+import { useState } from 'react';
+
+interface UseMutationState<T> {
+  data?: T;
+  error?: unknown;
+  isLoading: boolean;
+}
+
+type MutationMethod = 'PATCH' | 'POST' | 'PUT';
+
+type UseMutationResult<T> = [(url: string, data: any, method: MutationMethod) => void, UseMutationState<T>];
+
+export default function useMutation<T = any>(): UseMutationResult<T> {
+  const [state, setState] = useState<UseMutationState<T>>({
+    data: undefined,
+    error: undefined,
+    isLoading: false,
+  });
+  async function mutate(url: string, data: any, method: MutationMethod) {
+    setState(prev => ({ ...prev, isLoading: true }));
+    try {
+      const response = await fetch(url, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-Type': 'application/json',
+        },
+        method,
+      });
+      const json = await response.json();
+      setState(prev => ({ ...prev, data: json }));
+    } catch (error) {
+      setState(prev => ({ ...prev, error: error }));
+    } finally {
+      setState(prev => ({ ...prev, isLoading: false }));
+    }
+  }
+
+  return [mutate, { ...state }];
+}
