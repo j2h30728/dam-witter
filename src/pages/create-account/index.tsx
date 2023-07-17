@@ -1,5 +1,6 @@
 import type { UserInput } from '@/types/users';
 
+import Input from '@/components/Input';
 import { METHOD } from '@/constants/method';
 import useInputs from '@/hooks/useInput';
 import useMutation from '@/libs/client/useMutation';
@@ -11,7 +12,7 @@ export default function CreateAccount() {
   interface CreateAccount extends UserInput {
     confirmPassword: string;
   }
-  const [mutate, { data, error, isLoading }] = useMutation<ResponseType>();
+  const [mutate, { data, isLoading }] = useMutation<ResponseType>();
   const router = useRouter();
   const [form, onChange] = useInputs<CreateAccount>({
     confirmPassword: '',
@@ -39,38 +40,43 @@ export default function CreateAccount() {
       if (data.isSuccess) router.replace('/log-in');
     }
   }, [data, router]);
+
   return (
     <div>
       <h1>create account</h1>
       <form onSubmit={handleCreateAccount}>
-        <div>
-          <label>Name</label>
-          <input name="username" onChange={onChange} placeholder="Your name" type="text" value={form.username} />
-        </div>
-        <div>
-          <label>Email</label>
-          <input name="email" onChange={onChange} placeholder="Your email" type="email" value={form.email} />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            name="password"
-            onChange={onChange}
-            placeholder="Your password"
-            type="password"
-            value={form.password}
-          />
-        </div>
-        <div>
-          <label>Confirm Password</label>
-          <input
-            name="confirmPassword"
-            onChange={onChange}
-            placeholder="Your confirmPassword"
-            type="password"
-            value={form.confirmPassword}
-          />
-        </div>
+        <Input
+          name="username"
+          onChange={onChange}
+          placeholder="Your Name"
+          title="Name"
+          type="text"
+          value={form.username}
+        />
+        <Input
+          name="email"
+          onChange={onChange}
+          placeholder="Your email"
+          title="email"
+          type="email"
+          value={form.email}
+        />
+        <Input
+          name="password"
+          onChange={onChange}
+          placeholder="Your password"
+          title="Password"
+          type="password"
+          value={form.password}
+        />
+        <Input
+          name="confirmPassword"
+          onChange={onChange}
+          placeholder="Your confirmPassword"
+          title="confirmPassword"
+          type="password"
+          value={form.confirmPassword}
+        />
         <button>{isLoading ? 'Loading...' : 'Create Account'}</button>
       </form>
     </div>
