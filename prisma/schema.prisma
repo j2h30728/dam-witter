@@ -10,3 +10,59 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  name String
+  password String 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tweets Tweet[]
+  likes Like[]
+  comments Comment[]
+  profile Profile?
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  bio    String
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
+  @@index([userId])
+}
+
+model Tweet {
+  id Int @id @default(autoincrement())
+  text String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  likes Like[]
+  comments Comment[]
+  user User @relation(fields: [userId],references: [id], onDelete:Cascade)
+  userId Int
+  @@index([userId])
+}
+model Like {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId],references: [id], onDelete:Cascade)
+  userId Int
+  tweet Tweet @relation(fields: [tweetId],references: [id], onDelete:Cascade)
+  tweetId Int
+  
+  @@index([userId])
+  @@index([tweetId])
+  }
+
+model Comment {
+  id Int @id @default(autoincrement())
+  text String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId],references: [id], onDelete:Cascade)
+  userId Int
+  tweet Tweet @relation(fields: [tweetId],references: [id], onDelete:Cascade)
+  tweetId Int
+  
+  @@index([userId])
+  @@index([tweetId])
+  }
