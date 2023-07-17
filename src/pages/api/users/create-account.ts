@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
   const { email, name, password } = req.body;
 
-  if (!email || !name) {
+  if (!email || !name || !password) {
     return res.status(404).json({ isSuccess: false, message: '잘못된 입력입니다.' });
   }
 
