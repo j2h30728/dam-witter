@@ -1,10 +1,9 @@
-import Input from '@/components/Input';
-import { METHOD } from '@/constants/method';
-import ROUTE_PATH from '@/constants/route';
-import useInputs from '@/hooks/useInput';
-import useMutation from '@/libs/client/useMutation';
-import { ResponseType } from '@/libs/server/withHandler';
-import { UserInput } from '@/types/users';
+import type { ResponseType } from '@/types';
+
+import { Input } from '@/components';
+import { METHOD, ROUTE_PATH } from '@/constants';
+import { useInputs, useMutation } from '@/libs';
+import { UserInput } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 

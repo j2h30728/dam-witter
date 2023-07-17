@@ -1,8 +1,8 @@
+import type { ResponseType } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { METHOD } from '@/constants/method';
-import db from '@/libs/server/db';
-import withHandler, { ResponseType } from '@/libs/server/withHandler';
+import { METHOD } from '@/constants';
+import { db, withHandler } from '@/libs';
 import bcrypt from 'bcrypt';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {

@@ -1,10 +1,9 @@
-import type { UserInput } from '@/types/users';
+import type { ResponseType } from '@/types';
+import type { UserInput } from '@/types';
 
-import Input from '@/components/Input';
-import { METHOD } from '@/constants/method';
-import useInputs from '@/hooks/useInput';
-import useMutation from '@/libs/client/useMutation';
-import { ResponseType } from '@/libs/server/withHandler';
+import { Input } from '@/components';
+import { METHOD } from '@/constants';
+import { useInputs, useMutation } from '@/libs';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
