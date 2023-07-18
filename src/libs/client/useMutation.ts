@@ -8,7 +8,7 @@ interface UseMutationState<T> {
 
 type MutationMethod = 'PATCH' | 'POST' | 'PUT';
 
-type UseMutationResult<T> = [(url: string, data: any, method: MutationMethod) => void, UseMutationState<T>];
+type UseMutationResult<T> = [(url: string, method: MutationMethod, data?: any) => void, UseMutationState<T>];
 
 export default function useMutation<T = any>(): UseMutationResult<T> {
   const [state, setState] = useState<UseMutationState<T>>({
@@ -16,7 +16,7 @@ export default function useMutation<T = any>(): UseMutationResult<T> {
     error: undefined,
     isLoading: false,
   });
-  async function mutate(url: string, data: any, method: MutationMethod) {
+  async function mutate(url: string, method: MutationMethod, data?: any) {
     setState(prev => ({ ...prev, isLoading: true }));
     try {
       const response = await fetch(url, {

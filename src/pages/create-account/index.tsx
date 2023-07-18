@@ -1,9 +1,10 @@
-import type { ResponseType } from '@/types';
 import type { UserInput } from '@/types';
+import type { ResponseType } from '@/types';
 
 import { Input } from '@/components';
-import { METHOD } from '@/constants';
-import { useInputs, useMutation } from '@/libs';
+import { METHOD, ROUTE_PATH } from '@/constants';
+import { useInputs, useMutation } from '@/libs/client';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -25,11 +26,11 @@ export default function CreateAccount() {
       if (form.password !== form.confirmPassword) {
         throw new Error('동일한 비밀번호를 입력해주세요', { cause: '비밀번호 오류' });
       }
-      mutate(
-        '/api/users/create-account',
-        { email: form.email, name: form.username, password: form.password },
-        METHOD.POST
-      );
+      mutate('/api/users/create-account', METHOD.POST, {
+        email: form.email,
+        name: form.username,
+        password: form.password,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -78,6 +79,7 @@ export default function CreateAccount() {
         />
         <button>{isLoading ? 'Loading...' : 'Create Account'}</button>
       </form>
+      <Link href={ROUTE_PATH.LOG_IN}>Log-in</Link>
     </div>
   );
 }

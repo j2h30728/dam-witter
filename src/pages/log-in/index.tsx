@@ -2,7 +2,7 @@ import type { ResponseType } from '@/types';
 
 import { Input } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { useInputs, useMutation } from '@/libs';
+import { useInputs, useMutation } from '@/libs/client';
 import { UserInput } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -19,7 +19,7 @@ export default function LogIn() {
   const handleLogIn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      mutate('/api/users/log-in', { email: form.email, password: form.password }, METHOD.POST);
+      mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
     } catch (error) {
       console.error(error);
     }
