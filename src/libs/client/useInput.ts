@@ -1,14 +1,13 @@
 import { useCallback, useState } from 'react';
 
-function useInputs<T extends Record<string, any>>(initialForm: T) {
-  const [form, setForm] = useState(initialForm);
-  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setForm(form => ({ ...form, [name]: value }) as T);
+function useInput(initialInput: string) {
+  const [input, setInput] = useState(initialInput);
+  const onChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(event.target.value);
   }, []);
 
-  const reset = useCallback(() => setForm(initialForm), [initialForm]);
-  return [form, onChange, reset] as const;
+  const reset = useCallback(() => setInput(initialInput), [initialInput]);
+  return [input, onChange, reset] as const;
 }
 
-export default useInputs;
+export default useInput;
