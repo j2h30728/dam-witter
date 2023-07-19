@@ -1,7 +1,10 @@
-export interface ResponseType {
-  [key: string]: any;
+import { Tweet } from '@prisma/client';
+
+export interface ResponseType<T> {
+  data: T | null;
   isSuccess: boolean;
-  message?: string;
+  message: null | string;
+  statusCode: number;
 }
 
 export type Method = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
@@ -11,3 +14,5 @@ export interface UserInput {
   password: string;
   username: string;
 }
+
+export type TweetResponse = Tweet & { user: { email: string; name: string } };
