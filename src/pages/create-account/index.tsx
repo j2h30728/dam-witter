@@ -1,9 +1,10 @@
-import type { UserInput } from '@/types';
 import type { ResponseType } from '@/types';
+import type { UserInput } from '@/types';
 
 import { Input } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useInputs, useMutation } from '@/libs/client';
+import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -12,7 +13,7 @@ export default function CreateAccount() {
   interface CreateAccount extends UserInput {
     confirmPassword: string;
   }
-  const [mutate, { data, isLoading }] = useMutation<ResponseType>();
+  const [mutate, { data, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
   const [form, onChange] = useInputs<CreateAccount>({
     confirmPassword: '',
@@ -36,9 +37,7 @@ export default function CreateAccount() {
     }
   };
   useEffect(() => {
-    if (data) {
-      if (data.isSuccess) router.replace('/log-in');
-    }
+    if (data?.isSuccess) router.replace('/log-in');
   }, [data, router]);
 
   return (

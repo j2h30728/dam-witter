@@ -4,13 +4,14 @@ import { Input } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useInputs, useMutation } from '@/libs/client';
 import { UserInput } from '@/types';
+import { User } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 export default function LogIn() {
   type LogIN = Pick<UserInput, 'email' | 'password'>;
 
-  const [mutate, { data, isLoading }] = useMutation<ResponseType>();
+  const [mutate, { data, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
   const [form, onChange] = useInputs<LogIN>({
     email: '',
@@ -25,9 +26,7 @@ export default function LogIn() {
     }
   };
   useEffect(() => {
-    if (data) {
-      if (data.isSuccess) router.replace(ROUTE_PATH.HOME);
-    }
+    if (data?.isSuccess) router.replace(ROUTE_PATH.HOME);
   }, [data, router]);
 
   return (
