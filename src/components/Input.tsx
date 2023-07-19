@@ -8,9 +8,9 @@ export default function Input({
 }: {
   name: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder: string;
+  placeholder?: string;
   title: string;
-  type: string;
+  type: 'email' | 'password' | 'text';
   value: string;
 }) {
   return (
