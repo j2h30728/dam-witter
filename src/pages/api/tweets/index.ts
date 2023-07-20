@@ -9,12 +9,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
   if (req.method === METHOD.GET) {
     const tweets = await db.tweet.findMany({
       include: {
-        user: {
+        _count: {
           select: {
-            email: true,
-            name: true,
+            likes: true,
           },
         },
+        user: true,
       },
     });
     return res.status(200).json({ data: tweets, isSuccess: true, message: null, statusCode: 200 });
@@ -26,7 +26,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       session: { user },
     } = req;
 
-    console.log(text, user);
     const newTweet = await db.tweet.create({
       data: {
         text,
@@ -37,12 +36,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         },
       },
       include: {
-        user: {
+        _count: {
           select: {
-            email: true,
-            name: true,
+            likes: true,
           },
         },
+        user: true,
       },
     });
     return res.status(201).json({ data: newTweet, isSuccess: true, message: null, statusCode: 201 });

@@ -1,6 +1,7 @@
-import { Tweet } from '@prisma/client';
+import { Tweet, User } from '@prisma/client';
 
 export interface ResponseType<T> {
+  [key: string]: any;
   data: T | null;
   isSuccess: boolean;
   message: null | string;
@@ -15,4 +16,4 @@ export interface UserInput {
   username: string;
 }
 
-export type TweetResponse = Tweet & { user: { email: string; name: string } };
+export type TweetResponse = Tweet & { user: User } & { _count: { likes: number } };
