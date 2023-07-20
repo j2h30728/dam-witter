@@ -16,6 +16,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         },
         user: true,
       },
+      orderBy: {
+        id: 'desc',
+      },
     });
     return res.status(200).json({ data: tweets, isSuccess: true, message: null, statusCode: 200 });
   }

@@ -6,6 +6,7 @@ import useControlModal from '@/libs/client/useControlModal';
 import useLogOut from '@/libs/client/useLogOut';
 import { ResponseType, TweetResponse } from '@/types';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import useSWR from 'swr';
 
 export default function Home() {
@@ -13,11 +14,14 @@ export default function Home() {
   const [input, onChange] = useInput('');
   const handleLogOut = useLogOut();
 
-  const [createTweet] = useMutation<ResponseType<TweetResponse>>();
+  const [createTweet, { data: createdTweet }] = useMutation<ResponseType<TweetResponse>>();
 
   const { data: responseTweets, mutate } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets', {
     revalidateOnFocus: true,
   });
+  useEffect(() => {
+    if (createdTweet?.isSuccess) mutate();
+  }, [createdTweet, mutate]);
 
   return (
     <div>
@@ -37,7 +41,6 @@ export default function Home() {
             createTweet={() => {
               createTweet('/api/tweets', METHOD.POST, { text: input });
               handleCloseModal();
-              mutate();
             }}
             input={input}
             onChange={onChange}
