@@ -1,25 +1,20 @@
 import Modal from '@/components/Modal';
 import CreateTweet from '@/components/Modal/CreateTweet';
-import { METHOD } from '@/constants';
+import { METHOD, ROUTE_PATH } from '@/constants';
 import { useInput, useMutation } from '@/libs/client';
 import useControlModal from '@/libs/client/useControlModal';
+import useLogOut from '@/libs/client/useLogOut';
 import { ResponseType, TweetResponse } from '@/types';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import useSWR from 'swr';
 
 export default function Home() {
-  const [logOut] = useMutation<ResponseType<null>>();
-  const router = useRouter();
   const { handleCloseModal, handleOpenModal, isOpen } = useControlModal();
   const [input, onChange] = useInput('');
+  const handleLogOut = useLogOut();
+
   const [createTweet] = useMutation<ResponseType<TweetResponse>>();
 
-  const handleLogOut = () => {
-    if (confirm('로그아웃 하시겠습니까?')) {
-      logOut('/api/users/log-out', METHOD.POST);
-      router.push('/log-in');
-    }
-  };
   const { data: responseTweets, mutate } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets', {
     revalidateOnFocus: true,
   });
@@ -30,11 +25,11 @@ export default function Home() {
       <button onClick={handleOpenModal}>트윗추가하기</button>
       <button onClick={handleLogOut}>Log-Out</button>
       {responseTweets?.data?.map((tweet: TweetResponse) => (
-        <div key={tweet.id}>
+        <Link href={`${ROUTE_PATH.TWEETS}/${tweet.id}`} key={tweet.id}>
           <h3>{tweet.user.name}</h3>
           <small>{tweet.user.email}</small>
           <pre>{tweet.text}</pre>
-        </div>
+        </Link>
       ))}
       {isOpen && (
         <Modal onClose={handleCloseModal}>
