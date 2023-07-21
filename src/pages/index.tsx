@@ -11,7 +11,7 @@ import useSWR from 'swr';
 
 export default function Home() {
   const { handleCloseModal, handleOpenModal, isOpen } = useControlModal();
-  const [input, onChange] = useInput('');
+  const [input, onChange, reset] = useInput('');
   const handleLogOut = useLogOut();
 
   const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
@@ -41,11 +41,17 @@ export default function Home() {
         </Link>
       ))}
       {isOpen && (
-        <Modal onClose={handleCloseModal}>
+        <Modal
+          onClose={() => {
+            handleCloseModal();
+            reset();
+          }}
+        >
           <CreateTweet
             createTweet={() => {
               createTweet('/api/tweets', METHOD.POST, { text: input });
               handleCloseModal();
+              reset();
             }}
             input={input}
             onChange={onChange}
