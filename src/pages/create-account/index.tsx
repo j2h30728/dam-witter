@@ -3,8 +3,8 @@ import type { ResponseType } from '@/types';
 
 import { Input } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { useForm, useMutation } from '@/libs/client';
-import { emailValidator, passwordValidator } from '@/utils/validators';
+import { useForm } from '@/hooks';
+import { emailValidator, passwordValidator, useMutation } from '@/libs/client';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

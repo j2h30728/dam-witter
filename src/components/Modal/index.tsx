@@ -1,4 +1,4 @@
-import useLockBodyScroll from '@/libs/client/useLockBodyScroll';
+import { useLockBodyScroll } from '@/hooks';
 import { createPortal } from 'react-dom';
 
 interface ModalProps {

@@ -1,9 +1,9 @@
 import Modal from '@/components/Modal';
 import CreateTweet from '@/components/Modal/CreateTweet';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { useInput, useMutation } from '@/libs/client';
-import useControlModal from '@/libs/client/useControlModal';
-import useLogOut from '@/libs/client/useLogOut';
+import { useControlModal, useInput } from '@/hooks';
+import useLogOut from '@/hooks/users/useLogOut';
+import useMutation from '@/libs/client/useMutation';
 import { ResponseType, TweetResponse } from '@/types';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -22,7 +22,7 @@ export default function Home() {
   useEffect(() => {
     if (createdTweet?.isSuccess) {
       mutate();
-    } else {
+    } else if (createdTweetError) {
       alert(createdTweet?.message);
       console.error(createdTweetError);
     }

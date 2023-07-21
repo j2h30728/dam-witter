@@ -3,7 +3,7 @@ import { ResponseType } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-import useMutation from './useMutation';
+import useMutation from '../../libs/client/useMutation';
 
 export default function useLogOut() {
   const [logOut, { data: logOutResponse }] = useMutation<ResponseType<null>>();
