@@ -14,14 +14,19 @@ export default function Home() {
   const [input, onChange] = useInput('');
   const handleLogOut = useLogOut();
 
-  const [createTweet, { data: createdTweet }] = useMutation<ResponseType<TweetResponse>>();
+  const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
 
   const { data: responseTweets, mutate } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets', {
     revalidateOnFocus: true,
   });
   useEffect(() => {
-    if (createdTweet?.isSuccess) mutate();
-  }, [createdTweet, mutate]);
+    if (createdTweet?.isSuccess) {
+      mutate();
+    } else {
+      alert(createdTweet?.message);
+      console.error(createdTweetError);
+    }
+  }, [createdTweet, mutate, createdTweetError]);
 
   return (
     <div>

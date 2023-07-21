@@ -14,7 +14,7 @@ interface CreateAccount extends UserInput {
   confirmPassword: string;
 }
 export default function CreateAccount() {
-  const [mutate, { data, isLoading }] = useMutation<ResponseType<User>>();
+  const [mutate, { data, error, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
   const { errors, form, onChange } = useForm<CreateAccount>(
     {
@@ -28,19 +28,20 @@ export default function CreateAccount() {
 
   const handleCreateAccount = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      mutate('/api/users/create-account', METHOD.POST, {
-        email: form.email,
-        name: form.username,
-        password: form.password,
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    mutate('/api/users/create-account', METHOD.POST, {
+      email: form.email,
+      name: form.username,
+      password: form.password,
+    });
   };
   useEffect(() => {
-    if (data?.isSuccess) router.replace('/log-in');
-  }, [data, router]);
+    if (data?.isSuccess) {
+      router.replace('/log-in');
+    } else {
+      alert(data?.message);
+      console.error(error);
+    }
+  }, [data, router, error]);
 
   return (
     <div>

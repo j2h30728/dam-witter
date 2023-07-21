@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 export default function LogIn() {
   type LogIn = Pick<UserInput, 'email' | 'password'>;
 
-  const [mutate, { data, isLoading }] = useMutation<ResponseType<User>>();
+  const [mutate, { data, error, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
   const { errors, form, onChange } = useForm<LogIn>(
     { email: '', password: '' },
@@ -22,15 +22,16 @@ export default function LogIn() {
 
   const handleLogIn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
-    } catch (error) {
-      console.error(error);
-    }
+    mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
   };
   useEffect(() => {
-    if (data?.isSuccess) router.replace(ROUTE_PATH.HOME);
-  }, [data, router]);
+    if (data?.isSuccess) {
+      router.replace(ROUTE_PATH.HOME);
+    } else {
+      alert(data?.message);
+      console.error(error);
+    }
+  }, [data, router, error]);
 
   return (
     <div>
