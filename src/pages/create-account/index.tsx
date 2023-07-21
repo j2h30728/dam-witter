@@ -1,32 +1,34 @@
-import type { ResponseType } from '@/types';
 import type { UserInput } from '@/types';
+import type { ResponseType } from '@/types';
 
 import { Input } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { useInputs, useMutation } from '@/libs/client';
+import { useForm, useMutation } from '@/libs/client';
+import { emailValidator, passwordValidator } from '@/utils/validators';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
+interface CreateAccount extends UserInput {
+  confirmPassword: string;
+}
 export default function CreateAccount() {
-  interface CreateAccount extends UserInput {
-    confirmPassword: string;
-  }
   const [mutate, { data, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
-  const [form, onChange] = useInputs<CreateAccount>({
-    confirmPassword: '',
-    email: '',
-    password: '',
-    username: '',
-  });
+  const { errors, form, onChange } = useForm<CreateAccount>(
+    {
+      confirmPassword: '',
+      email: '',
+      password: '',
+      username: '',
+    },
+    { confirmPassword: passwordValidator, email: emailValidator, password: passwordValidator }
+  );
+
   const handleCreateAccount = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      if (form.password !== form.confirmPassword) {
-        throw new Error('동일한 비밀번호를 입력해주세요', { cause: '비밀번호 오류' });
-      }
       mutate('/api/users/create-account', METHOD.POST, {
         email: form.email,
         name: form.username,
@@ -60,6 +62,7 @@ export default function CreateAccount() {
           type="email"
           value={form.email}
         />
+        <p>{form.email && !errors.email.isValid && errors.email.message}</p>
         <Input
           name="password"
           onChange={onChange}
@@ -68,6 +71,8 @@ export default function CreateAccount() {
           type="password"
           value={form.password}
         />
+        <p>{form.password && !errors.password.isValid && errors.password.message}</p>
+
         <Input
           name="confirmPassword"
           onChange={onChange}
@@ -76,6 +81,8 @@ export default function CreateAccount() {
           type="password"
           value={form.confirmPassword}
         />
+        <p>{form.confirmPassword && !errors.confirmPassword.isValid && errors.confirmPassword.message}</p>
+
         <button>{isLoading ? 'Loading...' : 'Create Account'}</button>
       </form>
       <Link href={ROUTE_PATH.LOG_IN}>Log-in</Link>
