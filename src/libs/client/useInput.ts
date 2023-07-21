@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 function useInput(initialInput: string) {
   const [input, setInput] = useState(initialInput);
-  const onChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setInput(event.target.value);
   }, []);
 

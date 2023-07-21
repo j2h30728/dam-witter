@@ -47,7 +47,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       session: { user },
     } = req;
 
-    console.log(text, user);
     const newTweet = await db.tweet.create({
       data: {
         text,

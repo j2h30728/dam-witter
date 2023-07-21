@@ -9,9 +9,7 @@ export default function DetailTweet() {
   const { data: responseTweet, mutate: tweetMutate } = useSWR<ResponseType<TweetResponse>>(
     router.query.id ? `/api/tweets/${router.query.id}` : null
   );
-  const [likeMutate, { data }] = useMutation<ResponseType<TweetResponse>>();
-  console.log('like', data);
-  console.log(responseTweet);
+  const [likeMutate] = useMutation<ResponseType<TweetResponse>>();
   return (
     <div>
       <h1>Detail Tweet</h1>
