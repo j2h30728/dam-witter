@@ -15,19 +15,20 @@ export default function LogIn() {
 
   const [mutate, { data, error, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
-  const { errors, form, onChange } = useForm<LogIn>(
+  const { errors, form, isErrors, onChange } = useForm<LogIn>(
     { email: '', password: '' },
     { email: emailValidator, password: passwordValidator }
   );
-
   const handleLogIn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
+    if (!isErrors) {
+      mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
+    }
   };
   useEffect(() => {
     if (data?.isSuccess) {
       router.replace(ROUTE_PATH.HOME);
-    } else {
+    } else if (error) {
       alert(data?.message);
       console.error(error);
     }

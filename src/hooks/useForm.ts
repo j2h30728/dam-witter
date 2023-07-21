@@ -24,8 +24,9 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: Reco
       return updatedForm;
     });
   };
+  const isErrors = Object.entries(errors).filter(([_, value]) => !value.isValid).length > 0;
   const reset = () => setForm(initialForm);
-  return { errors, form, onChange, reset };
+  return { errors, form, isErrors, onChange, reset };
 }
 
 export default useForm;

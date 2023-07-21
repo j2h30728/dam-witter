@@ -28,6 +28,9 @@ export default function useMutation<T = any>(): UseMutationResult<T> {
       });
       const json = await response.json();
       setState(prev => ({ ...prev, data: json }));
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
       setState(prev => ({ ...prev, error: error }));
     } finally {

@@ -22,13 +22,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Us
     return res.status(400).json({
       data: null,
       isSuccess: false,
-      message: '잘못된 입력입니다.',
+      message: '이메일 또는 비밀번호를 확인해주세요.',
       statusCode: 400,
     });
   }
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) {
-    return res.status(400).json({ data: null, isSuccess: false, message: '잘못된 비밀번호입니다.', statusCode: 400 });
+    console.log('test');
+    return res
+      .status(400)
+      .json({ data: null, isSuccess: false, message: '이메일 또는 비밀번호를 확인해주세요.', statusCode: 400 });
   }
 
   req.session.user = { id: user.id };
