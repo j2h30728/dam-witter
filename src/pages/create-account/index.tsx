@@ -1,7 +1,8 @@
-import type { UserInput } from '@/types';
 import type { ResponseType } from '@/types';
+import type { UserInput } from '@/types';
 
 import { Input } from '@/components';
+import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import { emailValidator, passwordValidator, useMutation } from '@/libs/client';
@@ -25,7 +26,7 @@ export default function CreateAccount() {
     },
     { confirmPassword: passwordValidator, email: emailValidator, password: passwordValidator }
   );
-  console.log(error);
+
   const handleCreateAccount = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!isErrors) {
@@ -46,8 +47,7 @@ export default function CreateAccount() {
   }, [data, router, error]);
 
   return (
-    <div>
-      <h1>create account</h1>
+    <Layout title="CREATE ACCOUNT">
       <form onSubmit={handleCreateAccount}>
         <Input
           name="username"
@@ -89,6 +89,6 @@ export default function CreateAccount() {
         <button>{isLoading ? 'Loading...' : 'Create Account'}</button>
       </form>
       <Link href={ROUTE_PATH.LOG_IN}>Log-in</Link>
-    </div>
+    </Layout>
   );
 }

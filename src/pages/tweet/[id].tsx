@@ -1,3 +1,4 @@
+import Layout from '@/components/common/Layout';
 import { METHOD } from '@/constants';
 import { makeImagePath, useMutation } from '@/libs/client';
 import { ResponseType, TweetResponse } from '@/types';
@@ -12,8 +13,7 @@ export default function DetailTweet() {
   );
   const [likeMutate] = useMutation<ResponseType<TweetResponse>>();
   return (
-    <div>
-      <h1>Detail Tweet</h1>
+    <Layout hasBackButton isLoggedIn title="DAM">
       <small>{responseTweet?.data?.user.name}</small>
       {responseTweet?.data?.image && (
         <div className="relative w-full h-60 bg-slate-500">
@@ -24,7 +24,7 @@ export default function DetailTweet() {
             src={makeImagePath(responseTweet.data.image)}
           />
         </div>
-      )}{' '}
+      )}
       <pre>{responseTweet?.data?.text}</pre>
       <p>{responseTweet?.isLiked ? '좋아요 됨' : '좋아요 아님'}</p>
       <p>{responseTweet?.data?._count.likes}</p>
@@ -55,6 +55,6 @@ export default function DetailTweet() {
       >
         좋아요버튼
       </button>
-    </div>
+    </Layout>
   );
 }

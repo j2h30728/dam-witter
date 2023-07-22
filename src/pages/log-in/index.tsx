@@ -1,6 +1,7 @@
 import type { ResponseType } from '@/types';
 
 import { Input } from '@/components';
+import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import { emailValidator, passwordValidator, useMutation } from '@/libs/client';
@@ -35,8 +36,7 @@ export default function LogIn() {
   }, [data, router, error]);
 
   return (
-    <div>
-      <h1>Log In</h1>
+    <Layout title="LOG IN">
       <form onSubmit={handleLogIn}>
         <Input
           name="email"
@@ -59,6 +59,6 @@ export default function LogIn() {
         <button>{isLoading ? 'Loading...' : 'Log-In'}</button>
       </form>
       <Link href={ROUTE_PATH.CREATE_ACCOUNT}>Create account</Link>
-    </div>
+    </Layout>
   );
 }
