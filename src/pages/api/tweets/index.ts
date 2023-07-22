@@ -25,10 +25,31 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
 
   if (req.method === METHOD.POST) {
     const {
-      body: { text },
+      body: { imageId, text },
       session: { user },
     } = req;
-
+    if (imageId) {
+      const newTweetWithImage = await db.tweet.create({
+        data: {
+          image: imageId,
+          text,
+          user: {
+            connect: {
+              id: user?.id,
+            },
+          },
+        },
+        include: {
+          _count: {
+            select: {
+              likes: true,
+            },
+          },
+          user: true,
+        },
+      });
+      return res.status(201).json({ data: newTweetWithImage, isSuccess: true, message: null, statusCode: 201 });
+    }
     const newTweet = await db.tweet.create({
       data: {
         text,

@@ -3,8 +3,8 @@ interface CreateTweetProp {
   input: string;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onClickCloseModal: () => void;
-  previewImage : string;
-  uploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  previewImage: string;
+  selectedImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function CreateTweet({
@@ -13,7 +13,7 @@ export default function CreateTweet({
   onChange,
   onClickCloseModal,
   previewImage,
-  uploadImage,
+  selectedImage,
 }: CreateTweetProp) {
   console.log(previewImage);
   return (
@@ -24,7 +24,7 @@ export default function CreateTweet({
         htmlFor="image"
       >
         Image
-        <input accept="image/*" className="hidden" id="image" name="image" onChange={uploadImage} type="file" />
+        <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
       </label>
       {previewImage && <img className="object-contain w-full h-60 " src={previewImage}></img>}
       <textarea

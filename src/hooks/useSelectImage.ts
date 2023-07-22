@@ -1,11 +1,13 @@
 import { useState } from 'react';
 
-export default function useUploadImage() {
+export default function useSelectImage() {
   const [previewImage, setPreviewImage] = useState('');
+  const [imageFile, setImageFile] = useState<File>();
 
-  const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
+      setImageFile(file);
       setPreviewImage(URL?.createObjectURL(file));
     }
   };
@@ -13,5 +15,5 @@ export default function useUploadImage() {
     setPreviewImage('');
   };
 
-  return { cancelImage, previewImage, uploadImage };
+  return { cancelImage, imageFile, previewImage, selectedImage };
 }

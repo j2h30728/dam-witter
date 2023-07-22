@@ -1,6 +1,7 @@
 import { METHOD } from '@/constants';
-import { useMutation } from '@/libs/client';
+import { makeImagePath, useMutation } from '@/libs/client';
 import { ResponseType, TweetResponse } from '@/types';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
@@ -14,6 +15,16 @@ export default function DetailTweet() {
     <div>
       <h1>Detail Tweet</h1>
       <small>{responseTweet?.data?.user.name}</small>
+      {responseTweet?.data?.image && (
+        <div className="relative w-full h-60 bg-slate-500">
+          <Image
+            alt={responseTweet.data.image}
+            className="object-contain"
+            fill
+            src={makeImagePath(responseTweet.data.image)}
+          />
+        </div>
+      )}{' '}
       <pre>{responseTweet?.data?.text}</pre>
       <p>{responseTweet?.isLiked ? '좋아요 됨' : '좋아요 아님'}</p>
       <p>{responseTweet?.data?._count.likes}</p>
