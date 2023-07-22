@@ -2,6 +2,7 @@ import Modal from '@/components/Modal';
 import CreateTweet from '@/components/Modal/CreateTweet';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useControlModal, useInput } from '@/hooks';
+import useUploadImage from '@/hooks/useUploadImage';
 import useLogOut from '@/hooks/users/useLogOut';
 import useMutation from '@/libs/client/useMutation';
 import { ResponseType, TweetResponse } from '@/types';
@@ -15,6 +16,8 @@ export default function Home() {
   const handleLogOut = useLogOut();
 
   const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
+
+  const { cancelImage, previewImage, uploadImage } = useUploadImage();
 
   const { data: responseTweets, mutate } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets', {
     revalidateOnFocus: true,
@@ -37,6 +40,7 @@ export default function Home() {
         <Link href={`${ROUTE_PATH.TWEETS}/${tweet.id}`} key={tweet.id}>
           <h3>{tweet.user.name}</h3>
           <small>{tweet.user.email}</small>
+          <div className="w-full bg-cover h-60 bg-slate-500" style={{ backgroundImage: tweet.image || '' }}></div>
           <pre>{tweet.text}</pre>
         </Link>
       ))}
@@ -45,6 +49,7 @@ export default function Home() {
           onClose={() => {
             handleCloseModal();
             reset();
+            cancelImage();
           }}
         >
           <CreateTweet
@@ -55,6 +60,9 @@ export default function Home() {
             }}
             input={input}
             onChange={onChange}
+            onClickCloseModal={handleCloseModal}
+            previewImage={previewImage}
+            uploadImage={uploadImage}
           />
         </Modal>
       )}
