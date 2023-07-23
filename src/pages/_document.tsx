@@ -4,9 +4,9 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
+      <title>DAM-WITTER</title>
       <body>
         <Main />
-        <div id="modal-root"></div>
         <NextScript />
       </body>
     </Html>
