@@ -1,4 +1,4 @@
-import { Tweet, User } from '@prisma/client';
+import { Like, Tweet, User } from '@prisma/client';
 
 export interface ResponseType<T> {
   [key: string]: any;
@@ -16,4 +16,10 @@ export interface UserInput {
   username: string;
 }
 
-export type TweetResponse = Tweet & { user: User } & { _count: { likes: number } };
+export interface TweetResponse extends Tweet {
+  _count: { likes: number };
+  isLiked?: boolean;
+  likedTweetsByLoggedInUser?: boolean;
+  likes?: Like[];
+  user: User;
+}

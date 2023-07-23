@@ -7,6 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse | TweetResponse[]>>) {
   if (req.method === METHOD.GET) {
+    const { user } = req.session;
     const tweets = await db.tweet.findMany({
       include: {
         _count: {
@@ -14,13 +15,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
             likes: true,
           },
         },
+        likes: {
+          where: {
+            userId: user?.id,
+          },
+        },
         user: true,
       },
       orderBy: {
-        id: 'desc',
+        createdAt: 'desc',
       },
     });
-    return res.status(200).json({ data: tweets, isSuccess: true, message: null, statusCode: 200 });
+    const transformedTweets = tweets.map(tweet => ({
+      ...tweet,
+      isLiked: tweet.likes.some(like => like.userId === user?.id),
+    }));
+    return res.status(200).json({ data: transformedTweets, isSuccess: true, message: null, statusCode: 200 });
   }
 
   if (req.method === METHOD.POST) {
@@ -48,6 +58,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
           user: true,
         },
       });
+
       return res.status(201).json({ data: newTweetWithImage, isSuccess: true, message: null, statusCode: 201 });
     }
     const newTweet = await db.tweet.create({
