@@ -11,60 +11,61 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String
-  password String 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tweets Tweet[]
-  likes Like[]
-  comments Comment[]
-  profile Profile?
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  password  String 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tweets    Tweet[]
+  likes     Like[]
+  comments  Comment[]
+  profile   Profile?
+  
 }
 
 model Profile {
-  id     Int    @id @default(autoincrement())
+  id     String  @id @default(uuid())
   bio    String
-  avartar String?
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
+  avatar String
+  user   User    @relation(fields: [userId], references: [id])
+  userId String  @unique
   @@index([userId])
 }
 
 model Tweet {
-  id Int @id @default(autoincrement())
-  text String
-  image String?
+  id        String   @id @default(uuid())
+  text      String
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  likes Like[]
-  comments Comment[]
-  user User @relation(fields: [userId],references: [id], onDelete:Cascade)
-  userId Int
+  likes     Like[]
+  comments  Comment[]
+  user      User     @relation(fields: [userId],references: [id], onDelete:Cascade)
+  userId    String
   @@index([userId])
 }
+
 model Like {
-  id Int @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  user User @relation(fields: [userId],references: [id], onDelete:Cascade)
-  userId Int
-  tweet Tweet @relation(fields: [tweetId],references: [id], onDelete:Cascade)
-  tweetId Int
-  
+  user      User     @relation(fields: [userId],references: [id], onDelete:Cascade)
+  userId    String
+  tweet     Tweet    @relation(fields: [tweetId],references: [id], onDelete:Cascade)
+  tweetId   String
   @@index([userId])
   @@index([tweetId])
-  }
+
+}
 
 model Comment {
-  id Int @id @default(autoincrement())
-  text String
+  id        String   @id @default(uuid())
+  text      String
   createdAt DateTime @default(now())
-  user User @relation(fields: [userId],references: [id], onDelete:Cascade)
-  userId Int
-  tweet Tweet @relation(fields: [tweetId],references: [id], onDelete:Cascade)
-  tweetId Int
-  
+  user      User     @relation(fields: [userId],references: [id], onDelete:Cascade)
+  userId    String
+  tweet     Tweet    @relation(fields: [tweetId],references: [id], onDelete:Cascade)
+  tweetId   String
   @@index([userId])
   @@index([tweetId])
-  }
+}
