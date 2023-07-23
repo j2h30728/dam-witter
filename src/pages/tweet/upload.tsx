@@ -2,11 +2,11 @@ import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useInput, useSelectImage } from '@/hooks';
 import { useMutation } from '@/libs/client';
+import getImageId from '@/libs/client/getImageId';
 import { ResponseType, TweetResponse } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import useSWR from 'swr';
 
 export default function Upload() {
   const [input, onChange, reset] = useInput('');
@@ -28,14 +28,7 @@ export default function Upload() {
   const handleCreateTweet = async () => {
     setIsLoading(true);
     if (imageFile) {
-      const {
-        data: { uploadURL },
-      } = await (await fetch('/api/files')).json();
-      const form = new FormData();
-      form.append('file', imageFile, input.slice(5));
-      const {
-        result: { id },
-      } = await (await fetch(uploadURL, { body: form, method: 'POST' })).json();
+      const id = await getImageId(imageFile, input);
       createTweet('/api/tweets', METHOD.POST, { imageId: id, text: input });
     } else {
       createTweet('/api/tweets', METHOD.POST, { text: input });
@@ -48,10 +41,7 @@ export default function Upload() {
     <Layout hasBackButton title="TWEET UPLOAD">
       <div className="flex flex-col items-center justify-center space-y-4 ">
         <h1>Tweet</h1>
-        <label
-          className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-pointer hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-          htmlFor="image"
-        >
+        <label className="button " htmlFor="image">
           Image
           <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
         </label>

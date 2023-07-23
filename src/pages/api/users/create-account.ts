@@ -34,6 +34,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Us
       email,
       name,
       password: hashedPassword,
+      profile: {
+        create: {
+          avatar: '',
+          bio: `안녕하세요. ${name}입니다.`,
+        },
+      },
     },
   });
 

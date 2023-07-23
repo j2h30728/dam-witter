@@ -31,7 +31,7 @@ export default function Layout({
           {isLoggedIn ? <IoLogOut size={25} /> : <div></div>}
         </div>
       </div>
-      <div className="w-full h-screen px-5 pt-16 pb-32 overflow-auto bg-white border-solid overscroll-contain border-x-4 border-base">
+      <div className="w-full h-screen pt-16 pb-32 overflow-auto bg-white border-solid overscroll-contain border-x-4 border-base">
         {children}
       </div>
       {isLoggedIn && (

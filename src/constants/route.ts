@@ -1,5 +1,6 @@
 const ROUTE_PATH = {
   CREATE_ACCOUNT: '/create-account',
+  EDIT: '/edit',
   HOME: '/',
   LOG_IN: '/log-in',
   PROFILE: '/profile',

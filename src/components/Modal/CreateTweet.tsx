@@ -1,6 +1,9 @@
+import Image from 'next/image';
+
 interface CreateTweetProp {
   createTweet: () => void;
   input: string;
+  isLoading: boolean;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onClickCloseModal: () => void;
   previewImage: string;
@@ -10,6 +13,7 @@ interface CreateTweetProp {
 export default function CreateTweet({
   createTweet,
   input,
+  isLoading,
   onChange,
   onClickCloseModal,
   previewImage,
@@ -26,7 +30,11 @@ export default function CreateTweet({
         Image
         <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
       </label>
-      {previewImage && <img className="object-contain w-full h-60 " src={previewImage}></img>}
+      {previewImage && (
+        <div className="relative w-full h-60 bg-slate-500">
+          <Image alt="preview Image" className="object-contain w-full h-60 " fill src={previewImage} />
+        </div>
+      )}
       <textarea
         className="w-3/4 h-3/5"
         id="text"
@@ -35,8 +43,14 @@ export default function CreateTweet({
         placeholder="텍스트를 입력해주세요."
         value={input}
       />
-      <button onClick={createTweet}>추가하기</button>
-      <button onClick={onClickCloseModal}>취소하기</button>
+      {isLoading ? (
+        <p>등록중...</p>
+      ) : (
+        <div>
+          <button onClick={createTweet}>추가하기</button>
+          <button onClick={onClickCloseModal}>취소하기</button>
+        </div>
+      )}
     </div>
   );
 }

@@ -20,7 +20,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
             userId: user?.id,
           },
         },
-        user: true,
+        user: {
+          select: {
+            email: true,
+            name: true,
+            profile: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -55,7 +61,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
               likes: true,
             },
           },
-          user: true,
+          user: {
+            select: {
+              email: true,
+              name: true,
+              profile: true,
+            },
+          },
         },
       });
 
@@ -76,7 +88,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
             likes: true,
           },
         },
-        user: true,
+        user: {
+          select: {
+            email: true,
+            name: true,
+            profile: true,
+          },
+        },
       },
     });
     return res.status(201).json({ data: newTweet, isSuccess: true, message: null, statusCode: 201 });
