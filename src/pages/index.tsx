@@ -57,7 +57,7 @@ export default function Home() {
             </Link>
             <div className="flex items-center gap-2 px-3">
               <LikeButton isLiked={!!tweet.isLiked} toggleLike={() => handleLikeToggle(tweet)} />
-              <small>좋아요 {tweet._count.likes} 개</small>
+              <Link href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>좋아요 {tweet._count.likes} 개</Link>
             </div>
           </div>
         ))}

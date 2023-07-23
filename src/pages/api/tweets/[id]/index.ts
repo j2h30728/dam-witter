@@ -11,30 +11,29 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
     session: { user },
   } = req;
 
+  const tweet = await db.tweet.findUnique({
+    include: {
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+      user: {
+        select: {
+          email: true,
+          name: true,
+          profile: true,
+        },
+      },
+    },
+    where: {
+      id: String(id),
+    },
+  });
+  if (!tweet)
+    return res.status(400).json({ data: null, isSuccess: false, message: '잘못된 접근입니다.', statusCode: 400 });
+
   if (req.method === METHOD.GET) {
-    const tweet = await db.tweet.findUnique({
-      include: {
-        _count: {
-          select: {
-            likes: true,
-          },
-        },
-        user: {
-          select: {
-            email: true,
-            name: true,
-            profile: true,
-          },
-        },
-      },
-      where: {
-        id: String(id),
-      },
-    });
-
-    if (!tweet)
-      return res.status(400).json({ data: null, isSuccess: false, message: '잘못된 접근입니다.', statusCode: 400 });
-
     const isLiked = Boolean(
       await db.like.findFirst({
         where: {
@@ -79,5 +78,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
     });
     return res.status(201).json({ data: newTweet, isSuccess: true, message: null, statusCode: 201 });
   }
+
+  if (req.method === METHOD.DELETE) {
+    await db.tweet.delete({
+      where: {
+        id: tweet.id,
+      },
+    });
+    return res.status(204).json({ data: null, isSuccess: true, message: '삭제되었습니다.', statusCode: 200 });
+  }
 }
-export default withApiSession(withHandler({ handler, methods: [METHOD.GET] }));
+
+export default withApiSession(withHandler({ handler, methods: [METHOD.GET, METHOD.POST, METHOD.DELETE] }));

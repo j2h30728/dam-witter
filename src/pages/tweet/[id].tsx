@@ -1,8 +1,9 @@
 import { Layout, LikeButton, ProfileImage, Symbol, TweetImage } from '@/components';
-import { METHOD } from '@/constants';
+import { METHOD, ROUTE_PATH } from '@/constants';
 import { useMutation } from '@/libs/client';
 import { ResponseType, TweetResponse } from '@/types';
 import { useRouter } from 'next/router';
+import { AiOutlineDelete } from 'react-icons/ai';
 import useSWR from 'swr';
 
 export default function DetailTweet() {
@@ -10,11 +11,18 @@ export default function DetailTweet() {
   const { data: responseTweet, mutate: tweetMutate } = useSWR<ResponseType<TweetResponse>>(
     router.query.id ? `/api/tweets/${router.query.id}` : null
   );
-  const [likeMutate] = useMutation<ResponseType<TweetResponse>>();
+  const [mutate, x] = useMutation<ResponseType<TweetResponse>>();
+
+  const handleDeleteTweet = (tweetId: string | undefined) => {
+    if (tweetId) {
+      mutate(`/api/tweets/${router.query.id}`, METHOD.DELETE);
+      router.replace(ROUTE_PATH.HOME);
+    }
+  };
 
   const handleLikeButton = () => {
     if (responseTweet && responseTweet.data) {
-      likeMutate(`/api/tweets/${router.query.id}/like`, METHOD.POST);
+      mutate(`/api/tweets/${router.query.id}/like`, METHOD.POST);
       tweetMutate(
         {
           ...responseTweet,
@@ -38,11 +46,16 @@ export default function DetailTweet() {
 
   return (
     <Layout hasBackButton isLoggedIn title={<Symbol height={33} width={33} />}>
-      <main className="flex flex-col gap-3 px-3 mt-5">
-        <div className="flex items-center gap-3 px-3">
+      <main className="flex flex-col gap-3 px-3 mt-5 ">
+        <div className="relative flex items-center w-full gap-3 px-3">
           <ProfileImage avatarId={responseTweet?.data?.user.profile?.avatar} />
           <h3 className="text-xl font-bold">{responseTweet?.data?.user.name}</h3>
           <small>{responseTweet?.data?.user.email}</small>
+          <AiOutlineDelete
+            className="absolute cursor-pointer right-3"
+            onClick={() => handleDeleteTweet(String(router.query.id) || responseTweet?.data?.id)}
+            size={30}
+          />
         </div>
 
         {responseTweet?.data?.image && <TweetImage imageId={responseTweet.data.image} />}

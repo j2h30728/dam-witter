@@ -6,7 +6,7 @@ interface UseMutationState<T> {
   isLoading: boolean;
 }
 
-type MutationMethod = 'PATCH' | 'POST' | 'PUT';
+type MutationMethod = 'DELETE' | 'PATCH' | 'POST' | 'PUT';
 
 type UseMutationResult<T> = [(url: string, method: MutationMethod, data?: any) => void, UseMutationState<T>];
 
