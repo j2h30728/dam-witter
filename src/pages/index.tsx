@@ -1,12 +1,9 @@
-import { LikeButton } from '@/components';
-import Layout from '@/components/common/Layout';
+import { Layout, LikeButton, ProfileImage, TweetImage } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { makeImagePath, useMutation } from '@/libs/client';
+import { useMutation } from '@/libs/client';
 import { ResponseType, TweetResponse } from '@/types';
 import { Like } from '@prisma/client';
-import Image from 'next/image';
 import Link from 'next/link';
-import { FaUserCircle } from 'react-icons/fa';
 import useSWR from 'swr';
 
 export default function Home() {
@@ -37,36 +34,30 @@ export default function Home() {
   };
   return (
     <Layout isLoggedIn title="DAM">
-      <div className="flex flex-col mt-5 gap-7">
+      <div className="flex flex-col gap-5 mt-5">
         {responseTweets?.data?.map((tweet: TweetResponse) => (
-          <div className="flex flex-col gap-2 pb-2 border-b-2 border-base" key={tweet.id}>
+          <div className="flex flex-col gap-1 pb-2 border-b-2 border-base" key={tweet.id}>
             <div className="flex items-center gap-3 px-3">
-              {tweet.user.profile?.avatar ? (
-                <div className="relative w-14 h-14">
-                  <Image
-                    alt="preview Image"
-                    className="object-cover w-full h-32 overflow-hidden rounded-full"
-                    fill
-                    src={makeImagePath(tweet.user.profile?.avatar)}
-                  />
-                </div>
-              ) : (
-                <FaUserCircle className="fill-stone-500" size={50} />
-              )}
+              <ProfileImage avatarId={tweet.user.profile?.avatar} />
               <h3 className="text-xl font-bold">{tweet.user.name}</h3>
               <small>{tweet.user.email}</small>
             </div>
             <Link className="mx-3" href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>
-              {tweet.image && (
-                <div className="relative w-full my-3 h-60 ">
-                  <Image alt={tweet.image} className="object-contain" fill src={makeImagePath(tweet.image)}></Image>
-                </div>
-              )}
-              <p className="whitespace-pre-line">{tweet.text}</p>
+              {tweet.image && <TweetImage imageId={tweet.image} />}
+              <p className="whitespace-pre-line">
+                {tweet.text.length > 300 ? (
+                  <span>
+                    {tweet.text.slice(0, 200)}
+                    <small className="font-bold text-neutral-500">... 더보기</small>
+                  </span>
+                ) : (
+                  tweet.text
+                )}
+              </p>
             </Link>
             <div className="flex items-center gap-2 px-3">
               <LikeButton isLiked={!!tweet.isLiked} toggleLike={() => handleLikeToggle(tweet)} />
-              <small>마음에 들어요 {tweet._count.likes}</small>
+              <small>좋아요 {tweet._count.likes} 개</small>
             </div>
           </div>
         ))}
