@@ -34,10 +34,29 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Pr
 
   if (req.method === METHOD.PUT) {
     const { avatarId, bio, name } = req.body;
+
+    if (profile.profile) {
+      await db.profile.update({
+        data: { avatar: avatarId, bio: bio },
+        where: { id: profile.profile.id },
+      });
+    } else {
+      await db.profile.create({
+        data: {
+          avatar: avatarId,
+          bio: bio,
+          user: {
+            connect: {
+              id: user?.id,
+            },
+          },
+        },
+      });
+    }
+
     const updatedProfile = await db.user.update({
       data: {
         name: name,
-        profile: { update: { avatar: avatarId, bio: bio } },
       },
       include: {
         likes: true,
@@ -45,7 +64,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Pr
         tweets: true,
       },
       where: {
-        id: profile.id,
+        id: user?.id,
       },
     });
     return res
