@@ -22,7 +22,7 @@ export default function useMutation<T = any>(): UseMutationResult<T> {
       const response = await fetch(url, {
         body: JSON.stringify(data),
         headers: {
-          'content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         method,
       });
