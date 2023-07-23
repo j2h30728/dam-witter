@@ -25,3 +25,9 @@
 .button:active {
   background-color: #cbd5e0; /* stone-300 color in tailwind */
 }
+
+.sub-layout {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.25rem; /* mt-5 */
+}

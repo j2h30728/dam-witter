@@ -34,7 +34,7 @@ export default function Home() {
   };
   return (
     <Layout isLoggedIn title="DAM">
-      <div className="flex flex-col gap-5 mt-5">
+      <div className="gap-5 sub-layout">
         {responseTweets?.data?.map((tweet: TweetResponse) => (
           <div className="flex flex-col gap-1 pb-2 border-b-2 border-base" key={tweet.id}>
             <div className="flex items-center gap-3 px-3">

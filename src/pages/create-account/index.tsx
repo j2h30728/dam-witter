@@ -1,7 +1,7 @@
 import type { ResponseType } from '@/types';
 import type { UserInput } from '@/types';
 
-import { Input } from '@/components';
+import { Input, Symbol } from '@/components';
 import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
@@ -48,47 +48,55 @@ export default function CreateAccount() {
 
   return (
     <Layout title="CREATE ACCOUNT">
-      <form onSubmit={handleCreateAccount}>
-        <Input
-          name="username"
-          onChange={onChange}
-          placeholder="Your Name"
-          title="Name"
-          type="text"
-          value={form.username}
-        />
-        <Input
-          name="email"
-          onChange={onChange}
-          placeholder="Your email"
-          title="email"
-          type="email"
-          value={form.email}
-        />
-        <p>{form.email && !errors.email.isValid && errors.email.message}</p>
-        <Input
-          name="password"
-          onChange={onChange}
-          placeholder="Your password"
-          title="Password"
-          type="password"
-          value={form.password}
-        />
-        <p>{form.password && !errors.password.isValid && errors.password.message}</p>
-
-        <Input
-          name="confirmPassword"
-          onChange={onChange}
-          placeholder="Your confirmPassword"
-          title="confirmPassword"
-          type="password"
-          value={form.confirmPassword}
-        />
-        <p>{form.confirmPassword && !errors.confirmPassword.isValid && errors.confirmPassword.message}</p>
-
-        <button>{isLoading ? 'Loading...' : 'Create Account'}</button>
-      </form>
-      <Link href={ROUTE_PATH.LOG_IN}>Log-in</Link>
+      <div className="flex flex-col items-center px-3 sub-layout">
+        <Symbol className="m-16" height={130} width={130} />
+        <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleCreateAccount}>
+          <Input
+            name="username"
+            onChange={onChange}
+            placeholder="Your Name"
+            title="Name"
+            type="text"
+            value={form.username}
+          />
+          <Input
+            errorMassage={form.email && !errors.email.isValid && errors.email.message}
+            name="email"
+            onChange={onChange}
+            placeholder="Your email"
+            title="email"
+            type="email"
+            value={form.email}
+          />
+          <Input
+            errorMassage={form.password && !errors.password.isValid && errors.password.message}
+            name="password"
+            onChange={onChange}
+            placeholder="Your password"
+            title="Password"
+            type="password"
+            value={form.password}
+          />
+          <Input
+            errorMassage={form.confirmPassword && !errors.confirmPassword.isValid && errors.confirmPassword.message}
+            name="confirmPassword"
+            onChange={onChange}
+            placeholder="Your confirmPassword"
+            title="confirmPassword"
+            type="password"
+            value={form.confirmPassword}
+          />
+          <button className="w-full mt-8 button">
+            <span className="text-lg font-semibold ">{isLoading ? 'Loading...' : 'Create Account'}</span>
+          </button>
+        </form>
+        <nav className="flex gap-3 mt-5 ">
+          <span>계정이 있으신가요?</span>
+          <Link className="font-bold text-blue-400" href={ROUTE_PATH.LOG_IN}>
+            LOG-IN
+          </Link>
+        </nav>
+      </div>
     </Layout>
   );
 }

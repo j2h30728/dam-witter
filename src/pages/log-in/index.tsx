@@ -1,6 +1,6 @@
 import type { ResponseType } from '@/types';
 
-import { Input } from '@/components';
+import { Input, Symbol } from '@/components';
 import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
@@ -37,28 +37,38 @@ export default function LogIn() {
 
   return (
     <Layout title="LOG IN">
-      <form onSubmit={handleLogIn}>
-        <Input
-          name="email"
-          onChange={onChange}
-          placeholder="Your email"
-          title="email"
-          type="email"
-          value={form.email}
-        />
-        <p>{!errors.email.isValid && errors.email.message}</p>
-        <Input
-          name="password"
-          onChange={onChange}
-          placeholder="Your password"
-          title="Password"
-          type="password"
-          value={form.password}
-        />
-        <p>{!errors.password.isValid && errors.password.message}</p>
-        <button>{isLoading ? 'Loading...' : 'Log-In'}</button>
-      </form>
-      <Link href={ROUTE_PATH.CREATE_ACCOUNT}>Create account</Link>
+      <div className="flex flex-col items-center px-3 sub-layout">
+        <Symbol className="m-16" height={130} width={130} />
+        <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleLogIn}>
+          <Input
+            errorMassage={!errors.email.isValid && errors.email.message}
+            name="email"
+            onChange={onChange}
+            placeholder="Your email"
+            title="email"
+            type="email"
+            value={form.email}
+          />
+          <Input
+            errorMassage={!errors.password.isValid && errors.password.message}
+            name="password"
+            onChange={onChange}
+            placeholder="Your password"
+            title="Password"
+            type="password"
+            value={form.password}
+          />
+          <button className="w-full mt-8 button ">
+            <span className="text-lg font-semibold ">{isLoading ? 'Loading...' : 'Log-In'}</span>
+          </button>
+        </form>
+        <nav className="flex gap-3 mt-5 ">
+          <span>계정이 없으신가요?</span>
+          <Link className="font-bold text-blue-400" href={ROUTE_PATH.CREATE_ACCOUNT}>
+            Create account
+          </Link>
+        </nav>
+      </div>
     </Layout>
   );
 }
