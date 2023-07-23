@@ -14,7 +14,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Li
 
   const alreadyExists = await db.like.findFirst({
     where: {
-      tweetId: Number(id),
+      tweetId: String(id),
       userId: user?.id,
     },
   });
@@ -31,7 +31,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Li
     data: {
       tweet: {
         connect: {
-          id: Number(id),
+          id: String(id),
         },
       },
       user: {

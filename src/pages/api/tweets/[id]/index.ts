@@ -22,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         user: true,
       },
       where: {
-        id: Number(id),
+        id: String(id),
       },
     });
 
@@ -33,7 +33,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       await db.like.findFirst({
         where: {
           tweetId: tweet.id,
-          userId: user?.id,
+          userId: String(user?.id),
         },
       })
     );
