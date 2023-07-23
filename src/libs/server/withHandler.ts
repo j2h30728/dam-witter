@@ -10,7 +10,7 @@ interface ConfigType {
 export default function withHandler({ handler, isPrivate, methods }: ConfigType) {
   return async function (req: NextApiRequest, res: NextApiResponse<ResponseType<null>>) {
     if (req.method && !methods.includes(req.method as any)) {
-      return res.status(405).end();
+      return res.status(405).json({ data: null, isSuccess: false, message: '잘못된 요청입니다.', statusCode: 405 });
     }
     if (isPrivate && !req.session.user) {
       return res.status(401).json({ data: null, isSuccess: false, message: '잘못된 접근입니다.', statusCode: 401 });

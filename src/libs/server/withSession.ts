@@ -11,7 +11,7 @@ declare module 'iron-session' {
 
 const cookieOptions = {
   cookieName: 'dam-witter',
-  password: 'sdft996qyru6mrkdwefwsq0vewfweudf6mwdhp',
+  password: process.env.COOKIE_PASSWORD as string,
 };
 
 export function withApiSession(fn: NextApiHandler) {

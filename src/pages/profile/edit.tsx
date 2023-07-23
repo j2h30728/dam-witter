@@ -24,9 +24,9 @@ export default function ProfileEdit() {
     setIsLoading(true);
     if (imageFile) {
       const id = await getImageId(imageFile, editName);
-      editProfile('/api/users/profile', METHOD.PUT, { avatarId: id, bio: editBio, name: editName });
+      await editProfile('/api/users/profile', METHOD.PUT, { avatarId: id, bio: editBio, name: editName });
     } else {
-      editProfile('/api/users/profile', METHOD.PUT, { avatarId: '', name: editName, text: editBio });
+      await editProfile('/api/users/profile', METHOD.PUT, { avatarId: '', name: editName, text: editBio });
     }
   };
 

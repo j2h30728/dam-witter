@@ -15,9 +15,9 @@ export default function DetailTweet() {
   } = useSWR<ResponseType<TweetResponse>>(router.query.id ? `/api/tweets/${router.query.id}` : null);
   const [mutate, x] = useMutation<ResponseType<TweetResponse>>();
 
-  const handleDeleteTweet = (tweetId: string | undefined) => {
+  const handleDeleteTweet = async (tweetId: string | undefined) => {
     if (tweetId) {
-      mutate(`/api/tweets/${router.query.id}`, METHOD.DELETE);
+      await mutate(`/api/tweets/${router.query.id}`, METHOD.DELETE);
       router.replace(ROUTE_PATH.HOME);
     }
   };

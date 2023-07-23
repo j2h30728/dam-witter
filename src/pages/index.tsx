@@ -16,9 +16,9 @@ export default function Home() {
   });
   const [toggleLike] = useMutation<ResponseType<Like>>();
 
-  const handleLikeToggle = (tweet: TweetResponse) => {
+  const handleLikeToggle = async (tweet: TweetResponse) => {
     if (responseTweets)
-      tweetsMutate(
+      await tweetsMutate(
         {
           ...responseTweets,
           data:
@@ -34,7 +34,7 @@ export default function Home() {
         },
         false
       );
-    toggleLike(`/api/tweets/${tweet.id}/like`, METHOD.POST);
+    await toggleLike(`/api/tweets/${tweet.id}/like`, METHOD.POST);
   };
   return (
     <Layout isLoggedIn title={<Symbol height={33} width={33} />}>

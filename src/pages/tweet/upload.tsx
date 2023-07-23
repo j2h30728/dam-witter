@@ -32,9 +32,9 @@ export default function Upload() {
     setIsLoading(true);
     if (imageFile) {
       const id = await getImageId(imageFile, input);
-      createTweet('/api/tweets', METHOD.POST, { imageId: id, text: input });
+      await createTweet('/api/tweets', METHOD.POST, { imageId: id, text: input });
     } else {
-      createTweet('/api/tweets', METHOD.POST, { text: input });
+      await createTweet('/api/tweets', METHOD.POST, { text: input });
     }
     reset();
   };

@@ -20,10 +20,10 @@ export default function LogIn() {
     { email: '', password: '' },
     { email: emailValidator, password: passwordValidator }
   );
-  const handleLogIn = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!isErrors) {
-      mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
+      await mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
     }
   };
   useEffect(() => {

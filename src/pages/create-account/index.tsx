@@ -27,10 +27,10 @@ export default function CreateAccount() {
     { confirmPassword: passwordValidator, email: emailValidator, password: passwordValidator }
   );
 
-  const handleCreateAccount = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!isErrors) {
-      mutate('/api/users/create-account', METHOD.POST, {
+      await mutate('/api/users/create-account', METHOD.POST, {
         email: form.email,
         name: form.username,
         password: form.password,
