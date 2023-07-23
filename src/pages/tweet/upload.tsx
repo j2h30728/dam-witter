@@ -19,6 +19,7 @@ export default function Upload() {
 
   useEffect(() => {
     if (createdTweet?.isSuccess) {
+      setIsLoading(false);
       router.push(ROUTE_PATH.HOME);
     } else if (createdTweetError) {
       alert(createdTweet?.message);
@@ -36,7 +37,6 @@ export default function Upload() {
       createTweet('/api/tweets', METHOD.POST, { text: input });
     }
     reset();
-    setIsLoading(false);
   };
 
   return (

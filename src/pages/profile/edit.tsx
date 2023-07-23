@@ -28,11 +28,11 @@ export default function ProfileEdit() {
     } else {
       editProfile('/api/users/profile', METHOD.PUT, { avatarId: '', name: editName, text: editBio });
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
     if (editProfileData?.isSuccess) {
+      setIsLoading(false);
       router.push(ROUTE_PATH.PROFILE);
     } else if (editProfileError) {
       alert(editProfileData?.message);
