@@ -2,7 +2,17 @@ import { withApiSession, withHandler } from '@/libs/server';
 import { ResponseType } from '@/types';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<null>>) {
+interface ImageURLResponse {
+  errors: unknown;
+  message: string[];
+  result: {
+    id: string;
+    uploadURL: string;
+  };
+  success: boolean;
+}
+
+async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<ImageURLResponse>>) {
   const response = await (
     await fetch(
       `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1/direct_upload`,
