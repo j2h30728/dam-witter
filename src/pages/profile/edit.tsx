@@ -79,8 +79,8 @@ export default function ProfileEdit() {
           title="자기소개"
           value={editBio}
         />
-        <button className="button" onClick={handleEditProfile}>
-          {isLoading ? '수정중...' : '수정완료'}
+        <button className="w-3/5 text-center button" onClick={handleEditProfile}>
+          <span className="font-semibold "> {isLoading ? '수정중...' : '수정완료'}</span>
         </button>
       </main>
     </Layout>

@@ -7,7 +7,12 @@ export default function ProfileImage({ avatarId }: { avatarId: string | undefine
     <>
       {avatarId ? (
         <div className="relative w-12 h-12 border rounded-full border-stone-500">
-          <Image alt="preview Image" className="object-cover overflow-hidden" fill src={makeImagePath(avatarId)} />
+          <Image
+            alt="preview Image"
+            className="object-cover overflow-hidden rounded-full"
+            fill
+            src={makeImagePath(avatarId)}
+          />
         </div>
       ) : (
         <FaUserCircle className="fill-stone-500" size={46} />
