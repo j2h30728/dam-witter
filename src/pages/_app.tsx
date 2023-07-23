@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
         fetcher: (url: string) => fetch(url).then(response => response.json()),
       }}
     >
-      <div className="w-full max-w-xl mx-auto bg-yellow-100">
+      <div className="w-full max-w-xl mx-auto bg-beige0">
         <Component {...pageProps} />
       </div>
     </SWRConfig>

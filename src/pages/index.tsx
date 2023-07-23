@@ -1,4 +1,4 @@
-import { Layout, LikeButton, ProfileImage, TweetImage } from '@/components';
+import { Layout, LikeButton, ProfileImage, Symbol, TweetImage } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useMutation } from '@/libs/client';
 import { ResponseType, TweetResponse } from '@/types';
@@ -33,10 +33,10 @@ export default function Home() {
     toggleLike(`/api/tweets/${tweet.id}/like`, METHOD.POST);
   };
   return (
-    <Layout isLoggedIn title="DAM">
+    <Layout isLoggedIn title={<Symbol height={33} width={33} />}>
       <div className="gap-5 sub-layout">
         {responseTweets?.data?.map((tweet: TweetResponse) => (
-          <div className="flex flex-col gap-1 pb-2 border-b-2 border-base" key={tweet.id}>
+          <div className="flex flex-col gap-1 pb-2 border-b-2 border-base1" key={tweet.id}>
             <div className="flex items-center gap-3 px-3">
               <ProfileImage avatarId={tweet.user.profile?.avatar} />
               <h3 className="text-xl font-bold">{tweet.user.name}</h3>

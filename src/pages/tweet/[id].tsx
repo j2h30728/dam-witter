@@ -1,4 +1,4 @@
-import { Layout, LikeButton, ProfileImage, TweetImage } from '@/components';
+import { Layout, LikeButton, ProfileImage, Symbol, TweetImage } from '@/components';
 import { METHOD } from '@/constants';
 import { useMutation } from '@/libs/client';
 import { ResponseType, TweetResponse } from '@/types';
@@ -37,7 +37,7 @@ export default function DetailTweet() {
   };
 
   return (
-    <Layout hasBackButton isLoggedIn title="DAM">
+    <Layout hasBackButton isLoggedIn title={<Symbol height={33} width={33} />}>
       <main className="flex flex-col gap-3 px-3 mt-5">
         <div className="flex items-center gap-3 px-3">
           <ProfileImage avatarId={responseTweet?.data?.user.profile?.avatar} />

@@ -13,6 +13,7 @@ export default function useSelectImage() {
   };
   const cancelImage = () => {
     setPreviewImage('');
+    setImageFile(undefined);
   };
 
   return { cancelImage, imageFile, previewImage, selectedImage };

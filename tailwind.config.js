@@ -20,6 +20,7 @@ module.exports = {
         base100: '#FAF7F5',
         base200: '#EFEAE6',
         base300: '#E7E2DF',
+        beige0: '#fff9f2',
         beige1: '#ffe0a6',
         beige2: '#f7dba6',
 

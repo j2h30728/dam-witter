@@ -7,6 +7,7 @@ import { ResponseType, TweetResponse } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { AiOutlinePicture } from 'react-icons/ai';
 
 export default function Upload() {
   const [input, onChange, reset] = useInput('');
@@ -14,7 +15,7 @@ export default function Upload() {
   const router = useRouter();
   const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
 
-  const { imageFile, previewImage, selectedImage } = useSelectImage();
+  const { cancelImage, imageFile, previewImage, selectedImage } = useSelectImage();
 
   useEffect(() => {
     if (createdTweet?.isSuccess) {
@@ -25,7 +26,8 @@ export default function Upload() {
     }
   }, [createdTweet, router, createdTweetError]);
 
-  const handleCreateTweet = async () => {
+  const handleCreateTweet = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsLoading(true);
     if (imageFile) {
       const id = await getImageId(imageFile, input);
@@ -38,34 +40,37 @@ export default function Upload() {
   };
 
   return (
-    <Layout hasBackButton title="TWEET UPLOAD">
-      <div className="flex flex-col items-center justify-center space-y-4 ">
-        <h1>Tweet</h1>
-        <label className="button " htmlFor="image">
-          Image
+    <Layout hasBackButton isLoggedIn title="TWEET UPLOAD">
+      <form className="flex flex-col items-center justify-center space-y-4 " onSubmit={handleCreateTweet}>
+        <label
+          className="relative flex items-center justify-center w-full border-2 border-dashed rounded-lg cursor-pointer h-60 border-beige3"
+          htmlFor="image"
+        >
           <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
-        </label>
-        {previewImage && (
-          <div className="relative w-full h-60 bg-slate-500">
+          {previewImage ? (
             <Image alt="preview Image" className="object-contain w-full h-60 " fill src={previewImage} />
-          </div>
-        )}
+          ) : (
+            <div className="r">
+              <AiOutlinePicture className="text-beige3" size={80} />
+            </div>
+          )}
+        </label>
+        <button className="button" onClick={cancelImage}>
+          사진등록취소
+        </button>
         <textarea
-          className="w-3/4 h-3/5"
+          className="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           id="text"
           name="text"
           onChange={onChange}
           placeholder="텍스트를 입력해주세요."
+          required
           value={input}
         />
-        {isLoading ? (
-          <p>등록중...</p>
-        ) : (
-          <div>
-            <button onClick={handleCreateTweet}>추가하기</button>
-          </div>
-        )}
-      </div>
+        <button className="w-3/5 text-center button">
+          <span className="font-semibold "> {isLoading ? '등록중...' : '추가하기'}</span>
+        </button>
+      </form>
     </Layout>
   );
 }
