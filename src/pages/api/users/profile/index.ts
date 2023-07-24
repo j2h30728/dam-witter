@@ -1,7 +1,6 @@
 import { METHOD } from '@/constants';
 import { db, withApiSession, withHandler } from '@/libs/server';
 import { ProfileResponse, ResponseType } from '@/types';
-import { User } from '@prisma/client';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
 

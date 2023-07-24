@@ -59,7 +59,7 @@ export default function LogIn() {
             value={form.password}
           />
           <button className="w-full mt-8 button ">
-            <span className="text-lg font-semibold ">{isLoading ? 'Loading...' : 'Log-In'}</span>
+            <span className="text-lg font-semibold ">{isLoading && !data ? 'Loading...' : 'Log-In'}</span>
           </button>
         </form>
         <nav className="flex gap-3 mt-5 ">

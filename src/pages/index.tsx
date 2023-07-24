@@ -10,10 +10,9 @@ export default function Home() {
   const {
     data: responseTweets,
     isLoading,
+    isValidating,
     mutate: tweetsMutate,
-  } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets', {
-    revalidateOnFocus: true,
-  });
+  } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets');
   const [toggleLike] = useMutation<ResponseType<Like>>();
 
   const handleLikeToggle = async (tweet: TweetResponse) => {
@@ -38,18 +37,18 @@ export default function Home() {
   };
   return (
     <Layout isLoggedIn title={<Symbol height={33} width={33} />}>
-      <div className="gap-5 sub-layout">
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          responseTweets?.data?.map((tweet: TweetResponse) => (
-            <div className="flex flex-col gap-1 pb-2 border-b-2 border-base1" key={tweet.id}>
+      {isLoading && isValidating ? (
+        <LoadingSpinner text={'불러오는 중..'} />
+      ) : (
+        <div className="gap-5 sub-layout">
+          {responseTweets?.data?.map((tweet: TweetResponse) => (
+            <div className="flex flex-col gap-3 pb-2 border-b-2 border-base1" key={tweet.id}>
               <div className="flex items-center gap-3 px-3">
                 <ProfileImage avatarId={tweet.user.profile?.avatar} />
                 <h3 className="text-xl font-bold">{tweet.user.name}</h3>
                 <small>{tweet.user.email}</small>
               </div>
-              <Link className="mx-3" href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>
+              <Link className="px-5 mx-3" href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>
                 {tweet.image && <TweetImage imageId={tweet.image} />}
                 <p className="whitespace-pre-line">
                   {tweet.text.length > 300 ? (
@@ -67,9 +66,9 @@ export default function Home() {
                 <Link href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>좋아요 {tweet._count.likes} 개</Link>
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </Layout>
   );
 }

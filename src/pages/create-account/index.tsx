@@ -87,7 +87,7 @@ export default function CreateAccount() {
             value={form.confirmPassword}
           />
           <button className="w-full mt-8 button">
-            <span className="text-lg font-semibold ">{isLoading ? 'Loading...' : 'Create Account'}</span>
+            <span className="text-lg font-semibold ">{isLoading && !data ? 'Loading...' : 'Create Account'}</span>
           </button>
         </form>
         <nav className="flex gap-3 mt-5 ">

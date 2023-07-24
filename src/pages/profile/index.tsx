@@ -14,7 +14,7 @@ export default function Profile() {
     <Layout hasBackButton isLoggedIn title="MY PAGE">
       <main className="flex flex-col gap-5 mt-10">
         {isLoading ? (
-          <LoadingSpinner />
+          <LoadingSpinner text={'불러오는 중..'} />
         ) : (
           <>
             <div className="flex flex-col items-center gap-2 px-2">
