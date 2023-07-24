@@ -74,6 +74,7 @@ export default function ProfileEdit() {
         </div>
         <textarea
           className="h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
+          inputMode="text"
           name="bio"
           onChange={handleBioChange}
           title="자기소개"

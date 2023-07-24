@@ -29,6 +29,7 @@ export default function Input({
             errorMassage ? 'border-2 border-red-500' : 'border border-stone-500'
           )}
           id={name}
+          inputMode="text"
           name={name}
           onChange={onChange}
           placeholder={placeholder}

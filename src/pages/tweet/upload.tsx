@@ -61,6 +61,7 @@ export default function Upload() {
         <textarea
           className="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           id="text"
+          inputMode="text"
           name="text"
           onChange={onChange}
           placeholder="텍스트를 입력해주세요."
