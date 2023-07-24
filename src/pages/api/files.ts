@@ -25,7 +25,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Im
       }
     )
   ).json();
-  console.log(response);
 
   return res.json({
     data: { ...response.result },
