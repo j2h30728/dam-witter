@@ -64,13 +64,29 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
     { text: '' },
     { text: tweetValidator }
   );
+  console.log(responseTweet?.data?._count);
   const handleUploadComment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!form.text.trim()) return alert('코멘트를 입력해주세요.');
     if (isError) return alert(errorMessage.at(0));
     reset();
     await upLoadComment(`/api/tweets/${router.query.id}/comments`, METHOD.POST, { text: form.text });
-    await commentMutate();
+    if (responseTweet && responseTweet.data) {
+      tweetMutate(
+        {
+          ...responseTweet,
+          data: {
+            ...responseTweet.data,
+            _count: {
+              ...responseTweet.data._count,
+              comments: responseTweet.data._count.comments + 1,
+            },
+          },
+        },
+        false
+      );
+      await commentMutate();
+    }
   };
   const handleRemoveComment = (commentId: string) => {
     if (responseComments) {
@@ -82,6 +98,21 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
         },
         false
       );
+      if (responseTweet && responseTweet.data) {
+        tweetMutate(
+          {
+            ...responseTweet,
+            data: {
+              ...responseTweet.data,
+              _count: {
+                ...responseTweet.data._count,
+                comments: responseTweet.data._count.comments - 1,
+              },
+            },
+          },
+          false
+        );
+      }
     }
   };
   return (
@@ -110,9 +141,12 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
           </div>
           <p className="px-5 whitespace-pre-line">{responseTweet?.data?.text}</p>
           {responseTweet?.data?.image && <TweetImage imageId={responseTweet.data.image} />}
-          <div className="flex items-center gap-2 px-3 py-4 border-b border-stone-500">
-            <LikeButton isLiked={responseTweet?.isLiked} toggleLike={handleLikeButton} />
-            <span>좋아요 {responseTweet?.data?._count.likes} 개</span>
+          <div className="flex items-center justify-around gap-2 px-3 py-4 border-b border-stone-500">
+            <div className="flex items-center w-fit">
+              <LikeButton isLiked={responseTweet?.isLiked} toggleLike={handleLikeButton} />
+              <span>좋아요 {responseTweet?.data?._count.likes} 개</span>
+            </div>
+            <span>코멘트 {responseTweet?.data?._count.comments} 개</span>
           </div>
           <form className="flex items-center justify-around w-full gap-1" onSubmit={handleUploadComment}>
             <label className="font-semibold" htmlFor="comment">

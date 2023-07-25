@@ -42,7 +42,7 @@ export default function Home() {
       ) : (
         <div className="gap-5 sub-layout">
           {responseTweets?.data?.map((tweet: TweetResponse) => (
-            <div className="flex flex-col gap-3 pb-2 border-b-2 border-base1" key={tweet.id}>
+            <div className="flex flex-col gap-4 pb-2 border-b-2 border-base1" key={tweet.id}>
               <div className="flex items-center gap-3 px-3">
                 <ProfileImage avatarId={tweet.user.profile?.avatar} />
                 <h3 className="text-xl font-bold">{tweet.user.name}</h3>
@@ -61,9 +61,12 @@ export default function Home() {
                   )}
                 </p>
               </Link>
-              <div className="flex items-center gap-2 px-3">
-                <LikeButton isLiked={!!tweet.isLiked} toggleLike={() => handleLikeToggle(tweet)} />
-                <Link href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>좋아요 {tweet._count.likes} 개</Link>
+              <div className="flex items-center w-full gap-2 px-4 py-1 text-stone-500">
+                <div className="flex items-center gap-1 w-fit">
+                  <LikeButton isLiked={!!tweet.isLiked} toggleLike={() => handleLikeToggle(tweet)} />
+                  <span>좋아요 {tweet?._count.likes} 개</span>
+                </div>
+                <span>| 코멘트 {tweet?._count.comments} 개</span>
               </div>
             </div>
           ))}
