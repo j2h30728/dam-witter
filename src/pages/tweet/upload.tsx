@@ -60,7 +60,7 @@ export default function Upload() {
             </div>
           )}
         </label>
-        <button className="button" onClick={cancelImage}>
+        <button className="button" onClick={cancelImage} type="button">
           사진등록취소
         </button>
         <Textarea
