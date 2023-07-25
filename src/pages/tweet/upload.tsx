@@ -1,28 +1,23 @@
 import Layout from '@/components/common/Layout';
 import Textarea from '@/components/common/Textarea';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { useForm, useInput, useSelectImage } from '@/hooks';
+import { useForm, useSelectImage } from '@/hooks';
 import { useMutation } from '@/libs/client';
 import getImageId from '@/libs/client/getImageId';
 import { tweetValidator } from '@/libs/client/validators';
-import { ResponseType, TweetResponse } from '@/types';
+import { ResponseType, TweetResponse, UploadTweetInput } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePicture } from 'react-icons/ai';
 
-type UploadTweetInput = { text: string };
 export default function Upload() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
   const { errorMessage, errors, form, isError, onChange, reset } = useForm<UploadTweetInput>(
-    {
-      text: '',
-    },
-    {
-      text: tweetValidator,
-    }
+    { text: '' },
+    { text: tweetValidator }
   );
   const { cancelImage, imageFile, previewImage, selectedImage } = useSelectImage();
 

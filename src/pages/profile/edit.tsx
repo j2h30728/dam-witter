@@ -31,7 +31,6 @@ export default function ProfileEdit() {
   const [editProfile, { data: editProfileData, error: editProfileError }] =
     useMutation<ResponseType<ProfileResponse>>();
   const { imageFile, previewImage, selectedImage } = useSelectImage();
-
   const handleEditProfile = async () => {
     if (isError) return alert(errorMessage.at(0));
     setIsLoading(true);

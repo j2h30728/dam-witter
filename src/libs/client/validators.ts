@@ -43,9 +43,9 @@ export function usernameValidator(username: React.InputHTMLAttributes<HTMLInputE
     return { isValid: false, message: '이름은 필수 입력 값입니다.' };
   }
 
-  const usernameReg = /^.{1,12}$/;
+  const usernameReg = /^.{1,6}$/;
   if (!usernameReg.test(username)) {
-    return { isValid: false, message: '이름은 최대 12자 이하 입니다' };
+    return { isValid: false, message: '이름은 최대 6자 이하 입니다' };
   }
   return { isValid: true, message: '' };
 }

@@ -34,7 +34,7 @@ export default function useMutation<T = any>(): UseMutationResult<T> {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return json as T;
+      return json;
     } catch (error) {
       setState(prev => ({ ...prev, error: error }));
       console.error(error);
