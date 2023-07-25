@@ -12,6 +12,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       include: {
         _count: {
           select: {
+            comments: true,
             likes: true,
           },
         },
@@ -23,6 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         user: {
           select: {
             email: true,
+            id: true,
             name: true,
             profile: true,
           },
@@ -58,12 +60,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         include: {
           _count: {
             select: {
+              comments: true,
               likes: true,
             },
           },
           user: {
             select: {
               email: true,
+              id: true,
               name: true,
               profile: true,
             },
@@ -85,12 +89,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       include: {
         _count: {
           select: {
+            comments: true,
             likes: true,
           },
         },
         user: {
           select: {
             email: true,
+            id: true,
             name: true,
             profile: true,
           },

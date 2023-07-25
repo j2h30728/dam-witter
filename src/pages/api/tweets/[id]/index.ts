@@ -1,26 +1,44 @@
 import type { ResponseType, TweetResponse } from '@/types';
 
 import { METHOD } from '@/constants';
-import { db, withSsrSession } from '@/libs/server';
+import { db } from '@/libs/server';
 import { withApiSession, withHandler } from '@/libs/server';
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse | TweetResponse[]>>) {
+  console.log(req.body);
+
   const {
     query: { id },
     session: { user },
   } = req;
-
   const tweet = await db.tweet.findUnique({
     include: {
       _count: {
         select: {
+          comments: true,
           likes: true,
+        },
+      },
+      comments: {
+        select: {
+          createdAt: true,
+          id: true,
+          text: true,
+          user: {
+            select: {
+              email: true,
+              id: true,
+              name: true,
+              profile: true,
+            },
+          },
         },
       },
       user: {
         select: {
           email: true,
+          id: true,
           name: true,
           profile: true,
         },
@@ -64,12 +82,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       include: {
         _count: {
           select: {
+            comments: true,
             likes: true,
           },
         },
         user: {
           select: {
             email: true,
+            id: true,
             name: true,
             profile: true,
           },

@@ -1,4 +1,4 @@
-import { Like, Profile, Tweet, User } from '@prisma/client';
+import { Comment, Like, Profile, Tweet, User } from '@prisma/client';
 
 export interface ResponseType<T> {
   [key: string]: any;
@@ -17,12 +17,13 @@ export interface UserInput {
 }
 
 export interface TweetResponse extends Tweet {
-  _count: { likes: number };
+  _count: { comments: number; likes: number };
   isLiked?: boolean;
   likedTweetsByLoggedInUser?: boolean;
   likes?: Like[];
   user: {
     email: string;
+    id: string;
     name: string;
     profile: Profile | null;
   };
@@ -35,3 +36,18 @@ export interface ProfileResponse extends UserWithoutPassword {
   profile: Profile | null;
   tweets: Tweet[];
 }
+
+export interface CommentResponse extends Comment {
+  tweet?: {
+    id: string;
+    text: string;
+  };
+  user: {
+    email: string;
+    id: string;
+    name: string;
+    profile: Profile | null;
+  };
+}
+
+export type UploadTweetInput = { text: string };
