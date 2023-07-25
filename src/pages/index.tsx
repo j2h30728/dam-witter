@@ -66,7 +66,7 @@ export default function Home() {
                   <LikeButton isLiked={!!tweet.isLiked} toggleLike={() => handleLikeToggle(tweet)} />
                   <span>좋아요 {tweet?._count.likes} 개</span>
                 </div>
-                <span>| 코멘트 {tweet?._count.comments} 개</span>
+                <Link href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>| 코멘트 {tweet?._count.comments} 개</Link>
               </div>
             </div>
           ))}

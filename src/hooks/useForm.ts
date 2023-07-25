@@ -28,9 +28,9 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: Reco
 
   const errorMessage = Object.values(errors)
     .filter(error => !error.isValid)
-    .map(error => error.message);
+    .map(error => error.message)
+    .filter(error => error);
   const isError = errorMessage.length > 0;
-
   return { errorMessage, errors, form, isError, onChange, reset };
 }
 
