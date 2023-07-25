@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type Validator = (
-  value: React.InputHTMLAttributes<HTMLInputElement>['value'],
+  value: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['value'],
   subValue?: Record<string, any>
 ) => Errors;
 type Errors = { isValid: boolean; message: string };
@@ -10,7 +10,7 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: Reco
   const [form, setForm] = useState<Record<string, any>>(initialForm);
   const [errors, setErrors] = useState<Record<string, Errors>>(initialForm);
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setForm(prevForm => {
       const updatedForm = { ...prevForm, [name]: value };
@@ -24,9 +24,14 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: Reco
       return updatedForm;
     });
   };
-  const isErrors = Object.entries(errors).filter(([_, value]) => !value.isValid).length > 0;
   const reset = () => setForm(initialForm);
-  return { errors, form, isErrors, onChange, reset };
+
+  const errorMessage = Object.values(errors)
+    .filter(error => !error.isValid)
+    .map(error => error.message);
+  const isError = errorMessage.length > 0;
+
+  return { errorMessage, errors, form, isError, onChange, reset };
 }
 
 export default useForm;

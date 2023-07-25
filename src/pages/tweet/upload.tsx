@@ -1,20 +1,29 @@
 import Layout from '@/components/common/Layout';
+import Textarea from '@/components/common/Textarea';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { useInput, useSelectImage } from '@/hooks';
+import { useForm, useInput, useSelectImage } from '@/hooks';
 import { useMutation } from '@/libs/client';
 import getImageId from '@/libs/client/getImageId';
+import { tweetValidator } from '@/libs/client/validators';
 import { ResponseType, TweetResponse } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePicture } from 'react-icons/ai';
 
+type UploadTweetInput = { text: string };
 export default function Upload() {
-  const [input, onChange, reset] = useInput('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
-
+  const { errorMessage, errors, form, isError, onChange, reset } = useForm<UploadTweetInput>(
+    {
+      text: '',
+    },
+    {
+      text: tweetValidator,
+    }
+  );
   const { cancelImage, imageFile, previewImage, selectedImage } = useSelectImage();
 
   useEffect(() => {
@@ -29,12 +38,13 @@ export default function Upload() {
 
   const handleCreateTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isError) return alert(errorMessage.at(0));
     setIsLoading(true);
     if (imageFile) {
-      const id = await getImageId(imageFile, input);
-      await createTweet('/api/tweets', METHOD.POST, { imageId: id, text: input });
+      const id = await getImageId(imageFile, form.text);
+      await createTweet('/api/tweets', METHOD.POST, { imageId: id, text: form.text });
     } else {
-      await createTweet('/api/tweets', METHOD.POST, { text: input });
+      await createTweet('/api/tweets', METHOD.POST, { text: form.text });
     }
     reset();
   };
@@ -58,15 +68,13 @@ export default function Upload() {
         <button className="button" onClick={cancelImage}>
           사진등록취소
         </button>
-        <textarea
-          className="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
-          id="text"
-          inputMode="text"
+        <Textarea
+          errorMassage={form.text && !errors.text.isValid && errors.text.message}
           name="text"
           onChange={onChange}
           placeholder="텍스트를 입력해주세요."
-          required
-          value={input}
+          textareaStyle="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
+          value={form.text}
         />
         <button className="w-3/5 text-center button">
           <span className="font-semibold "> {isLoading ? '등록중...' : '추가하기'}</span>

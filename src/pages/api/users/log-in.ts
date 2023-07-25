@@ -28,7 +28,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Us
   }
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) {
-    console.log('test');
     return res
       .status(400)
       .json({ data: null, isSuccess: false, message: '이메일 또는 비밀번호를 확인해주세요.', statusCode: 400 });

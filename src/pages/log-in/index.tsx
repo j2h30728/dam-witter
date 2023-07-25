@@ -16,15 +16,14 @@ export default function LogIn() {
 
   const [mutate, { data, error, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
-  const { errors, form, isErrors, onChange } = useForm<LogIn>(
+  const { errorMessage, errors, form, isError, onChange } = useForm<LogIn>(
     { email: '', password: '' },
     { email: emailValidator, password: passwordValidator }
   );
   const handleLogIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!isErrors) {
-      await mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
-    }
+    if (isError) return alert(errorMessage.at(0));
+    await mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
   };
   useEffect(() => {
     if (data?.isSuccess) {

@@ -1,11 +1,12 @@
-import type { ResponseType } from '@/types';
 import type { UserInput } from '@/types';
+import type { ResponseType } from '@/types';
 
 import { Input, Symbol } from '@/components';
 import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import { emailValidator, passwordValidator, useMutation } from '@/libs/client';
+import { usernameValidator } from '@/libs/client/validators';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -17,25 +18,30 @@ interface CreateAccount extends UserInput {
 export default function CreateAccount() {
   const [mutate, { data, error, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
-  const { errors, form, isErrors, onChange } = useForm<CreateAccount>(
+  const { errorMessage, errors, form, isError, onChange } = useForm<CreateAccount>(
     {
       confirmPassword: '',
       email: '',
       password: '',
       username: '',
     },
-    { confirmPassword: passwordValidator, email: emailValidator, password: passwordValidator }
+    {
+      confirmPassword: passwordValidator,
+      email: emailValidator,
+      password: passwordValidator,
+      username: usernameValidator,
+    }
   );
 
   const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!isErrors) {
-      await mutate('/api/users/create-account', METHOD.POST, {
-        email: form.email,
-        name: form.username,
-        password: form.password,
-      });
-    }
+    if (isError) return alert(errorMessage.at(0));
+
+    await mutate('/api/users/create-account', METHOD.POST, {
+      email: form.email,
+      name: form.username,
+      password: form.password,
+    });
   };
   useEffect(() => {
     if (data?.isSuccess) {
@@ -52,6 +58,7 @@ export default function CreateAccount() {
         <Symbol className="m-16" height={130} width={130} />
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleCreateAccount}>
           <Input
+            errorMassage={form.username && !errors.username.isValid && errors.username.message}
             name="username"
             onChange={onChange}
             placeholder="Your Name"

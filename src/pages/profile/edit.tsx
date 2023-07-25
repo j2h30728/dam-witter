@@ -1,8 +1,11 @@
+import { Input } from '@/components';
 import Layout from '@/components/common/Layout';
+import Textarea from '@/components/common/Textarea';
 import { METHOD, ROUTE_PATH } from '@/constants';
-import { useInput, useSelectImage } from '@/hooks';
+import { useForm, useSelectImage } from '@/hooks';
 import { makeImagePath, useMutation } from '@/libs/client';
 import getImageId from '@/libs/client/getImageId';
+import { bioValidator, usernameValidator } from '@/libs/client/validators';
 import { ProfileResponse, ResponseType } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -10,26 +13,43 @@ import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import useSWR from 'swr';
 
+type EditProfileInput = { bio: string; username: string };
 export default function ProfileEdit() {
   const router = useRouter();
   const { data: profile } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
   const [isLoading, setIsLoading] = useState(false);
-  const [editName, handleNameChange] = useInput(profile?.data?.name || '');
-  const [editBio, handleBioChange] = useInput(profile?.data?.profile?.bio || '');
+  const { errorMessage, errors, form, isError, onChange } = useForm<EditProfileInput>(
+    {
+      bio: profile?.data?.profile?.bio || '',
+      username: profile?.data?.name || '',
+    },
+    {
+      bio: bioValidator,
+      username: usernameValidator,
+    }
+  );
   const [editProfile, { data: editProfileData, error: editProfileError }] =
     useMutation<ResponseType<ProfileResponse>>();
   const { imageFile, previewImage, selectedImage } = useSelectImage();
 
   const handleEditProfile = async () => {
+    if (isError) return alert(errorMessage.at(0));
     setIsLoading(true);
     if (imageFile) {
-      const id = await getImageId(imageFile, editName);
-      await editProfile('/api/users/profile', METHOD.PUT, { avatarId: id, bio: editBio, name: editName });
+      const id = await getImageId(imageFile, form.username);
+      await editProfile('/api/users/profile', METHOD.PUT, {
+        avatarId: id,
+        bio: form.bio,
+        name: form.username,
+      });
     } else {
-      await editProfile('/api/users/profile', METHOD.PUT, { avatarId: '', name: editName, text: editBio });
+      await editProfile('/api/users/profile', METHOD.PUT, {
+        avatarId: profile?.data?.profile?.avatar,
+        bio: form.bio,
+        name: form.username,
+      });
     }
   };
-
   useEffect(() => {
     if (editProfileData?.isSuccess) {
       setIsLoading(false);
@@ -42,7 +62,7 @@ export default function ProfileEdit() {
 
   return (
     <Layout hasBackButton isLoggedIn title="MY PAGE">
-      <main className="flex flex-col gap-5 mt-10">
+      <main className="flex flex-col mt-10">
         <div className="flex flex-col items-center gap-2 px-2">
           {previewImage ? (
             <div className="relative w-40 h-40">
@@ -69,16 +89,25 @@ export default function ProfileEdit() {
             프로필 사진 수정하기
             <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
           </label>
-          <input className="text-3xl font-bold" onChange={handleNameChange} placeholder={profile?.data?.name} />
+          <Input
+            errorMassage={form.username && !errors.username.isValid && errors.username.message}
+            isEditMode
+            name="username"
+            onChange={onChange}
+            placeholder="이름"
+            title=""
+            type="text"
+            value={form.username}
+          />
           <small className="text-stone-500">{profile?.data?.email}</small>
         </div>
-        <textarea
-          className="h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
-          inputMode="text"
+        <Textarea
+          errorMassage={form.bio && !errors.bio.isValid && errors.bio.message}
           name="bio"
-          onChange={handleBioChange}
-          title="자기소개"
-          value={editBio}
+          onChange={onChange}
+          placeholder="자기소개"
+          textareaStyle="h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
+          value={form.bio}
         />
         <button className="w-3/5 text-center button" onClick={handleEditProfile}>
           <span className="font-semibold "> {isLoading ? '수정중...' : '수정완료'}</span>

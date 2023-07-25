@@ -33,3 +33,41 @@ export function passwordValidator(
 
   return { isValid: true, message: '' };
 }
+
+export function usernameValidator(username: React.InputHTMLAttributes<HTMLInputElement>['value']) {
+  if (typeof username !== 'string') {
+    return { isValid: false, message: '유효한 이름 입력 부탁드립니다.' };
+  }
+
+  if (username.trim().length < 1) {
+    return { isValid: false, message: '이름은 필수 입력 값입니다.' };
+  }
+
+  const usernameReg = /^.{1,12}$/;
+  if (!usernameReg.test(username)) {
+    return { isValid: false, message: '이름은 최대 12자 이하 입니다' };
+  }
+  return { isValid: true, message: '' };
+}
+
+export function bioValidator(bio: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['value']) {
+  if (typeof bio !== 'string') {
+    return { isValid: false, message: '유효한 자기소개 입력 부탁드립니다.' };
+  }
+
+  if (bio.length <= 0 && bio.length > 100) {
+    return { isValid: false, message: '자기소개는 최대 100자 이하 입니다.' };
+  }
+  return { isValid: true, message: '' };
+}
+
+export function tweetValidator(tweet: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['value']) {
+  if (typeof tweet !== 'string') {
+    return { isValid: false, message: '유효한 트윗 입력 부탁드립니다.' };
+  }
+
+  if (tweet.trim().length < 1) {
+    return { isValid: false, message: '트윗은 공백으로만 작성할 수 없습니다.' };
+  }
+  return { isValid: true, message: '' };
+}

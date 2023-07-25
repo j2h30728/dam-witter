@@ -33,7 +33,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Pr
 
   if (req.method === METHOD.PUT) {
     const { avatarId, bio, name } = req.body;
-
     if (profile.profile) {
       await db.profile.update({
         data: { avatar: avatarId, bio: bio },
