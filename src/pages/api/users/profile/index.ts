@@ -54,7 +54,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Pr
 
     const updatedProfile = await db.user.update({
       data: {
-        name: name,
+        name: name ? name : '기본 이름',
       },
       include: {
         likes: true,
