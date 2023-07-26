@@ -60,10 +60,11 @@ export default function Upload() {
             </div>
           )}
         </label>
-        <button className="button" onClick={cancelImage} type="button">
+        <button className="button" disabled={isLoading} onClick={cancelImage} type="button">
           사진등록취소
         </button>
         <Textarea
+          disabled={isLoading}
           errorMassage={form.text && !errors.text.isValid && errors.text.message}
           name="text"
           onChange={onChange}
@@ -71,7 +72,7 @@ export default function Upload() {
           textareaStyle="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           value={form.text}
         />
-        <button className="w-3/5 text-center button">
+        <button className="w-3/5 text-center button" disabled={isLoading}>
           <span className="font-semibold "> {isLoading ? '등록중...' : '추가하기'}</span>
         </button>
       </form>

@@ -40,6 +40,7 @@ export default function LogIn() {
         <Symbol className="m-16" height={130} width={130} />
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleLogIn}>
           <Input
+            disabled={isLoading}
             errorMassage={!errors.email.isValid && errors.email.message}
             name="email"
             onChange={onChange}
@@ -49,6 +50,7 @@ export default function LogIn() {
             value={form.email}
           />
           <Input
+            disabled={isLoading}
             errorMassage={!errors.password.isValid && errors.password.message}
             name="password"
             onChange={onChange}
@@ -57,7 +59,7 @@ export default function LogIn() {
             type="password"
             value={form.password}
           />
-          <button className="w-full mt-8 button ">
+          <button className="w-full mt-8 button " disabled={isLoading}>
             <span className="text-lg font-semibold ">{isLoading && !data ? 'Loading...' : 'Log-In'}</span>
           </button>
         </form>

@@ -1,6 +1,7 @@
 import { parameterToString } from '@/libs/client/utils';
 
 export default function Textarea({
+  disabled,
   errorMassage,
   name,
   onChange,
@@ -9,6 +10,7 @@ export default function Textarea({
   textareaStyle,
   value,
 }: {
+  disabled: boolean;
   errorMassage?: false | string;
   name: string;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -24,6 +26,7 @@ export default function Textarea({
           textareaStyle,
           errorMassage ? 'border-2 border-red-500' : 'border border-stone-500'
         )}
+        disabled={disabled}
         inputMode="text"
         name={name}
         onChange={onChange}

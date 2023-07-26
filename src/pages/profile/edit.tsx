@@ -86,9 +86,18 @@ export default function ProfileEdit() {
           )}
           <label className="absolute top-56 button" htmlFor="image">
             프로필 사진 수정하기
-            <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
+            <input
+              accept="image/*"
+              className="hidden"
+              disabled={isLoading}
+              id="image"
+              name="image"
+              onChange={selectedImage}
+              type="file"
+            />
           </label>
           <Input
+            disabled={isLoading}
             errorMassage={form.username && !errors.username.isValid && errors.username.message}
             isEditMode
             name="username"
@@ -101,6 +110,7 @@ export default function ProfileEdit() {
           <small className="text-stone-500">{profile?.data?.email}</small>
         </div>
         <Textarea
+          disabled={isLoading}
           errorMassage={form.bio && !errors.bio.isValid && errors.bio.message}
           name="bio"
           onChange={onChange}
@@ -108,7 +118,7 @@ export default function ProfileEdit() {
           textareaStyle="h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           value={form.bio}
         />
-        <button className="w-3/5 text-center button" onClick={handleEditProfile}>
+        <button className="w-3/5 text-center button" disabled={isLoading} onClick={handleEditProfile}>
           <span className="font-semibold "> {isLoading ? '수정중...' : '수정완료'}</span>
         </button>
       </main>

@@ -1,6 +1,7 @@
 import { parameterToString } from '@/libs/client/utils';
 
 export default function Input({
+  disabled,
   errorMassage,
   isEditMode = false,
   name,
@@ -10,6 +11,7 @@ export default function Input({
   type,
   value,
 }: {
+  disabled: boolean;
   errorMassage?: false | string;
   isEditMode?: boolean;
   name: string;
@@ -31,6 +33,7 @@ export default function Input({
               'w-full px-3 h-9 rounded-md ',
               errorMassage ? 'border-2 border-red-500' : 'border border-stone-500'
             )}
+            disabled={disabled}
             id={name}
             inputMode="text"
             name={name}
@@ -44,6 +47,7 @@ export default function Input({
       ) : (
         <input
           className="mt-2 text-3xl font-bold"
+          disabled={disabled}
           name={name}
           onChange={onChange}
           placeholder={placeholder}

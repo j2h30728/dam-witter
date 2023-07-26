@@ -58,6 +58,7 @@ export default function CreateAccount() {
         <Symbol className="m-16" height={130} width={130} />
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleCreateAccount}>
           <Input
+            disabled={isLoading}
             errorMassage={form.username && !errors.username.isValid && errors.username.message}
             name="username"
             onChange={onChange}
@@ -67,6 +68,7 @@ export default function CreateAccount() {
             value={form.username}
           />
           <Input
+            disabled={isLoading}
             errorMassage={form.email && !errors.email.isValid && errors.email.message}
             name="email"
             onChange={onChange}
@@ -76,6 +78,7 @@ export default function CreateAccount() {
             value={form.email}
           />
           <Input
+            disabled={isLoading}
             errorMassage={form.password && !errors.password.isValid && errors.password.message}
             name="password"
             onChange={onChange}
@@ -85,6 +88,7 @@ export default function CreateAccount() {
             value={form.password}
           />
           <Input
+            disabled={isLoading}
             errorMassage={form.confirmPassword && !errors.confirmPassword.isValid && errors.confirmPassword.message}
             name="confirmPassword"
             onChange={onChange}
@@ -93,7 +97,7 @@ export default function CreateAccount() {
             type="password"
             value={form.confirmPassword}
           />
-          <button className="w-full mt-8 button">
+          <button className="w-full mt-8 button" disabled={isLoading}>
             <span className="text-lg font-semibold ">{isLoading && !data ? 'Loading...' : 'Create Account'}</span>
           </button>
         </form>
