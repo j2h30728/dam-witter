@@ -6,7 +6,7 @@ export default function ProfileImage({ avatarId }: { avatarId: string | undefine
   return (
     <>
       {avatarId ? (
-        <div className="relative w-12 h-12 border rounded-full border-stone-500">
+        <div className="relative w-12 h-12 border rounded-full border-stone-100">
           <Image
             alt="preview Image"
             className="object-cover overflow-hidden rounded-full"

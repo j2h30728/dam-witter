@@ -1,6 +1,7 @@
 import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useMutation } from '@/libs/client';
+import maskEmail from '@/libs/client/maskEmail';
 import { ResponseType, TweetResponse } from '@/types';
 import { Like } from '@prisma/client';
 import Link from 'next/link';
@@ -46,7 +47,7 @@ export default function Home() {
               <div className="flex items-center gap-3 px-3">
                 <ProfileImage avatarId={tweet.user.profile?.avatar} />
                 <h3 className="text-xl font-bold">{tweet.user.name}</h3>
-                <small>{tweet.user.email}</small>
+                <small>{maskEmail(tweet.user.email)}</small>
               </div>
               <Link className="px-5 mx-3" href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>
                 {tweet.image && <TweetImage imageId={tweet.image} />}

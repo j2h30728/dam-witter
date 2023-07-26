@@ -3,6 +3,7 @@ import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import useDelete from '@/hooks/useDelete';
 import { useMutation } from '@/libs/client';
+import maskEmail from '@/libs/client/maskEmail';
 import { tweetValidator } from '@/libs/client/validators';
 import { db, withSsrSession } from '@/libs/server';
 import { CommentResponse, ResponseType, TweetResponse, UploadTweetInput } from '@/types';
@@ -64,7 +65,6 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
     { text: '' },
     { text: tweetValidator }
   );
-  console.log(responseTweet?.data?._count);
   const handleUploadComment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!form.text.trim()) return alert('코멘트를 입력해주세요.');
@@ -128,7 +128,7 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
           <div className="relative flex items-center w-full gap-3 px-3">
             <ProfileImage avatarId={responseTweet?.data?.user.profile?.avatar} />
             <h3 className="text-xl font-bold">{responseTweet?.data?.user.name}</h3>
-            <small>{responseTweet?.data?.user.email}</small>
+            <small>{maskEmail(responseTweet?.data?.user.email || '')}</small>
             {loggedInUser.id === responseTweet?.data?.userId && (
               <AiOutlineDelete
                 onClick={() =>
@@ -168,12 +168,9 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
           </form>
           <div className="flex flex-col gap-3">
             {responseComments?.data?.map(comment => (
-              <div className="flex items-center gap-2" key={comment.id}>
+              <div className="flex items-center gap-2 " key={comment.id}>
                 <ProfileImage avatarId={comment.user.profile?.avatar} />
-                <div className="flex flex-col w-1/5">
-                  <span className="font-semibold">{comment.user.name}</span>
-                  <small className="text-sm">{comment.user.email}</small>
-                </div>
+                <span className="w-1/6 font-semibold">{comment.user.name}</span>
                 <span className="w-3/5">{comment.text}</span>
                 {loggedInUser.id === comment.user.id && (
                   <AiOutlineDelete

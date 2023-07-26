@@ -6,8 +6,6 @@ import { withApiSession, withHandler } from '@/libs/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse | TweetResponse[]>>) {
-  console.log(req.body);
-
   const {
     query: { id },
     session: { user },
