@@ -35,7 +35,7 @@ export default function Input({
             )}
             disabled={disabled}
             id={name}
-            inputMode="text"
+            inputMode={type === 'email' ? 'email' : 'text'}
             name={name}
             onChange={onChange}
             placeholder={placeholder}
