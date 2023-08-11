@@ -4,7 +4,7 @@ import Textarea from '@/components/common/Textarea';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
 import { makeImagePath, useMutation } from '@/libs/client';
-import getImageId from '@/libs/client/getImageId';
+import { parameterToString } from '@/libs/client/utils';
 import { bioValidator, usernameValidator } from '@/libs/client/validators';
 import { ProfileResponse, ResponseType } from '@/types';
 import Image from 'next/image';
@@ -30,14 +30,13 @@ export default function ProfileEdit() {
   );
   const [editProfile, { data: editProfileData, error: editProfileError }] =
     useMutation<ResponseType<ProfileResponse>>();
-  const { imageFile, previewImage, selectedImage } = useSelectImage();
+  const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
   const handleEditProfile = async () => {
     if (isError) return alert(errorMessage.at(0));
     setIsLoading(true);
-    if (imageFile) {
-      const id = await getImageId(imageFile, form.username);
+    if (imageId) {
       await editProfile('/api/users/profile', METHOD.PUT, {
-        avatarId: id,
+        avatarId: imageId,
         bio: form.bio,
         name: form.username,
       });
@@ -118,8 +117,14 @@ export default function ProfileEdit() {
           textareaStyle="h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           value={form.bio}
         />
-        <button className="w-3/5 text-center button" disabled={isLoading} onClick={handleEditProfile}>
-          <span className="font-semibold "> {isLoading ? '수정중...' : '수정완료'}</span>
+        <button
+          className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
+          disabled={isLoading || isImageLoading}
+          onClick={handleEditProfile}
+        >
+          <span className={parameterToString('font-semibold ', isLoading || isImageLoading ? 'text-stone-100' : '')}>
+            {isLoading ? '수정중...' : isImageLoading ? '프로플이미지 등록중..' : '수정완료'}
+          </span>
         </button>
       </main>
     </Layout>
