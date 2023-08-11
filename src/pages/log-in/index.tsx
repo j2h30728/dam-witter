@@ -41,7 +41,7 @@ export default function LogIn() {
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleLogIn}>
           <Input
             disabled={isLoading}
-            errorMassage={!errors.email.isValid && errors.email.message}
+            errorMassage={form.email && !errors.email.isValid && errors.email.message}
             name="email"
             onChange={onChange}
             placeholder="Your email"
@@ -51,7 +51,7 @@ export default function LogIn() {
           />
           <Input
             disabled={isLoading}
-            errorMassage={!errors.password.isValid && errors.password.message}
+            errorMassage={form.password && !errors.password.isValid && errors.password.message}
             name="password"
             onChange={onChange}
             placeholder="Your password"

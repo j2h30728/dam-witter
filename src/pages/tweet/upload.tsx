@@ -16,8 +16,8 @@ export default function Upload() {
   const router = useRouter();
   const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
   const { errorMessage, errors, form, isError, onChange, reset } = useForm<UploadTweetInput>(
-    { text: '' },
-    { text: tweetValidator }
+    { tweet: '' },
+    { tweet: tweetValidator }
   );
   const { cancelImage, imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
@@ -36,9 +36,9 @@ export default function Upload() {
     if (isError) return alert(errorMessage.at(0));
     setIsLoading(true);
     if (imageId) {
-      await createTweet('/api/tweets', METHOD.POST, { imageId, text: form.text });
+      await createTweet('/api/tweets', METHOD.POST, { imageId, text: form.tweet });
     } else {
-      await createTweet('/api/tweets', METHOD.POST, { text: form.text });
+      await createTweet('/api/tweets', METHOD.POST, { text: form.tweet });
     }
     reset();
   };
@@ -64,12 +64,12 @@ export default function Upload() {
         </button>
         <Textarea
           disabled={isLoading}
-          errorMassage={form.text && !errors.text.isValid && errors.text.message}
-          name="text"
+          errorMassage={form.tweet && !errors.tweet.isValid && errors.tweet.message}
+          name="tweet"
           onChange={onChange}
           placeholder="텍스트를 입력해주세요."
           textareaStyle="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
-          value={form.text}
+          value={form.tweet}
         />
         <button
           className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
