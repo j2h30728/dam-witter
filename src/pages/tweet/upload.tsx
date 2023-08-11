@@ -12,10 +12,11 @@ import { useEffect, useState } from 'react';
 import { AiOutlinePicture } from 'react-icons/ai';
 
 export default function Upload() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isTweetSubmissionInProgress, setIsTweetSubmissionInProgress] = useState(false);
   const router = useRouter();
-  const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
-  const { errorMessage, errors, form, isError, onChange, reset } = useForm<UploadTweetInput>(
+  const [createTweet, { data: createdTweet, error: createdTweetError, isLoading: isCreateTweetApiLoading }] =
+    useMutation<ResponseType<TweetResponse>>();
+  const { errorMessage, errors, form, isError, onChange } = useForm<UploadTweetInput>(
     { tweet: '' },
     { tweet: tweetValidator }
   );
@@ -23,7 +24,6 @@ export default function Upload() {
 
   useEffect(() => {
     if (createdTweet?.isSuccess) {
-      setIsLoading(false);
       router.push(ROUTE_PATH.HOME);
     } else if (createdTweetError) {
       alert(createdTweet?.message);
@@ -34,14 +34,22 @@ export default function Upload() {
   const handleCreateTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isError) return alert(errorMessage.at(0));
-    setIsLoading(true);
-    if (imageId) {
-      await createTweet('/api/tweets', METHOD.POST, { imageId, text: form.tweet });
-    } else {
+    setIsTweetSubmissionInProgress(true);
+
+    if (!previewImage) {
       await createTweet('/api/tweets', METHOD.POST, { text: form.tweet });
+      setIsTweetSubmissionInProgress(false);
     }
-    reset();
   };
+
+  useEffect(() => {
+    if (!isImageLoading && imageId && isTweetSubmissionInProgress) {
+      createTweet('/api/tweets', METHOD.POST, { imageId, text: form.tweet });
+      setIsTweetSubmissionInProgress(false);
+    }
+  }, [imageId, form.tweet, createTweet, isImageLoading, isTweetSubmissionInProgress]);
+
+  const isCreatingTweet = isTweetSubmissionInProgress || isCreateTweetApiLoading;
 
   return (
     <Layout hasBackButton isLoggedIn title="TWEET UPLOAD">
@@ -59,11 +67,11 @@ export default function Upload() {
             </div>
           )}
         </label>
-        <button className="button" disabled={isLoading} onClick={cancelImage} type="button">
+        <button className="button" disabled={isCreatingTweet} onClick={cancelImage} type="button">
           사진등록취소
         </button>
         <Textarea
-          disabled={isLoading}
+          disabled={isCreatingTweet}
           errorMassage={form.tweet && !errors.tweet.isValid && errors.tweet.message}
           name="tweet"
           onChange={onChange}
@@ -73,10 +81,10 @@ export default function Upload() {
         />
         <button
           className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
-          disabled={isLoading || isImageLoading}
+          disabled={isCreatingTweet}
         >
-          <span className={parameterToString('font-semibold ', isLoading || isImageLoading ? 'text-stone-100' : '')}>
-            {isLoading ? '트윗 등록중...' : isImageLoading ? '이미지 등록중..' : '추가하기'}
+          <span className={parameterToString('font-semibold ', isCreatingTweet ? 'text-stone-100' : '')}>
+            {isCreatingTweet ? '트윗 등록중...' : '추가하기'}
           </span>
         </button>
       </form>

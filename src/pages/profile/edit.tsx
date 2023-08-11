@@ -18,6 +18,8 @@ export default function ProfileEdit() {
   const router = useRouter();
   const { data: profile } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditedProfileSubmissionInProgress, setIsEditedProfileSubmissionInProgress] = useState(false);
+
   const { errorMessage, errors, form, isError, onChange } = useForm<EditProfileInput>(
     {
       bio: profile?.data?.profile?.bio || '',
@@ -28,35 +30,47 @@ export default function ProfileEdit() {
       username: usernameValidator,
     }
   );
-  const [editProfile, { data: editProfileData, error: editProfileError }] =
+  const [editProfile, { data: editProfileData, error: editProfileError, isLoading: isEditProfileApiLoading }] =
     useMutation<ResponseType<ProfileResponse>>();
   const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
-  const handleEditProfile = async () => {
-    if (isError) return alert(errorMessage.at(0));
-    setIsLoading(true);
-    if (imageId) {
-      await editProfile('/api/users/profile', METHOD.PUT, {
-        avatarId: imageId,
-        bio: form.bio,
-        name: form.username,
-      });
-    } else {
-      await editProfile('/api/users/profile', METHOD.PUT, {
-        avatarId: profile?.data?.profile?.avatar,
-        bio: form.bio,
-        name: form.username,
-      });
-    }
-  };
+
   useEffect(() => {
     if (editProfileData?.isSuccess) {
-      setIsLoading(false);
+      setIsEditedProfileSubmissionInProgress(false);
       router.push(ROUTE_PATH.PROFILE);
     } else if (editProfileError) {
       alert(editProfileData?.message);
       console.error(editProfileData);
     }
   }, [editProfileData, router, editProfileError]);
+
+  const handleEditProfile = async () => {
+    if (isError) return alert(errorMessage.at(0));
+    setIsEditedProfileSubmissionInProgress(true);
+    if (!previewImage) {
+      await editProfile('/api/users/profile', METHOD.PUT, {
+        avatarId: profile?.data?.profile?.avatar,
+        bio: form.bio,
+        name: form.username,
+      });
+      setIsEditedProfileSubmissionInProgress(false);
+    }
+  };
+  if (imageId) {
+  }
+
+  useEffect(() => {
+    if (!isImageLoading && imageId && isEditedProfileSubmissionInProgress) {
+      editProfile('/api/users/profile', METHOD.PUT, {
+        avatarId: imageId,
+        bio: form.bio,
+        name: form.username,
+      });
+      setIsEditedProfileSubmissionInProgress(false);
+    }
+  }, [imageId, form.bio, form.username, isImageLoading, isEditedProfileSubmissionInProgress, editProfile]);
+
+  const isCreatingTweet = isEditProfileApiLoading || isEditedProfileSubmissionInProgress;
 
   return (
     <Layout hasBackButton isLoggedIn title="MY PAGE">
@@ -88,7 +102,7 @@ export default function ProfileEdit() {
             <input
               accept="image/*"
               className="hidden"
-              disabled={isLoading}
+              disabled={isCreatingTweet}
               id="image"
               name="image"
               onChange={selectedImage}
@@ -96,7 +110,7 @@ export default function ProfileEdit() {
             />
           </label>
           <Input
-            disabled={isLoading}
+            disabled={isCreatingTweet}
             errorMassage={form.username && !errors.username.isValid && errors.username.message}
             isEditMode
             name="username"
@@ -109,7 +123,7 @@ export default function ProfileEdit() {
           <small className="text-stone-500">{profile?.data?.email}</small>
         </div>
         <Textarea
-          disabled={isLoading}
+          disabled={isCreatingTweet}
           errorMassage={form.bio && !errors.bio.isValid && errors.bio.message}
           name="bio"
           onChange={onChange}
@@ -119,11 +133,11 @@ export default function ProfileEdit() {
         />
         <button
           className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
-          disabled={isLoading || isImageLoading}
+          disabled={isCreatingTweet}
           onClick={handleEditProfile}
         >
-          <span className={parameterToString('font-semibold ', isLoading || isImageLoading ? 'text-stone-100' : '')}>
-            {isLoading ? '수정중...' : isImageLoading ? '프로플이미지 등록중..' : '수정완료'}
+          <span className={parameterToString('font-semibold ', isCreatingTweet ? 'text-stone-100' : '')}>
+            {isCreatingTweet ? '수정중...' : '수정완료'}
           </span>
         </button>
       </main>
