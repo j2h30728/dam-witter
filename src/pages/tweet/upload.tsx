@@ -3,7 +3,7 @@ import Textarea from '@/components/common/Textarea';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
 import { useMutation } from '@/libs/client';
-import getImageId from '@/libs/client/getImageId';
+import { parameterToString } from '@/libs/client/utils';
 import { tweetValidator } from '@/libs/client/validators';
 import { ResponseType, TweetResponse, UploadTweetInput } from '@/types';
 import Image from 'next/image';
@@ -19,7 +19,7 @@ export default function Upload() {
     { text: '' },
     { text: tweetValidator }
   );
-  const { cancelImage, imageFile, previewImage, selectedImage } = useSelectImage();
+  const { cancelImage, imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
   useEffect(() => {
     if (createdTweet?.isSuccess) {
@@ -35,9 +35,8 @@ export default function Upload() {
     event.preventDefault();
     if (isError) return alert(errorMessage.at(0));
     setIsLoading(true);
-    if (imageFile) {
-      const id = await getImageId(imageFile, form.text);
-      await createTweet('/api/tweets', METHOD.POST, { imageId: id, text: form.text });
+    if (imageId) {
+      await createTweet('/api/tweets', METHOD.POST, { imageId, text: form.text });
     } else {
       await createTweet('/api/tweets', METHOD.POST, { text: form.text });
     }
@@ -72,8 +71,13 @@ export default function Upload() {
           textareaStyle="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           value={form.text}
         />
-        <button className="w-3/5 text-center button" disabled={isLoading}>
-          <span className="font-semibold "> {isLoading ? '등록중...' : '추가하기'}</span>
+        <button
+          className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
+          disabled={isLoading || isImageLoading}
+        >
+          <span className={parameterToString('font-semibold ', isLoading || isImageLoading ? 'text-stone-100' : '')}>
+            {isLoading ? '트윗 등록중...' : isImageLoading ? '이미지 등록중..' : '추가하기'}
+          </span>
         </button>
       </form>
     </Layout>
