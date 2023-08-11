@@ -4,13 +4,12 @@ import { useForm } from '@/hooks';
 import useDelete from '@/hooks/useDelete';
 import { useMutation } from '@/libs/client';
 import maskEmail from '@/libs/client/maskEmail';
-import { tweetValidator } from '@/libs/client/validators';
+import { basicTextValidator } from '@/libs/client/validators';
 import { db, withSsrSession } from '@/libs/server';
-import { CommentResponse, ResponseType, TweetResponse, UploadTweetInput } from '@/types';
+import { CommentResponse, ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
 import { Profile } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 import useSWR from 'swr';
 
@@ -61,9 +60,9 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
       );
     }
   };
-  const { errorMessage, form, isError, onChange, reset } = useForm<UploadTweetInput>(
+  const { errorMessage, form, isError, onChange, reset } = useForm<UploadBasicInputText>(
     { text: '' },
-    { text: tweetValidator }
+    { text: basicTextValidator }
   );
   const handleUploadComment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
