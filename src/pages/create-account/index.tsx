@@ -73,7 +73,7 @@ export default function CreateAccount() {
             name="email"
             onChange={onChange}
             placeholder="Your email"
-            title="email"
+            title="Email"
             type="email"
             value={form.email}
           />
@@ -93,7 +93,7 @@ export default function CreateAccount() {
             name="confirmPassword"
             onChange={onChange}
             placeholder="Your confirmPassword"
-            title="confirmPassword"
+            title="ConfirmPassword"
             type="password"
             value={form.confirmPassword}
           />

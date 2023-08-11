@@ -61,7 +61,7 @@ export default function Layout({
               onClick={() => router.push(ROUTE_PATH.TWEETS + ROUTE_PATH.UPLOAD)}
             >
               <AiOutlinePlusCircle className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-              <span>트윗추기</span>
+              <span>트윗추가</span>
             </div>
             <div
               className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"

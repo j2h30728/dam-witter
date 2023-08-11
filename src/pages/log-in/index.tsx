@@ -45,7 +45,7 @@ export default function LogIn() {
             name="email"
             onChange={onChange}
             placeholder="Your email"
-            title="email"
+            title="Email"
             type="email"
             value={form.email}
           />
