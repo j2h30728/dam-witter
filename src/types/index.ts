@@ -50,4 +50,4 @@ export interface CommentResponse extends Comment {
   };
 }
 
-export type UploadTweetInput = { text: string };
+export type UploadBasicInputText = { text: string };

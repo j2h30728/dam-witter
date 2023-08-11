@@ -61,13 +61,13 @@ export function bioValidator(bio: React.InputHTMLAttributes<HTMLInputElement | H
   return { isValid: true, message: '' };
 }
 
-export function tweetValidator(tweet: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['value']) {
+export function basicTextValidator(tweet: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['value']) {
   if (typeof tweet !== 'string') {
-    return { isValid: false, message: '유효한 트윗 입력 부탁드립니다.' };
+    return { isValid: false, message: '유효한 입력 부탁드립니다.' };
   }
 
   if (tweet.trim().length < 1) {
-    return { isValid: false, message: '트윗은 공백으로만 작성할 수 없습니다.' };
+    return { isValid: false, message: '공백으로만 작성할 수 없습니다.' };
   }
   return { isValid: true, message: '' };
 }

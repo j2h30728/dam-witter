@@ -3,27 +3,27 @@ import Textarea from '@/components/common/Textarea';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
 import { useMutation } from '@/libs/client';
-import getImageId from '@/libs/client/getImageId';
-import { tweetValidator } from '@/libs/client/validators';
-import { ResponseType, TweetResponse, UploadTweetInput } from '@/types';
+import { parameterToString } from '@/libs/client/utils';
+import { basicTextValidator } from '@/libs/client/validators';
+import { ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePicture } from 'react-icons/ai';
 
 export default function Upload() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isTweetSubmissionInProgress, setIsTweetSubmissionInProgress] = useState(false);
   const router = useRouter();
-  const [createTweet, { data: createdTweet, error: createdTweetError }] = useMutation<ResponseType<TweetResponse>>();
-  const { errorMessage, errors, form, isError, onChange, reset } = useForm<UploadTweetInput>(
+  const [createTweet, { data: createdTweet, error: createdTweetError, isLoading: isCreateTweetApiLoading }] =
+    useMutation<ResponseType<TweetResponse>>();
+  const { errorMessage, errors, form, isError, onChange } = useForm<UploadBasicInputText>(
     { text: '' },
-    { text: tweetValidator }
+    { text: basicTextValidator }
   );
-  const { cancelImage, imageFile, previewImage, selectedImage } = useSelectImage();
+  const { cancelImage, imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
   useEffect(() => {
     if (createdTweet?.isSuccess) {
-      setIsLoading(false);
       router.push(ROUTE_PATH.HOME);
     } else if (createdTweetError) {
       alert(createdTweet?.message);
@@ -34,15 +34,22 @@ export default function Upload() {
   const handleCreateTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isError) return alert(errorMessage.at(0));
-    setIsLoading(true);
-    if (imageFile) {
-      const id = await getImageId(imageFile, form.text);
-      await createTweet('/api/tweets', METHOD.POST, { imageId: id, text: form.text });
-    } else {
+    setIsTweetSubmissionInProgress(true);
+
+    if (!previewImage) {
       await createTweet('/api/tweets', METHOD.POST, { text: form.text });
+      setIsTweetSubmissionInProgress(false);
     }
-    reset();
   };
+
+  useEffect(() => {
+    if (!isImageLoading && imageId && isTweetSubmissionInProgress) {
+      createTweet('/api/tweets', METHOD.POST, { imageId, text: form.text });
+      setIsTweetSubmissionInProgress(false);
+    }
+  }, [imageId, form.text, createTweet, isImageLoading, isTweetSubmissionInProgress]);
+
+  const isCreatingTweet = isTweetSubmissionInProgress || isCreateTweetApiLoading;
 
   return (
     <Layout hasBackButton isLoggedIn title="TWEET UPLOAD">
@@ -60,20 +67,25 @@ export default function Upload() {
             </div>
           )}
         </label>
-        <button className="button" disabled={isLoading} onClick={cancelImage} type="button">
+        <button className="button" disabled={isCreatingTweet} onClick={cancelImage} type="button">
           사진등록취소
         </button>
         <Textarea
-          disabled={isLoading}
-          errorMassage={form.text && !errors.text.isValid && errors.text.message}
-          name="text"
+          disabled={isCreatingTweet}
+          errorMassage={form.text && !errors.tweet.isValid && errors.tweet.message}
+          name="tweet"
           onChange={onChange}
           placeholder="텍스트를 입력해주세요."
           textareaStyle="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           value={form.text}
         />
-        <button className="w-3/5 text-center button" disabled={isLoading}>
-          <span className="font-semibold "> {isLoading ? '등록중...' : '추가하기'}</span>
+        <button
+          className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
+          disabled={isCreatingTweet}
+        >
+          <span className={parameterToString('font-semibold ', isCreatingTweet ? 'text-stone-100' : '')}>
+            {isCreatingTweet ? '트윗 등록중...' : '추가하기'}
+          </span>
         </button>
       </form>
     </Layout>

@@ -5,18 +5,27 @@ type Validator = (
   subValue?: Record<string, any>
 ) => Errors;
 type Errors = { isValid: boolean; message: string };
+type NewError = Record<string, Errors>;
 
 function useForm<T extends Record<string, any>>(initialForm: T, validators: Record<string, Validator>) {
   const [form, setForm] = useState<Record<string, any>>(initialForm);
   const [errors, setErrors] = useState<Record<string, Errors>>(
-    Object.keys(initialForm).reduce((acc, key) => ({ ...acc, [key]: { isValid: true, message: '' } }), {})
+    Object.keys(initialForm).reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: form[key]
+          ? { isValid: true, message: '' }
+          : { isValid: false, message: `${key}의 입력값을 채워주세요.` },
+      }),
+      {}
+    )
   );
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setForm(prevForm => {
       const updatedForm = { ...prevForm, [name]: value };
-      const newErrors: Record<string, Errors> = {};
+      const newErrors: NewError = {};
       Object.entries(updatedForm).forEach(([fieldName, fieldValue]) => {
         if (validators[fieldName]) {
           newErrors[fieldName] = validators[fieldName](fieldValue, updatedForm);
@@ -32,7 +41,9 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: Reco
     .filter(error => !error.isValid)
     .map(error => error.message)
     .filter(error => error);
+
   const isError = errorMessage.length > 0;
+
   return { errorMessage, errors, form, isError, onChange, reset };
 }
 
