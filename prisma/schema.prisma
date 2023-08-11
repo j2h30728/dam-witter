@@ -22,14 +22,13 @@ model User {
   likes     Like[]
   comments  Comment[]
   profile   Profile?
-  
 }
 
 model Profile {
   id     String  @id @default(uuid())
   bio    String
   avatar String
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete:Cascade)
   userId String  @unique
   @@index([userId])
 }
