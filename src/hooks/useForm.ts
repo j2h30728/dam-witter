@@ -8,7 +8,9 @@ type Errors = { isValid: boolean; message: string };
 
 function useForm<T extends Record<string, any>>(initialForm: T, validators: Record<string, Validator>) {
   const [form, setForm] = useState<Record<string, any>>(initialForm);
-  const [errors, setErrors] = useState<Record<string, Errors>>(initialForm);
+  const [errors, setErrors] = useState<Record<string, Errors>>(
+    Object.keys(initialForm).reduce((acc, key) => ({ ...acc, [key]: { isValid: true, message: '' } }), {})
+  );
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
