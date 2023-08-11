@@ -7,8 +7,7 @@
     "build": "next build && prisma generate",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install",
-    "db-sync": "npx prisma migrate dev"
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
