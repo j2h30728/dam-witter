@@ -1,6 +1,7 @@
 import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useMutation } from '@/libs/client';
+import formatDate from '@/libs/client/formDate';
 import maskEmail from '@/libs/client/maskEmail';
 import { ResponseType, TweetResponse } from '@/types';
 import { Like } from '@prisma/client';
@@ -48,6 +49,7 @@ export default function Home() {
                 <ProfileImage avatarId={tweet.user.profile?.avatar} />
                 <h3 className="text-xl font-bold">{tweet.user.name}</h3>
                 <small>{maskEmail(tweet.user.email)}</small>
+                <small className="ml-auto  text-stone-500">{formatDate(tweet.createdAt)}</small>
               </div>
               <Link className="px-5 mx-3" href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>
                 {tweet.image && <TweetImage imageId={tweet.image} />}

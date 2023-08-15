@@ -11,6 +11,8 @@ export default function ProfileImage({ avatarId }: { avatarId: string | undefine
             alt="preview Image"
             className="object-cover overflow-hidden rounded-full"
             fill
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             src={makeImagePath(avatarId)}
           />
         </div>

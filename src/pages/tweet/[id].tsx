@@ -3,6 +3,7 @@ import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import useDelete from '@/hooks/useDelete';
 import { useMutation } from '@/libs/client';
+import formatDate from '@/libs/client/formDate';
 import maskEmail from '@/libs/client/maskEmail';
 import { basicTextValidator } from '@/libs/client/validators';
 import { db, withSsrSession } from '@/libs/server';
@@ -60,6 +61,7 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
       );
     }
   };
+
   const { errorMessage, form, isError, onChange, reset } = useForm<UploadBasicInputText>(
     { text: '' },
     { text: basicTextValidator }
@@ -128,12 +130,13 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
             <ProfileImage avatarId={responseTweet?.data?.user.profile?.avatar} />
             <h3 className="text-xl font-bold">{responseTweet?.data?.user.name}</h3>
             <small>{maskEmail(responseTweet?.data?.user.email || '')}</small>
+            <small className="ml-auto text-stone-500">{formatDate(responseTweet?.data?.createdAt)}</small>
             {loggedInUser.id === responseTweet?.data?.userId && (
               <AiOutlineDelete
                 onClick={() =>
                   tweetDelete(String(router.query.id) || responseTweet?.data?.id, `/api/tweets/${router.query.id}`)
                 }
-                className="absolute cursor-pointer right-3"
+                className="cursor-pointer "
                 size={30}
               />
             )}
@@ -170,7 +173,8 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
               <div className="flex items-center gap-2 " key={comment.id}>
                 <ProfileImage avatarId={comment.user.profile?.avatar} />
                 <span className="w-1/6 font-semibold">{comment.user.name}</span>
-                <span className="w-3/5">{comment.text}</span>
+                <span className="w-1/2">{comment.text}</span>
+                <small className="ml-auto w-fit text-stone-500">{formatDate(comment.createdAt)}</small>
                 {loggedInUser.id === comment.user.id && (
                   <AiOutlineDelete
                     className="cursor-pointer fill-stone-400"
