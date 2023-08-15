@@ -17,7 +17,6 @@ type EditProfileInput = { bio: string; username: string };
 export default function ProfileEdit() {
   const router = useRouter();
   const { data: profile } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
-  const [isLoading, setIsLoading] = useState(false);
   const [isEditedProfileSubmissionInProgress, setIsEditedProfileSubmissionInProgress] = useState(false);
 
   const { errorMessage, errors, form, isError, onChange } = useForm<EditProfileInput>(
@@ -82,6 +81,8 @@ export default function ProfileEdit() {
                 alt="preview Image"
                 className="object-cover w-full overflow-hidden rounded-full h-50 "
                 fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 src={previewImage}
               />
             </div>
@@ -91,6 +92,8 @@ export default function ProfileEdit() {
                 alt="preview Image"
                 className="object-cover w-full overflow-hidden rounded-full h-50 "
                 fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 src={makeImagePath(profile?.data?.profile?.avatar)}
               />
             </div>

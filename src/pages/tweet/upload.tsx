@@ -60,7 +60,13 @@ export default function Upload() {
         >
           <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
           {previewImage ? (
-            <Image alt="preview Image" className="object-contain w-full h-60 " fill src={previewImage} />
+            <Image
+              alt="preview Image"
+              className="object-contain w-full h-60 "
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              src={previewImage}
+            />
           ) : (
             <div className="r">
               <AiOutlinePicture className="text-beige3" size={80} />

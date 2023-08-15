@@ -24,6 +24,7 @@ export default function Profile() {
                     alt="preview Image"
                     className="object-cover w-full overflow-hidden rounded-full h-50 "
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     src={makeImagePath(profile?.data?.profile?.avatar)}
                   />
                 </div>
