@@ -8,7 +8,6 @@ import { UserInput } from '@/types';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import useSWRMutation from 'swr/mutation';
 
 type LogIn = Pick<UserInput, 'email' | 'password'>;
@@ -25,19 +24,14 @@ export default function LogIn() {
     trigger({ email: form.email, password: form.password });
   };
 
-  const { data, error, isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, LogIn>(
+  const { isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, LogIn>(
     '/api/users/log-in',
-    mutateData<LogIn>(METHOD.POST)
-  );
-
-  useEffect(() => {
-    if (data?.isSuccess) {
-      router.replace(ROUTE_PATH.HOME);
-    } else if (error) {
-      alert(data?.message);
-      console.error(error);
+    mutateData<LogIn>(METHOD.POST),
+    {
+      onError: error => console.error(error),
+      onSuccess: data => (data.isSuccess ? router.replace(ROUTE_PATH.HOME) : alert(data.message)),
     }
-  }, [data, router, error]);
+  );
 
   return (
     <Layout title="LOG IN">

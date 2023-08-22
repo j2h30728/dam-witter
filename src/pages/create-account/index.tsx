@@ -8,7 +8,6 @@ import { emailValidator, mutateData, passwordValidator, usernameValidator } from
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import useSWRMutation from 'swr/mutation';
 
 interface CreateAccount extends UserInput {
@@ -30,9 +29,13 @@ export default function CreateAccount() {
       password: passwordValidator,
     }
   );
-  const { data, error, isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, UserInput>(
+  const { isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, UserInput>(
     '/api/users/create-account',
-    mutateData<UserInput>(METHOD.POST)
+    mutateData<UserInput>(METHOD.POST),
+    {
+      onError: error => console.error(error),
+      onSuccess: data => (data.isSuccess ? router.replace('/log-in') : alert(data.message)),
+    }
   );
 
   const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -45,14 +48,6 @@ export default function CreateAccount() {
       password: form.password,
     });
   };
-  useEffect(() => {
-    if (data?.isSuccess) {
-      router.replace('/log-in');
-    } else if (error) {
-      alert(data?.message);
-      console.error(error);
-    }
-  }, [data, router, error]);
 
   return (
     <Layout title="CREATE ACCOUNT">

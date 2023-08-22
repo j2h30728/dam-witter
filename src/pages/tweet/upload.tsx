@@ -15,27 +15,21 @@ export default function Upload() {
 
   const {
     data: uploadedTweet,
-    error: uploadTweetErrors,
     isMutating: isUploadTweetMutating,
     trigger,
   } = useSWRMutation<ResponseType<TweetResponse>, any, string, UploadBasicInputText>(
     '/api/tweets',
-    mutateData<UploadBasicInputText>(METHOD.POST)
+    mutateData<UploadBasicInputText>(METHOD.POST),
+    {
+      onError: error => console.error(error),
+      onSuccess: data => (data.isSuccess ? router.push(ROUTE_PATH.HOME) : alert(uploadedTweet?.message)),
+    }
   );
   const { errorMessage, errors, form, isError, onChange } = useForm<UploadBasicInputText>(
     { text: '' },
     { text: basicTextValidator }
   );
   const { cancelImage, imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
-
-  useEffect(() => {
-    if (uploadedTweet?.isSuccess) {
-      router.push(ROUTE_PATH.HOME);
-    } else if (uploadTweetErrors) {
-      alert(uploadedTweet?.message);
-      console.error(uploadTweetErrors);
-    }
-  }, [uploadedTweet, router, uploadTweetErrors]);
 
   const handleCreateTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

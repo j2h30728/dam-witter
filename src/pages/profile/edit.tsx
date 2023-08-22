@@ -27,24 +27,24 @@ export default function ProfileEdit() {
     }
   );
   const editProfile = mutateData<EditProfileInput>(METHOD.PUT);
-  const {
-    data: editProfileData,
-    error: editProfileError,
-    isMutating: isEditProfileMutating,
-    trigger,
-  } = useSWRMutation<ResponseType<ProfileResponse>, any, string, EditProfileInput>('/api/users/profile', editProfile);
+  const { isMutating: isEditProfileMutating, trigger } = useSWRMutation<
+    ResponseType<ProfileResponse>,
+    any,
+    string,
+    EditProfileInput
+  >('/api/users/profile', editProfile, {
+    onError: error => console.error(error),
+    onSuccess: data => {
+      if (data.isSuccess) {
+        setIsEditedProfileSubmissionInProgress(false);
+        router.push(ROUTE_PATH.PROFILE);
+      } else {
+        alert(data.message);
+      }
+    },
+  });
 
   const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
-
-  useEffect(() => {
-    if (editProfileData?.isSuccess) {
-      setIsEditedProfileSubmissionInProgress(false);
-      router.push(ROUTE_PATH.PROFILE);
-    } else if (editProfileError) {
-      alert(editProfileData?.message);
-      console.error(editProfileData);
-    }
-  }, [editProfileData, router, editProfileError]);
 
   const handleEditProfile = async () => {
     if (isError) return alert(errorMessage.at(0));
