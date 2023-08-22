@@ -1,10 +1,7 @@
-import Layout from '@/components/common/Layout';
-import Textarea from '@/components/common/Textarea';
+import { Layout, Textarea } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
-import mutateData from '@/libs/client/mutateData';
-import { parameterToString } from '@/libs/client/utils';
-import { basicTextValidator } from '@/libs/client/validators';
+import { basicTextValidator, mutateData, parameterToString } from '@/libs/client';
 import { ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';

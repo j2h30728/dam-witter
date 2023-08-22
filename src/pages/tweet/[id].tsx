@@ -2,18 +2,14 @@ import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } 
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import useDelete from '@/hooks/useDelete';
-import { useMutation } from '@/libs/client';
-import formatDate from '@/libs/client/formDate';
-import maskEmail from '@/libs/client/maskEmail';
-import mutateData from '@/libs/client/mutateData';
-import { basicTextValidator } from '@/libs/client/validators';
+import { basicTextValidator, formatDate, maskEmail, mutateData, useMutation } from '@/libs/client';
 import { db, withSsrSession } from '@/libs/server';
 import { CommentResponse, ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
 import { Profile } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { AiOutlineDelete } from 'react-icons/ai';
-import useSWR, { useSWRConfig } from 'swr';
+import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 type LoggedInUsr = { loggedInUser: { email: string; id: string; name: string; profile: Profile } };

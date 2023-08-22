@@ -1,12 +1,7 @@
-import { Input } from '@/components';
-import Layout from '@/components/common/Layout';
-import Textarea from '@/components/common/Textarea';
+import { Input, Layout, Textarea } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
-import { makeImagePath } from '@/libs/client';
-import mutateData from '@/libs/client/mutateData';
-import { parameterToString } from '@/libs/client/utils';
-import { bioValidator, usernameValidator } from '@/libs/client/validators';
+import { bioValidator, makeImagePath, mutateData, parameterToString, usernameValidator } from '@/libs/client';
 import { ProfileResponse, ResponseType } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';

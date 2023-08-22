@@ -1,13 +1,10 @@
 import type { ResponseType } from '@/types';
 import type { UserInput } from '@/types';
 
-import { Input, Symbol } from '@/components';
-import Layout from '@/components/common/Layout';
+import { Input, Layout, Symbol } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
-import { emailValidator, passwordValidator, useMutation } from '@/libs/client';
-import mutateData from '@/libs/client/mutateData';
-import { usernameValidator } from '@/libs/client/validators';
+import { emailValidator, mutateData, passwordValidator, usernameValidator } from '@/libs/client';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

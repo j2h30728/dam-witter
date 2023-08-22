@@ -1,6 +1,6 @@
 import { ROUTE_PATH } from '@/constants';
-import useLogOut from '@/hooks/users/useLogOut';
-import { parameterToString } from '@/libs/client/utils';
+import { useLogOut } from '@/hooks';
+import { parameterToString } from '@/libs/client';
 import { useRouter } from 'next/router';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
 

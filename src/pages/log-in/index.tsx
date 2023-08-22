@@ -1,11 +1,9 @@
 import type { ResponseType } from '@/types';
 
-import { Input, Symbol } from '@/components';
-import Layout from '@/components/common/Layout';
+import { Input, Layout, Symbol } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
-import { emailValidator, passwordValidator } from '@/libs/client';
-import mutateData from '@/libs/client/mutateData';
+import { emailValidator, mutateData, passwordValidator } from '@/libs/client';
 import { UserInput } from '@/types';
 import { User } from '@prisma/client';
 import Link from 'next/link';
