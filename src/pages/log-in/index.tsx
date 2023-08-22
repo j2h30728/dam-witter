@@ -4,17 +4,18 @@ import { Input, Symbol } from '@/components';
 import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
-import { emailValidator, passwordValidator, useMutation } from '@/libs/client';
+import { emailValidator, passwordValidator } from '@/libs/client';
+import mutateData from '@/libs/client/mutateData';
 import { UserInput } from '@/types';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import useSWRMutation from 'swr/mutation';
+
+type LogIn = Pick<UserInput, 'email' | 'password'>;
 
 export default function LogIn() {
-  type LogIn = Pick<UserInput, 'email' | 'password'>;
-
-  const [mutate, { data, error, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
   const { errorMessage, errors, form, isError, onChange } = useForm<LogIn>(
     { email: '', password: '' },
@@ -23,8 +24,14 @@ export default function LogIn() {
   const handleLogIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isError) return alert(errorMessage.at(0));
-    await mutate('/api/users/log-in', METHOD.POST, { email: form.email, password: form.password });
+    trigger({ email: form.email, password: form.password });
   };
+
+  const { data, error, isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, LogIn>(
+    '/api/users/log-in',
+    mutateData<LogIn>(METHOD.POST)
+  );
+
   useEffect(() => {
     if (data?.isSuccess) {
       router.replace(ROUTE_PATH.HOME);
@@ -40,7 +47,7 @@ export default function LogIn() {
         <Symbol className="m-16" height={130} width={130} />
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleLogIn}>
           <Input
-            disabled={isLoading}
+            disabled={isMutating}
             errorMassage={form.email && !errors.email.isValid && errors.email.message}
             name="email"
             onChange={onChange}
@@ -50,7 +57,7 @@ export default function LogIn() {
             value={form.email}
           />
           <Input
-            disabled={isLoading}
+            disabled={isMutating}
             errorMassage={form.password && !errors.password.isValid && errors.password.message}
             name="password"
             onChange={onChange}
@@ -59,8 +66,8 @@ export default function LogIn() {
             type="password"
             value={form.password}
           />
-          <button className="w-full mt-8 button " disabled={isLoading}>
-            <span className="text-lg font-semibold ">{isLoading && !data ? 'Loading...' : 'Log-In'}</span>
+          <button className="w-full mt-8 button " disabled={isMutating}>
+            <span className="text-lg font-semibold ">{isMutating ? 'Loading...' : 'Log-In'}</span>
           </button>
         </form>
         <nav className="flex gap-3 mt-5 ">
@@ -72,4 +79,7 @@ export default function LogIn() {
       </div>
     </Layout>
   );
+}
+function async<T>(url: any, string: any, arg: any, T: any) {
+  throw new Error('Function not implemented.');
 }

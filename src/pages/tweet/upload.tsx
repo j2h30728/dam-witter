@@ -2,7 +2,7 @@ import Layout from '@/components/common/Layout';
 import Textarea from '@/components/common/Textarea';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
-import { useMutation } from '@/libs/client';
+import mutateData from '@/libs/client/mutateData';
 import { parameterToString } from '@/libs/client/utils';
 import { basicTextValidator } from '@/libs/client/validators';
 import { ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
@@ -10,12 +10,21 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePicture } from 'react-icons/ai';
+import useSWRMutation from 'swr/mutation';
 
 export default function Upload() {
   const [isTweetSubmissionInProgress, setIsTweetSubmissionInProgress] = useState(false);
   const router = useRouter();
-  const [createTweet, { data: createdTweet, error: createdTweetError, isLoading: isCreateTweetApiLoading }] =
-    useMutation<ResponseType<TweetResponse>>();
+
+  const {
+    data: uploadedTweet,
+    error: uploadTweetErrors,
+    isMutating: isUploadTweetMutating,
+    trigger,
+  } = useSWRMutation<ResponseType<TweetResponse>, any, string, UploadBasicInputText>(
+    '/api/tweets',
+    mutateData<UploadBasicInputText>(METHOD.POST)
+  );
   const { errorMessage, errors, form, isError, onChange } = useForm<UploadBasicInputText>(
     { text: '' },
     { text: basicTextValidator }
@@ -23,13 +32,13 @@ export default function Upload() {
   const { cancelImage, imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
   useEffect(() => {
-    if (createdTweet?.isSuccess) {
+    if (uploadedTweet?.isSuccess) {
       router.push(ROUTE_PATH.HOME);
-    } else if (createdTweetError) {
-      alert(createdTweet?.message);
-      console.error(createdTweetError);
+    } else if (uploadTweetErrors) {
+      alert(uploadedTweet?.message);
+      console.error(uploadTweetErrors);
     }
-  }, [createdTweet, router, createdTweetError]);
+  }, [uploadedTweet, router, uploadTweetErrors]);
 
   const handleCreateTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,19 +46,19 @@ export default function Upload() {
     setIsTweetSubmissionInProgress(true);
 
     if (!previewImage) {
-      await createTweet('/api/tweets', METHOD.POST, { text: form.text });
+      trigger({ text: form.text });
       setIsTweetSubmissionInProgress(false);
     }
   };
 
   useEffect(() => {
     if (!isImageLoading && imageId && isTweetSubmissionInProgress) {
-      createTweet('/api/tweets', METHOD.POST, { imageId, text: form.text });
+      trigger({ imageId, text: form.text });
       setIsTweetSubmissionInProgress(false);
     }
-  }, [imageId, form.text, createTweet, isImageLoading, isTweetSubmissionInProgress]);
+  }, [imageId, form.text, trigger, isImageLoading, isTweetSubmissionInProgress]);
 
-  const isCreatingTweet = isTweetSubmissionInProgress || isCreateTweetApiLoading;
+  const isCreatingTweet = isTweetSubmissionInProgress || isUploadTweetMutating;
 
   return (
     <Layout hasBackButton isLoggedIn title="TWEET UPLOAD">

@@ -5,6 +5,7 @@ import useDelete from '@/hooks/useDelete';
 import { useMutation } from '@/libs/client';
 import formatDate from '@/libs/client/formDate';
 import maskEmail from '@/libs/client/maskEmail';
+import mutateData from '@/libs/client/mutateData';
 import { basicTextValidator } from '@/libs/client/validators';
 import { db, withSsrSession } from '@/libs/server';
 import { CommentResponse, ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
@@ -12,7 +13,8 @@ import { Profile } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { AiOutlineDelete } from 'react-icons/ai';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
+import useSWRMutation from 'swr/mutation';
 
 type LoggedInUsr = { loggedInUser: { email: string; id: string; name: string; profile: Profile } };
 
@@ -23,15 +25,17 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
     isLoading,
     mutate: tweetMutate,
   } = useSWR<ResponseType<TweetResponse>>(router.query.id ? `/api/tweets/${router.query.id}` : null);
-  const {
-    data: responseComments,
-    error: commentsError,
-    mutate: commentMutate,
-  } = useSWR<ResponseType<CommentResponse[] | undefined>>(
+  const { data: responseComments, mutate: commentMutate } = useSWR<ResponseType<CommentResponse[] | undefined>>(
     router.query.id ? `/api/tweets/${router.query.id}/comments` : null
   );
   const [toggleLike] = useMutation<ResponseType<TweetResponse>>();
-  const [upLoadComment, { isLoading: isUploadCommentLoading }] = useMutation<ResponseType<CommentResponse>>();
+
+  const { isMutating: isMutatingUploadComment, trigger: upLoadComment } = useSWRMutation<
+    ResponseType<CommentResponse>,
+    any,
+    string,
+    UploadBasicInputText
+  >(`/api/tweets/${router.query.id}/comments`, mutateData<UploadBasicInputText>(METHOD.POST));
 
   const { handleDelete: tweetDelete, isLoading: isTweetDeleteLoading } = useDelete(() =>
     router.replace(ROUTE_PATH.HOME)
@@ -70,8 +74,7 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
     event.preventDefault();
     if (!form.text.trim()) return alert('코멘트를 입력해주세요.');
     if (isError) return alert(errorMessage.at(0));
-    reset();
-    await upLoadComment(`/api/tweets/${router.query.id}/comments`, METHOD.POST, { text: form.text });
+    await upLoadComment({ text: form.text });
     if (responseTweet && responseTweet.data) {
       tweetMutate(
         {
@@ -88,6 +91,7 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
       );
       await commentMutate();
     }
+    reset();
   };
   const handleRemoveComment = (commentId: string) => {
     if (responseComments) {
@@ -156,7 +160,7 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
             </label>
             <input
               className="w-4/6 h-8 px-2 border rounded-sm border-base1"
-              disabled={isUploadCommentLoading}
+              disabled={isMutatingUploadComment}
               id="comment"
               name="text"
               onChange={onChange}
@@ -164,8 +168,8 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
               type="text"
               value={form.text}
             />
-            <button className="button" disabled={isUploadCommentLoading}>
-              {isUploadCommentLoading ? <span>등록중...</span> : <span>등 록</span>}
+            <button className="button" disabled={isMutatingUploadComment}>
+              {isMutatingUploadComment ? <span>등록중...</span> : <span>등 록</span>}
             </button>
           </form>
           <div className="flex flex-col gap-3">

@@ -1,45 +1,50 @@
-import type { UserInput } from '@/types';
 import type { ResponseType } from '@/types';
+import type { UserInput } from '@/types';
 
 import { Input, Symbol } from '@/components';
 import Layout from '@/components/common/Layout';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import { emailValidator, passwordValidator, useMutation } from '@/libs/client';
+import mutateData from '@/libs/client/mutateData';
 import { usernameValidator } from '@/libs/client/validators';
 import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import useSWRMutation from 'swr/mutation';
 
 interface CreateAccount extends UserInput {
   confirmPassword: string;
 }
 export default function CreateAccount() {
-  const [mutate, { data, error, isLoading }] = useMutation<ResponseType<User>>();
   const router = useRouter();
   const { errorMessage, errors, form, isError, onChange } = useForm<CreateAccount>(
     {
       confirmPassword: '',
       email: '',
+      name: '',
       password: '',
-      username: '',
     },
     {
       confirmPassword: passwordValidator,
       email: emailValidator,
+      name: usernameValidator,
       password: passwordValidator,
-      username: usernameValidator,
     }
+  );
+  const { data, error, isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, UserInput>(
+    '/api/users/create-account',
+    mutateData<UserInput>(METHOD.POST)
   );
 
   const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isError) return alert(errorMessage.at(0));
 
-    await mutate('/api/users/create-account', METHOD.POST, {
+    trigger({
       email: form.email,
-      name: form.username,
+      name: form.name,
       password: form.password,
     });
   };
@@ -58,17 +63,17 @@ export default function CreateAccount() {
         <Symbol className="m-16" height={130} width={130} />
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleCreateAccount}>
           <Input
-            disabled={isLoading}
-            errorMassage={form.username && !errors.username.isValid && errors.username.message}
-            name="username"
+            disabled={isMutating}
+            errorMassage={form.name && !errors.name.isValid && errors.name.message}
+            name="name"
             onChange={onChange}
             placeholder="Your Name"
             title="Name"
             type="text"
-            value={form.username}
+            value={form.name}
           />
           <Input
-            disabled={isLoading}
+            disabled={isMutating}
             errorMassage={form.email && !errors.email.isValid && errors.email.message}
             name="email"
             onChange={onChange}
@@ -78,7 +83,7 @@ export default function CreateAccount() {
             value={form.email}
           />
           <Input
-            disabled={isLoading}
+            disabled={isMutating}
             errorMassage={form.password && !errors.password.isValid && errors.password.message}
             name="password"
             onChange={onChange}
@@ -88,7 +93,7 @@ export default function CreateAccount() {
             value={form.password}
           />
           <Input
-            disabled={isLoading}
+            disabled={isMutating}
             errorMassage={form.confirmPassword && !errors.confirmPassword.isValid && errors.confirmPassword.message}
             name="confirmPassword"
             onChange={onChange}
@@ -97,8 +102,8 @@ export default function CreateAccount() {
             type="password"
             value={form.confirmPassword}
           />
-          <button className="w-full mt-8 button" disabled={isLoading}>
-            <span className="text-lg font-semibold ">{isLoading && !data ? 'Loading...' : 'Create Account'}</span>
+          <button className="w-full mt-8 button" disabled={isMutating}>
+            <span className="text-lg font-semibold ">{isMutating ? 'Loading...' : 'Create Account'}</span>
           </button>
         </form>
         <nav className="flex gap-3 mt-5 ">

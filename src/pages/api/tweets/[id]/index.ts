@@ -63,10 +63,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
   }
 
   if (req.method === METHOD.POST) {
-    const {
-      body: { text },
-      session: { user },
-    } = req;
+    const { text } = JSON.parse(req.body);
+    const { user } = req.session;
 
     const newTweet = await db.tweet.create({
       data: {

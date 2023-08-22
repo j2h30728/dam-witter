@@ -32,7 +32,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Pr
     return res.status(200).json({ data: profile, isSuccess: true, message: '', statusCode: 200 });
 
   if (req.method === METHOD.PUT) {
-    const { avatarId, bio, name } = req.body;
+    const { avatarId, bio, name } = JSON.parse(req.body);
     if (profile.profile) {
       await db.profile.update({
         data: { avatar: avatarId, bio: bio },
