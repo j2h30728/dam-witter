@@ -1,4 +1,6 @@
 export default function maskEmail(email: string): string {
+  if (!email) return '';
+
   const emailSplit = email.split('@');
   const [username, domain] = emailSplit;
 

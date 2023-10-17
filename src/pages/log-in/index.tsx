@@ -1,37 +1,32 @@
-import type { ResponseType } from '@/types';
-
 import { Input, Layout, Symbol } from '@/components';
-import { METHOD, ROUTE_PATH } from '@/constants';
+import { ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
-import { emailValidator, mutateData, passwordValidator } from '@/libs/client';
+import { emailValidator, fetchers, passwordValidator } from '@/libs/client';
 import { UserInput } from '@/types';
-import { User } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWRMutation from 'swr/mutation';
 
-type LogIn = Pick<UserInput, 'email' | 'password'>;
-
 export default function LogIn() {
   const router = useRouter();
-  const { errorMessage, errors, form, isError, onChange } = useForm<LogIn>(
+  const { isMutating, trigger } = useSWRMutation(
+    '/api/users/log-in',
+    fetchers.post<Pick<UserInput, 'email' | 'password'>>,
+    {
+      onSuccess: () => router.replace(ROUTE_PATH.HOME),
+    }
+  );
+
+  const { errorMessage, errors, form, isError, onChange } = useForm<Pick<UserInput, 'email' | 'password'>>(
     { email: '', password: '' },
     { email: emailValidator, password: passwordValidator }
   );
+
   const handleLogIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isError) return alert(errorMessage.at(0));
     trigger({ email: form.email, password: form.password });
   };
-
-  const { isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, LogIn>(
-    '/api/users/log-in',
-    mutateData<LogIn>(METHOD.POST),
-    {
-      onError: error => console.error(error),
-      onSuccess: data => (data.isSuccess ? router.replace(ROUTE_PATH.HOME) : alert(data.message)),
-    }
-  );
 
   return (
     <Layout title="LOG IN">

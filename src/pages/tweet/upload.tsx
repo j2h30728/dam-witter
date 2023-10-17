@@ -1,8 +1,8 @@
 import { Layout, Textarea } from '@/components';
-import { METHOD, ROUTE_PATH } from '@/constants';
+import { ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
-import { basicTextValidator, mutateData, parameterToString } from '@/libs/client';
-import { ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
+import { basicTextValidator, fetchers, parameterToString } from '@/libs/client';
+import { UploadBasicInputText } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,21 +10,16 @@ import { AiOutlinePicture } from 'react-icons/ai';
 import useSWRMutation from 'swr/mutation';
 
 export default function Upload() {
-  const [isTweetSubmissionInProgress, setIsTweetSubmissionInProgress] = useState(false);
   const router = useRouter();
-
-  const {
-    data: uploadedTweet,
-    isMutating: isUploadTweetMutating,
-    trigger,
-  } = useSWRMutation<ResponseType<TweetResponse>, any, string, UploadBasicInputText>(
+  const [isTweetSubmissionInProgress, setIsTweetSubmissionInProgress] = useState(false);
+  const { isMutating: isUploadTweetMutating, trigger } = useSWRMutation(
     '/api/tweets',
-    mutateData<UploadBasicInputText>(METHOD.POST),
+    fetchers.post<UploadBasicInputText>,
     {
-      onError: error => console.error(error),
-      onSuccess: data => (data.isSuccess ? router.push(ROUTE_PATH.HOME) : alert(uploadedTweet?.message)),
+      onSuccess: () => router.push(ROUTE_PATH.HOME),
     }
   );
+
   const { errorMessage, errors, form, isError, onChange } = useForm<UploadBasicInputText>(
     { text: '' },
     { text: basicTextValidator }

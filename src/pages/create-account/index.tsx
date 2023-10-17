@@ -1,11 +1,9 @@
-import type { ResponseType } from '@/types';
 import type { UserInput } from '@/types';
 
 import { Input, Layout, Symbol } from '@/components';
-import { METHOD, ROUTE_PATH } from '@/constants';
+import { ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
-import { emailValidator, mutateData, passwordValidator, usernameValidator } from '@/libs/client';
-import { User } from '@prisma/client';
+import { emailValidator, fetchers, passwordValidator, usernameValidator } from '@/libs/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWRMutation from 'swr/mutation';
@@ -29,14 +27,9 @@ export default function CreateAccount() {
       password: passwordValidator,
     }
   );
-  const { isMutating, trigger } = useSWRMutation<ResponseType<User>, any, string, UserInput>(
-    '/api/users/create-account',
-    mutateData<UserInput>(METHOD.POST),
-    {
-      onError: error => console.error(error),
-      onSuccess: data => (data.isSuccess ? router.replace('/log-in') : alert(data.message)),
-    }
-  );
+  const { isMutating, trigger } = useSWRMutation('/api/users/create-account', fetchers.post<UserInput>, {
+    onSuccess: () => router.replace(ROUTE_PATH.LOG_IN),
+  });
 
   const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

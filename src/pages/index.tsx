@@ -1,9 +1,9 @@
 import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } from '@/components';
-import { METHOD, ROUTE_PATH } from '@/constants';
-import { formatDate, maskEmail, useMutation } from '@/libs/client';
+import { ROUTE_PATH } from '@/constants';
+import useLikeTweet from '@/hooks/tweets/useLikeTweet';
+import { formatDate, maskEmail } from '@/libs/client';
 import { db, withSsrSession } from '@/libs/server';
 import { ResponseType, TweetResponse } from '@/types';
-import { Like } from '@prisma/client';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import Link from 'next/link';
 import useSWR, { SWRConfig } from 'swr';
@@ -16,7 +16,7 @@ const Home: NextPage = () => {
     mutate: tweetsMutate,
   } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets');
 
-  const [toggleLike] = useMutation<ResponseType<Like>>();
+  const { trigger: toggleLike } = useLikeTweet();
 
   const handleLikeToggle = async (tweet: TweetResponse) => {
     if (responseTweets)
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
         },
         false
       );
-    await toggleLike(`/api/tweets/${tweet.id}/like`, METHOD.POST);
+    await toggleLike({ tweetId: tweet.id }, { rollbackOnError: true });
   };
   return (
     <Layout isLoggedIn title={<Symbol height={33} width={33} />}>

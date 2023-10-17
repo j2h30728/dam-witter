@@ -8,6 +8,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <SWRConfig
       value={{
         fetcher: (url: string) => fetch(url).then(response => response.json()),
+        onError: (error: Error) => alert(error),
       }}
     >
       <div className="w-full max-w-xl mx-auto bg-beige0">

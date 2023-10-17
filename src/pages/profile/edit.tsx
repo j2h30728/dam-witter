@@ -1,7 +1,7 @@
 import { Input, Layout, Textarea } from '@/components';
-import { METHOD, ROUTE_PATH } from '@/constants';
+import { ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
-import { bioValidator, makeImagePath, mutateData, parameterToString, usernameValidator } from '@/libs/client';
+import { bioValidator, fetchers, makeImagePath, parameterToString, usernameValidator } from '@/libs/client';
 import { ProfileResponse, ResponseType } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -26,23 +26,21 @@ export default function ProfileEdit() {
       name: usernameValidator,
     }
   );
-  const editProfile = mutateData<EditProfileInput>(METHOD.PUT);
-  const { isMutating: isEditProfileMutating, trigger } = useSWRMutation<
-    ResponseType<ProfileResponse>,
-    any,
-    string,
-    EditProfileInput
-  >('/api/users/profile', editProfile, {
-    onError: error => console.error(error),
-    onSuccess: data => {
-      if (data.isSuccess) {
-        setIsEditedProfileSubmissionInProgress(false);
-        router.push(ROUTE_PATH.PROFILE);
-      } else {
-        alert(data.message);
-      }
-    },
-  });
+  const { isMutating: isEditProfileMutating, trigger } = useSWRMutation(
+    '/api/users/profile',
+    fetchers.put<EditProfileInput, ProfileResponse>,
+    {
+      onError: error => console.error(error),
+      onSuccess: data => {
+        if (data.isSuccess) {
+          setIsEditedProfileSubmissionInProgress(false);
+          router.push(ROUTE_PATH.PROFILE);
+        } else {
+          alert(data.message);
+        }
+      },
+    }
+  );
 
   const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
