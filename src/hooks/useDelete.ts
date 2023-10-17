@@ -1,24 +1,21 @@
 import { METHOD } from '@/constants';
-import { useMutation } from '@/libs/client';
-import { ResponseType, TweetResponse } from '@/types';
-import { useEffect } from 'react';
+import { mutateData } from '@/libs/client';
+import { MutationMethod } from '@/libs/client/mutateData';
+import { ResponseType } from '@/types';
+import useSWRMutation from 'swr/mutation';
 
-export default function useDelete(successCallbackFn?: () => void) {
-  const [mutate, { data, error, isLoading }] = useMutation<ResponseType<TweetResponse>>();
-
-  const handleDelete = (id: string | undefined, url: string) => {
-    if (id && confirm('삭제하시겠습니까?')) {
-      mutate(url, METHOD.DELETE, id);
+export default function useDelete<T, Input>(url: string, method: MutationMethod, successCallbackFn?: () => void) {
+  const mutate = useSWRMutation<ResponseType<T>, any, string, any>(url, mutateData<Input>(method), {
+    onError: error => console.error(error),
+    onSuccess: data => (data.isSuccess && successCallbackFn ? successCallbackFn() : alert(data.message)),
+  });
+  const handleTrigger = async (data?: any) => {
+    if (method === METHOD.DELETE) {
+      confirm('삭제하시겠습니까?') && (await mutate.trigger(data));
+    } else {
+      mutate.trigger(data);
     }
   };
-  useEffect(() => {
-    if (data?.isSuccess) {
-      successCallbackFn && successCallbackFn();
-    } else if (error) {
-      alert(data?.message);
-      console.error(error);
-    }
-  }, [data?.isSuccess, data?.message, successCallbackFn, error]);
 
-  return { handleDelete, isLoading };
+  return { handleTrigger, mutate };
 }

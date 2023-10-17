@@ -1,4 +1,4 @@
-type MutationMethod = 'DELETE' | 'PATCH' | 'POST' | 'PUT';
+export type MutationMethod = 'DELETE' | 'PATCH' | 'POST' | 'PUT';
 
 export default function mutateData<T>(method: MutationMethod) {
   return async (url: string, { arg }: { arg: T }) => {

@@ -2,7 +2,8 @@ import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } 
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import useDelete from '@/hooks/useDelete';
-import { basicTextValidator, formatDate, maskEmail, mutateData, useMutation } from '@/libs/client';
+import { basicTextValidator, formatDate, maskEmail, mutateData } from '@/libs/client';
+import deleteData from '@/libs/client/deleteData';
 import { db, withSsrSession } from '@/libs/server';
 import { CommentResponse, ResponseType, TweetResponse, UploadBasicInputText } from '@/types';
 import { Profile } from '@prisma/client';
@@ -24,8 +25,10 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
   const { data: responseComments, mutate: commentMutate } = useSWR<ResponseType<CommentResponse[] | undefined>>(
     router.query.id ? `/api/tweets/${router.query.id}/comments` : null
   );
-  const [toggleLike] = useMutation<ResponseType<TweetResponse>>();
-
+  const { trigger: triggerLike } = useSWRMutation<ResponseType<TweetResponse>, any, string>(
+    `/api/tweets/${router.query.id}/like`,
+    mutateData(METHOD.POST)
+  );
   const { isMutating: isMutatingUploadComment, trigger: upLoadComment } = useSWRMutation<
     ResponseType<CommentResponse>,
     any,
@@ -33,14 +36,18 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
     UploadBasicInputText
   >(`/api/tweets/${router.query.id}/comments`, mutateData<UploadBasicInputText>(METHOD.POST));
 
-  const { handleDelete: tweetDelete, isLoading: isTweetDeleteLoading } = useDelete(() =>
+  const { trigger: deleteComment } = useSWRMutation<ResponseType<CommentResponse>, any, string, string>(
+    `/api/tweets/${router.query.id}/comments`,
+    deleteData()
+  );
+
+  const { handleTrigger, mutate: tweetDelete } = useDelete(`/api/tweets/${router.query.id}`, METHOD.DELETE, () =>
     router.replace(ROUTE_PATH.HOME)
   );
-  const [mutate] = useMutation<ResponseType<TweetResponse>>();
 
   const handleLikeButton = () => {
     if (responseTweet && responseTweet.data) {
-      toggleLike(`/api/tweets/${router.query.id}/like`, METHOD.POST);
+      triggerLike();
       tweetMutate(
         {
           ...responseTweet,
@@ -90,8 +97,8 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
     reset();
   };
   const handleRemoveComment = (commentId: string) => {
+    deleteComment(`/${commentId}`);
     if (responseComments) {
-      mutate(`/api/tweets/${router.query.id}/comments/${commentId}`, METHOD.DELETE);
       commentMutate(
         {
           ...responseComments,
@@ -120,7 +127,7 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
     <Layout hasBackButton isLoggedIn title={<Symbol height={33} width={33} />}>
       {isLoading ? (
         <LoadingSpinner text={'불러오는 중..'} />
-      ) : isTweetDeleteLoading ? (
+      ) : tweetDelete.isMutating && !tweetDelete.data?.isSuccess ? (
         <>
           <LoadingSpinner text={'삭제 중..'} />
         </>
@@ -132,13 +139,7 @@ export default function DetailTweet({ loggedInUser }: LoggedInUsr) {
             <small>{maskEmail(responseTweet?.data?.user.email || '')}</small>
             <small className="ml-auto text-stone-500">{formatDate(responseTweet?.data?.createdAt)}</small>
             {loggedInUser.id === responseTweet?.data?.userId && (
-              <AiOutlineDelete
-                onClick={() =>
-                  tweetDelete(String(router.query.id) || responseTweet?.data?.id, `/api/tweets/${router.query.id}`)
-                }
-                className="cursor-pointer "
-                size={30}
-              />
+              <AiOutlineDelete className="cursor-pointer " onClick={() => handleTrigger()} size={30} />
             )}
           </div>
           <p className="px-5 whitespace-pre-line">{responseTweet?.data?.text}</p>

@@ -1,18 +1,21 @@
 import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } from '@/components';
 import { METHOD, ROUTE_PATH } from '@/constants';
 import { formatDate, maskEmail, useMutation } from '@/libs/client';
+import { db, withSsrSession } from '@/libs/server';
 import { ResponseType, TweetResponse } from '@/types';
 import { Like } from '@prisma/client';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import Link from 'next/link';
-import useSWR from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 
-export default function Home() {
+const Home: NextPage = () => {
   const {
     data: responseTweets,
     isLoading,
     isValidating,
     mutate: tweetsMutate,
   } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets');
+
   const [toggleLike] = useMutation<ResponseType<Like>>();
 
   const handleLikeToggle = async (tweet: TweetResponse) => {
@@ -75,4 +78,54 @@ export default function Home() {
       )}
     </Layout>
   );
-}
+};
+
+const Page: NextPage<{ fallback: { tweetsResponseWithSSR: ResponseType<TweetResponse[]> } }> = ({ fallback }) => {
+  return (
+    <SWRConfig value={{ fallback }}>
+      <Home />
+    </SWRConfig>
+  );
+};
+
+export const getServerSideProps = withSsrSession(async function ({ req }: GetServerSidePropsContext) {
+  const { user } = req.session;
+  const tweets = await db.tweet.findMany({
+    include: {
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+      likes: {
+        where: {
+          userId: user?.id,
+        },
+      },
+      user: {
+        select: {
+          email: true,
+          id: true,
+          name: true,
+          profile: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  const transformedTweets = tweets.map(tweet => ({
+    ...tweet,
+    isLiked: tweet.likes.some(like => like.userId === user?.id),
+  }));
+  return {
+    props: {
+      fallback: {
+        tweetsResponseWithSSR: JSON.parse(JSON.stringify(transformedTweets)),
+      },
+    },
+  };
+});
+export default Page;
