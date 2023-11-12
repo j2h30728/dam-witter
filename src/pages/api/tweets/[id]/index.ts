@@ -19,10 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         },
       },
       comments: {
-        select: {
-          createdAt: true,
-          id: true,
-          text: true,
+        include: {
           user: {
             select: {
               email: true,
@@ -31,6 +28,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
               profile: true,
             },
           },
+        },
+        orderBy: {
+          createdAt: 'asc',
         },
       },
       user: {

@@ -9,6 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
       value={{
         fetcher: (url: string) => fetch(url).then(response => response.json()),
         onError: (error: Error) => alert(error),
+        refreshInterval: 1000 * 60,
       }}
     >
       <div className="w-full max-w-xl mx-auto bg-beige0">
