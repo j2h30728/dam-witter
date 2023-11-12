@@ -1,7 +1,9 @@
 import { ROUTE_PATH } from '@/constants';
 import { fetchers, parameterToString } from '@/libs/client';
+import { ProfileResponse, ResponseType } from '@/types';
 import { useRouter } from 'next/router';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
+import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 export default function Layout({
@@ -55,8 +57,8 @@ export default function Layout({
       <div className="w-full h-screen pt-16 pb-32 overflow-auto border-solid overscroll-contain border-x-4 border-base">
         {children}
       </div>
-      <footer>
-        {isLoggedIn && (
+      {isLoggedIn ? (
+        <footer>
           <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
             <div
               className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
@@ -80,8 +82,8 @@ export default function Layout({
               <span>마이페이지</span>
             </div>
           </nav>
-        )}
-      </footer>
+        </footer>
+      ) : null}
     </div>
   );
 }
