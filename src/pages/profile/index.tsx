@@ -1,5 +1,4 @@
-import { LoadingSpinner } from '@/components';
-import Layout from '@/components/common/Layout';
+import { Layout, LoadingSpinner } from '@/components';
 import { ROUTE_PATH } from '@/constants';
 import { makeImagePath } from '@/libs/client';
 import { ProfileResponse, ResponseType } from '@/types';

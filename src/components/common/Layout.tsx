@@ -1,8 +1,8 @@
 import { ROUTE_PATH } from '@/constants';
-import useLogOut from '@/hooks/users/useLogOut';
-import { parameterToString } from '@/libs/client/utils';
+import { fetchers, parameterToString } from '@/libs/client';
 import { useRouter } from 'next/router';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
+import useSWRMutation from 'swr/mutation';
 
 export default function Layout({
   children,
@@ -16,7 +16,9 @@ export default function Layout({
   title: React.ReactNode;
 }) {
   const router = useRouter();
-  const handleLogOut = useLogOut();
+  const { trigger: logOut } = useSWRMutation('/api/users/log-out', fetchers.post, {
+    onSuccess: () => router.replace('/log-in'),
+  });
 
   return (
     <div className="container mx-auto">
@@ -31,7 +33,14 @@ export default function Layout({
         <div className="cursor-pointer" onClick={() => router.push(ROUTE_PATH.HOME)}>
           <div className="text-xl font-bold text-gray-800 text-beige1 ">{title}</div>
         </div>
-        <div className="cursor-pointer" onClick={handleLogOut}>
+        <div
+          onClick={() => {
+            if (confirm('로그아웃 하시겠습니까?')) {
+              logOut();
+            }
+          }}
+          className="cursor-pointer"
+        >
           <div
             className={parameterToString(
               'flex flex-col items-center justify-between gap-1 text-xs font-medium text-white',

@@ -12,8 +12,8 @@ export type Method = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 
 export interface UserInput {
   email: string;
+  name: string;
   password: string;
-  username: string;
 }
 
 export interface TweetResponse extends Tweet {
@@ -50,4 +50,4 @@ export interface CommentResponse extends Comment {
   };
 }
 
-export type UploadBasicInputText = { text: string };
+export type UploadBasicInputText = { imageId?: string; text: string };

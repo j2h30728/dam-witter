@@ -42,10 +42,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
   }
 
   if (req.method === METHOD.POST) {
-    const {
-      body: { imageId, text },
-      session: { user },
-    } = req;
+    const { imageId, text } = JSON.parse(req.body);
+    const { user } = req.session;
     if (imageId) {
       const newTweetWithImage = await db.tweet.create({
         data: {

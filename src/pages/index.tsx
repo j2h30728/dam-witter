@@ -1,21 +1,22 @@
 import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } from '@/components';
-import { METHOD, ROUTE_PATH } from '@/constants';
-import { useMutation } from '@/libs/client';
-import formatDate from '@/libs/client/formDate';
-import maskEmail from '@/libs/client/maskEmail';
+import { ROUTE_PATH } from '@/constants';
+import useLikeTweet from '@/hooks/tweets/useLikeTweet';
+import { formatDate, maskEmail } from '@/libs/client';
+import { db, withSsrSession } from '@/libs/server';
 import { ResponseType, TweetResponse } from '@/types';
-import { Like } from '@prisma/client';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import Link from 'next/link';
-import useSWR from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 
-export default function Home() {
+const Home: NextPage = () => {
   const {
     data: responseTweets,
     isLoading,
     isValidating,
     mutate: tweetsMutate,
   } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets');
-  const [toggleLike] = useMutation<ResponseType<Like>>();
+
+  const { trigger: toggleLike } = useLikeTweet();
 
   const handleLikeToggle = async (tweet: TweetResponse) => {
     if (responseTweets)
@@ -35,7 +36,7 @@ export default function Home() {
         },
         false
       );
-    await toggleLike(`/api/tweets/${tweet.id}/like`, METHOD.POST);
+    await toggleLike({ tweetId: tweet.id }, { rollbackOnError: true });
   };
   return (
     <Layout isLoggedIn title={<Symbol height={33} width={33} />}>
@@ -49,7 +50,7 @@ export default function Home() {
                 <ProfileImage avatarId={tweet.user.profile?.avatar} />
                 <h3 className="text-xl font-bold">{tweet.user.name}</h3>
                 <small>{maskEmail(tweet.user.email)}</small>
-                <small className="ml-auto  text-stone-500">{formatDate(tweet.createdAt)}</small>
+                <small className="ml-auto text-stone-500">{formatDate(tweet.createdAt)}</small>
               </div>
               <Link className="px-5 mx-3" href={`${ROUTE_PATH.TWEETS}/${tweet.id}`}>
                 {tweet.image && <TweetImage imageId={tweet.image} />}
@@ -77,4 +78,54 @@ export default function Home() {
       )}
     </Layout>
   );
-}
+};
+
+const Page: NextPage<{ fallback: { tweetsResponseWithSSR: ResponseType<TweetResponse[]> } }> = ({ fallback }) => {
+  return (
+    <SWRConfig value={{ fallback }}>
+      <Home />
+    </SWRConfig>
+  );
+};
+
+export const getServerSideProps = withSsrSession(async function ({ req }: GetServerSidePropsContext) {
+  const { user } = req.session;
+  const tweets = await db.tweet.findMany({
+    include: {
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+      likes: {
+        where: {
+          userId: user?.id,
+        },
+      },
+      user: {
+        select: {
+          email: true,
+          id: true,
+          name: true,
+          profile: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  const transformedTweets = tweets.map(tweet => ({
+    ...tweet,
+    isLiked: tweet.likes.some(like => like.userId === user?.id),
+  }));
+  return {
+    props: {
+      fallback: {
+        tweetsResponseWithSSR: JSON.parse(JSON.stringify(transformedTweets)),
+      },
+    },
+  };
+});
+export default Page;

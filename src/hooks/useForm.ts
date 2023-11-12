@@ -8,7 +8,7 @@ type Errors = { isValid: boolean; message: string };
 type NewError = Record<string, Errors>;
 
 function useForm<T extends Record<string, any>>(initialForm: T, validators: Record<string, Validator>) {
-  const [form, setForm] = useState<Record<string, any>>(initialForm);
+  const [form, setForm] = useState<Record<string, string>>(initialForm);
   const [errors, setErrors] = useState<Record<string, Errors>>(
     Object.keys(initialForm).reduce(
       (acc, key) => ({

@@ -1,19 +1,16 @@
-import { Input } from '@/components';
-import Layout from '@/components/common/Layout';
-import Textarea from '@/components/common/Textarea';
-import { METHOD, ROUTE_PATH } from '@/constants';
+import { Input, Layout, Textarea } from '@/components';
+import { ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
-import { makeImagePath, useMutation } from '@/libs/client';
-import { parameterToString } from '@/libs/client/utils';
-import { bioValidator, usernameValidator } from '@/libs/client/validators';
+import { bioValidator, fetchers, makeImagePath, parameterToString, usernameValidator } from '@/libs/client';
 import { ProfileResponse, ResponseType } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
 
-type EditProfileInput = { bio: string; username: string };
+type EditProfileInput = { avatarId?: string; bio: string; name: string };
 export default function ProfileEdit() {
   const router = useRouter();
   const { data: profile } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
@@ -22,35 +19,39 @@ export default function ProfileEdit() {
   const { errorMessage, errors, form, isError, onChange } = useForm<EditProfileInput>(
     {
       bio: profile?.data?.profile?.bio || '',
-      username: profile?.data?.name || '',
+      name: profile?.data?.name || '',
     },
     {
       bio: bioValidator,
-      username: usernameValidator,
+      name: usernameValidator,
     }
   );
-  const [editProfile, { data: editProfileData, error: editProfileError, isLoading: isEditProfileApiLoading }] =
-    useMutation<ResponseType<ProfileResponse>>();
-  const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
-
-  useEffect(() => {
-    if (editProfileData?.isSuccess) {
-      setIsEditedProfileSubmissionInProgress(false);
-      router.push(ROUTE_PATH.PROFILE);
-    } else if (editProfileError) {
-      alert(editProfileData?.message);
-      console.error(editProfileData);
+  const { isMutating: isEditProfileMutating, trigger } = useSWRMutation(
+    '/api/users/profile',
+    fetchers.put<EditProfileInput, ProfileResponse>,
+    {
+      onError: error => console.error(error),
+      onSuccess: data => {
+        if (data.isSuccess) {
+          setIsEditedProfileSubmissionInProgress(false);
+          router.push(ROUTE_PATH.PROFILE);
+        } else {
+          alert(data.message);
+        }
+      },
     }
-  }, [editProfileData, router, editProfileError]);
+  );
+
+  const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
   const handleEditProfile = async () => {
     if (isError) return alert(errorMessage.at(0));
     setIsEditedProfileSubmissionInProgress(true);
     if (!previewImage) {
-      await editProfile('/api/users/profile', METHOD.PUT, {
+      trigger({
         avatarId: profile?.data?.profile?.avatar,
         bio: form.bio,
-        name: form.username,
+        name: form.name,
       });
       setIsEditedProfileSubmissionInProgress(false);
     }
@@ -60,16 +61,16 @@ export default function ProfileEdit() {
 
   useEffect(() => {
     if (!isImageLoading && imageId && isEditedProfileSubmissionInProgress) {
-      editProfile('/api/users/profile', METHOD.PUT, {
+      trigger({
         avatarId: imageId,
         bio: form.bio,
-        name: form.username,
+        name: form.name,
       });
       setIsEditedProfileSubmissionInProgress(false);
     }
-  }, [imageId, form.bio, form.username, isImageLoading, isEditedProfileSubmissionInProgress, editProfile]);
+  }, [imageId, form.bio, form.name, isImageLoading, isEditedProfileSubmissionInProgress, trigger]);
 
-  const isCreatingTweet = isEditProfileApiLoading || isEditedProfileSubmissionInProgress;
+  const isEditProfile = isEditProfileMutating || isEditedProfileSubmissionInProgress;
 
   return (
     <Layout hasBackButton isLoggedIn title="MY PAGE">
@@ -105,7 +106,7 @@ export default function ProfileEdit() {
             <input
               accept="image/*"
               className="hidden"
-              disabled={isCreatingTweet}
+              disabled={isEditProfile}
               id="image"
               name="image"
               onChange={selectedImage}
@@ -113,20 +114,20 @@ export default function ProfileEdit() {
             />
           </label>
           <Input
-            disabled={isCreatingTweet}
-            errorMassage={form.username && !errors.username.isValid && errors.username.message}
+            disabled={isEditProfile}
+            errorMassage={form.name && !errors.name.isValid && errors.name.message}
             isEditMode
-            name="username"
+            name="name"
             onChange={onChange}
             placeholder="이름"
             title=""
             type="text"
-            value={form.username}
+            value={form.name}
           />
           <small className="text-stone-500">{profile?.data?.email}</small>
         </div>
         <Textarea
-          disabled={isCreatingTweet}
+          disabled={isEditProfile}
           errorMassage={form.bio && !errors.bio.isValid && errors.bio.message}
           name="bio"
           onChange={onChange}
@@ -136,11 +137,11 @@ export default function ProfileEdit() {
         />
         <button
           className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
-          disabled={isCreatingTweet}
+          disabled={isEditProfile}
           onClick={handleEditProfile}
         >
-          <span className={parameterToString('font-semibold ', isCreatingTweet ? 'text-stone-100' : '')}>
-            {isCreatingTweet ? '수정중...' : '수정완료'}
+          <span className={parameterToString('font-semibold ', isEditProfile ? 'text-stone-100' : '')}>
+            {isEditProfile ? '수정중...' : '수정완료'}
           </span>
         </button>
       </main>

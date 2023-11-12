@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "next dev",
-    "build": "next build && prisma generate",
+    "build": "prisma generate && next build ",
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install"
@@ -16,16 +17,15 @@
     ]
   },
   "dependencies": {
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^5.4.2",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
-    "next": "13.4.10",
+    "next": "^13.5.5",
     "postcss": "8.4.26",
-    "prisma": "^5.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
@@ -43,6 +43,7 @@
     "husky": "^8.0.3",
     "iron-session": "^6.3.1",
     "lint-staged": "^13.2.3",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "prisma": "^5.4.2"
   }
 }

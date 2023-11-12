@@ -7,7 +7,7 @@ import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<User>>) {
-  const { email, name, password } = req.body;
+  const { email, name, password } = JSON.parse(req.body);
 
   if (!email || !name || !password) {
     return res.status(404).json({ data: null, isSuccess: false, message: '잘못된 입력입니다.', statusCode: 404 });

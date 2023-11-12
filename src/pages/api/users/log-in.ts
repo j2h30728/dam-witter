@@ -7,10 +7,9 @@ import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<User>>) {
-  const { email, password } = req.body;
-
-  if (!email) {
-    return res.status(404).json({ data: null, isSuccess: false, message: '잘못된 입력입니다.', statusCode: 404 });
+  const { email, password } = JSON.parse(req.body);
+  if (!email || !password) {
+    return res.status(404).json({ data: null, isSuccess: false, message: '입력값을 채워주세요.', statusCode: 404 });
   }
 
   const user = await db.user.findUnique({

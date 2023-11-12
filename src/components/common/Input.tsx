@@ -1,4 +1,4 @@
-import { parameterToString } from '@/libs/client/utils';
+import { parameterToString } from '@/libs/client';
 
 export default function Input({
   disabled,
