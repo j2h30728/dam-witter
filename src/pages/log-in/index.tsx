@@ -67,6 +67,3 @@ export default function LogIn() {
     </Layout>
   );
 }
-function async<T>(url: any, string: any, arg: any, T: any) {
-  throw new Error('Function not implemented.');
-}
