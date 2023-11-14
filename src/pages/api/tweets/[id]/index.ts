@@ -62,47 +62,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
     return res.status(200).json({ data: tweet, isLiked, isSuccess: true, message: null, statusCode: 200 });
   }
 
-  if (req.method === METHOD.POST) {
-    const { text } = JSON.parse(req.body);
-    const { user } = req.session;
-
-    const newTweet = await db.tweet.create({
-      data: {
-        text,
-        user: {
-          connect: {
-            id: user?.id,
-          },
-        },
-      },
-      include: {
-        _count: {
-          select: {
-            comments: true,
-            likes: true,
-          },
-        },
-        user: {
-          select: {
-            email: true,
-            id: true,
-            name: true,
-            profile: true,
-          },
-        },
-      },
-    });
-    return res.status(201).json({ data: newTweet, isSuccess: true, message: null, statusCode: 201 });
-  }
-
   if (req.method === METHOD.DELETE) {
     await db.tweet.delete({
       where: {
         id: tweet.id,
       },
     });
-    return res.status(200).json({ data: null, isSuccess: true, message: '삭제되었습니다.', statusCode: 204 });
+    return res.status(200).json({ data: null, isSuccess: true, message: '삭제 되었습니다.', statusCode: 204 });
   }
 }
 
-export default withApiSession(withHandler({ handler, methods: [METHOD.GET, METHOD.POST, METHOD.DELETE] }));
+export default withApiSession(withHandler({ handler, methods: [METHOD.GET, METHOD.DELETE] }));

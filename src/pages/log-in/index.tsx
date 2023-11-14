@@ -2,6 +2,8 @@ import { Input, Layout, Symbol } from '@/components';
 import { ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import { emailValidator, fetchers, passwordValidator } from '@/libs/client';
+import { DEFAULT_ERROR_MESSAGE } from '@/libs/client/constants';
+import { toastMessage } from '@/libs/client/toastMessage';
 import { UserInput } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,7 +15,10 @@ export default function LogIn() {
     '/api/users/log-in',
     fetchers.post<Pick<UserInput, 'email' | 'password'>>,
     {
-      onSuccess: () => router.replace(ROUTE_PATH.HOME),
+      onSuccess: data => {
+        toastMessage('success', data.message);
+        router.replace(ROUTE_PATH.HOME);
+      },
     }
   );
 
@@ -24,7 +29,7 @@ export default function LogIn() {
 
   const handleLogIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isError) return alert(errorMessage.at(0));
+    if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
     trigger({ email: form.email, password: form.password });
   };
 

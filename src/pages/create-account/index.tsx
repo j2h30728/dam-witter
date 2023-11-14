@@ -4,6 +4,8 @@ import { Input, Layout, Symbol } from '@/components';
 import { ROUTE_PATH } from '@/constants';
 import { useForm } from '@/hooks';
 import { emailValidator, fetchers, passwordValidator, usernameValidator } from '@/libs/client';
+import { DEFAULT_ERROR_MESSAGE } from '@/libs/client/constants';
+import { toastMessage } from '@/libs/client/toastMessage';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWRMutation from 'swr/mutation';
@@ -28,12 +30,15 @@ export default function CreateAccount() {
     }
   );
   const { isMutating, trigger } = useSWRMutation('/api/users/create-account', fetchers.post<UserInput>, {
-    onSuccess: () => router.replace(ROUTE_PATH.LOG_IN),
+    onSuccess: data => {
+      toastMessage('success', data.message);
+      router.replace(ROUTE_PATH.LOG_IN);
+    },
   });
 
   const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isError) return alert(errorMessage.at(0));
+    if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
 
     trigger({
       email: form.email,

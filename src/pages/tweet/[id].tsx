@@ -1,7 +1,7 @@
 import { Layout, LikeButton, LoadingSpinner, Symbol, TweetImage } from '@/components';
 import Comments from '@/components/common/comments';
 import useLikeTweet from '@/hooks/tweets/useLikeTweet';
-import { ResponseType, TweetResponse } from '@/types';
+import { ProfileResponse, ResponseType, TweetResponse } from '@/types';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
@@ -11,6 +11,7 @@ function TweetAndComments() {
   const router = useRouter();
 
   const tweet = useSWR<ResponseType<TweetResponse>>(router.query.id ? `/api/tweets/${router.query.id}` : null);
+  const { data: loggedInUser } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
 
   const toggleLike = useLikeTweet();
 
@@ -38,13 +39,13 @@ function TweetAndComments() {
     }
   };
 
-  if (tweet.isLoading || !tweet.data) {
+  if (tweet.isLoading || !tweet.data || !loggedInUser?.data) {
     return <LoadingSpinner text={'불러오는 중..'} />;
   }
 
   return (
     <main className="flex flex-col gap-3 px-3 mt-5 ">
-      <DetailTweetContent />
+      <DetailTweetContent loggedInUserId={loggedInUser.data?.id} />
       <div className="flex items-center justify-around gap-2 px-3 py-4 border-b border-stone-500">
         <div className="flex items-center w-fit">
           <LikeButton isLiked={tweet.data.isLiked} toggleLike={handleLikeButton} />
@@ -52,7 +53,7 @@ function TweetAndComments() {
         </div>
         <span>코멘트 {tweet.data.data?._count.comments} 개</span>
       </div>
-      <Comments tweetComments={tweet.data.data?.comments} />
+      <Comments loggedInUserId={loggedInUser.data?.id} tweetComments={tweet.data.data?.comments} />
     </main>
   );
 }

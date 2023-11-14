@@ -12,8 +12,8 @@ const postFetcher = async <T, F = unknown>(url: string, { arg }: { arg: T }): Pr
   return response.json();
 };
 
-const deleteFetcher = async (url: string, { arg }: { arg: string }): Promise<ResponseType<unknown>> => {
-  const response = await fetch(`${url}/${arg}`, {
+const deleteFetcher = async (url: string, { arg }: { arg?: string }): Promise<ResponseType<unknown>> => {
+  const response = await fetch(`${url}/${arg ?? ''}`, {
     method: METHOD.DELETE,
   });
   if (!response.ok) {
