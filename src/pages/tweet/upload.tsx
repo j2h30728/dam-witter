@@ -9,7 +9,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePicture } from 'react-icons/ai';
-import { mutate } from 'swr';
+import { preload } from 'swr';
+import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
 
 export default function Upload() {
@@ -20,9 +21,9 @@ export default function Upload() {
     '/api/tweets',
     fetchers.post<UploadBasicInputText, TweetResponse>,
     {
-      onSuccess: async (data, key) => {
-        console.log(key);
-        await mutate(key);
+      onSuccess: data => {
+        cache.delete('/api/tweets');
+        preload('/api/tweets', fetchers.get<TweetResponse[]>);
         if (data.isSuccess) {
           toastMessage('success', data.message);
           router.push(ROUTE_PATH.HOME);

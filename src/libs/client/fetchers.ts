@@ -1,6 +1,15 @@
 import { METHOD } from '@/constants';
 import { ResponseType } from '@/types';
 
+const getFetcher = async <F = unknown>(url: string): Promise<ResponseType<F>> => {
+  const response = await fetch(url, {
+    method: METHOD.GET,
+  });
+  if (!response.ok) {
+    throw (await response.json()).message;
+  }
+  return response.json();
+};
 const postFetcher = async <T, F = unknown>(url: string, { arg }: { arg: T }): Promise<ResponseType<F>> => {
   const response = await fetch(url, {
     body: JSON.stringify(arg),
@@ -34,6 +43,7 @@ const putFetcher = async <T, F = unknown>(url: string, { arg }: { arg: T }): Pro
 
 const fetchers = {
   delete: deleteFetcher,
+  get: getFetcher,
   post: postFetcher,
   put: putFetcher,
 };

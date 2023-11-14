@@ -9,7 +9,6 @@ const UploadCommentInput = ({
   handleUploadComment: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   isCommentMutating: boolean;
 }) => {
-  console.log(isCommentMutating);
   return (
     <form className="flex items-center justify-around w-full gap-1" onSubmit={handleUploadComment}>
       <label className="font-semibold" htmlFor="comment">

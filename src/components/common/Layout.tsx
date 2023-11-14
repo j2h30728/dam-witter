@@ -1,9 +1,8 @@
 import { ROUTE_PATH } from '@/constants';
 import { fetchers, parameterToString } from '@/libs/client';
-import { ProfileResponse, ResponseType } from '@/types';
 import { useRouter } from 'next/router';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
-import useSWR from 'swr';
+import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
 
 export default function Layout({
@@ -19,7 +18,9 @@ export default function Layout({
 }) {
   const router = useRouter();
   const { trigger: logOut } = useSWRMutation('/api/users/log-out', fetchers.post, {
-    onSuccess: () => router.replace('/log-in'),
+    onSuccess: () => {
+      router.replace('/log-in');
+    },
   });
 
   return (

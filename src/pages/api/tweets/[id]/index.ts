@@ -68,7 +68,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         id: tweet.id,
       },
     });
-    return res.status(200).json({ data: null, isSuccess: true, message: '삭제 되었습니다.', statusCode: 204 });
+    return res.status(200).json({ data: tweet, isSuccess: true, message: '삭제 되었습니다.', statusCode: 204 });
   }
 }
 

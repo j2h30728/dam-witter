@@ -1,9 +1,14 @@
 import { Layout, LikeButton, LoadingSpinner, Symbol, TweetImage } from '@/components';
 import Comments from '@/components/common/comments';
+import { ROUTE_PATH } from '@/constants';
 import useLikeTweet from '@/hooks/tweets/useLikeTweet';
+import { fetchers } from '@/libs/client';
+import { toastMessage } from '@/libs/client/toastMessage';
 import { ProfileResponse, ResponseType, TweetResponse } from '@/types';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
+import { cache, preload } from 'swr/_internal';
+import useSWRMutation from 'swr/mutation';
 
 import DetailTweetContent from '../../components/common/tweets/DetailTweetContent';
 
@@ -12,8 +17,19 @@ function TweetAndComments() {
 
   const tweet = useSWR<ResponseType<TweetResponse>>(router.query.id ? `/api/tweets/${router.query.id}` : null);
   const { data: loggedInUser } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
-
   const toggleLike = useLikeTweet();
+
+  const tweetDelete = useSWRMutation(`/api/tweets/${router.query.id}`, fetchers.delete, {
+    onError: (error: string) => toastMessage('error', error),
+    onSuccess: data => {
+      router.replace(ROUTE_PATH.HOME);
+      if (data.isSuccess) {
+        cache.delete('/api/tweets');
+        preload('/api/tweets', fetchers.get<TweetResponse[]>);
+      }
+      toastMessage('info', data.message);
+    },
+  });
 
   const handleLikeButton = () => {
     if (tweet.data && tweet.data.data) {
@@ -39,13 +55,25 @@ function TweetAndComments() {
     }
   };
 
+  const handleDeleteTweet = () => {
+    if (confirm('삭제하시겠습니까?')) {
+      tweetDelete.trigger();
+    }
+  };
   if (tweet.isLoading || !tweet.data || !loggedInUser?.data) {
     return <LoadingSpinner text={'불러오는 중..'} />;
+  }
+  if (tweetDelete.isMutating || tweetDelete.data) {
+    return <LoadingSpinner text="트윗 삭제 중 입니다." />;
   }
 
   return (
     <main className="flex flex-col gap-3 px-3 mt-5 ">
-      <DetailTweetContent loggedInUserId={loggedInUser.data?.id} />
+      <DetailTweetContent
+        detailTweet={tweet.data.data}
+        loggedInUserId={loggedInUser.data?.id}
+        onDeleteTweet={handleDeleteTweet}
+      />
       <div className="flex items-center justify-around gap-2 px-3 py-4 border-b border-stone-500">
         <div className="flex items-center w-fit">
           <LikeButton isLiked={tweet.data.isLiked} toggleLike={handleLikeButton} />
