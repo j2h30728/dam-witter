@@ -57,10 +57,13 @@ const Comments = ({
       );
     }
   };
-
   return (
     <>
-      <UploadCommentInput controlForm={commentForm} handleUploadComment={handleUploadComment} />
+      <UploadCommentInput
+        controlForm={commentForm}
+        handleUploadComment={handleUploadComment}
+        isCommentMutating={upLoadComment.isMutating}
+      />
       <div className="flex flex-col gap-3">
         {tweetComments?.map(comment => (
           <CommentItem

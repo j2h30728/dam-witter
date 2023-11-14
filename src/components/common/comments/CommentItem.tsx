@@ -1,6 +1,6 @@
 import ProfileImage from '@/components/images/ProfileImage';
 import { formatDate } from '@/libs/client';
-import { CommentResponse, ProfileResponse, ResponseType, TweetResponse } from '@/types';
+import { CommentResponse } from '@/types';
 import { AiOutlineDelete } from 'react-icons/ai';
 
 const CommentItem = ({
