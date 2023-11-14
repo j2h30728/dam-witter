@@ -1,5 +1,6 @@
 import { Layout, LikeButton, LoadingSpinner, Symbol, TweetImage } from '@/components';
-import Comments from '@/components/common/comments';
+import Comments from '@/components/comments';
+import DetailTweetContent from '@/components/tweets/DetailTweetContent';
 import { ROUTE_PATH } from '@/constants';
 import useLikeTweet from '@/hooks/tweets/useLikeTweet';
 import { fetchers } from '@/libs/client';
@@ -7,10 +8,8 @@ import { toastMessage } from '@/libs/client/toastMessage';
 import { ProfileResponse, ResponseType, TweetResponse } from '@/types';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { cache, preload } from 'swr/_internal';
+import { mutate } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
-
-import DetailTweetContent from '../../components/common/tweets/DetailTweetContent';
 
 function TweetAndComments() {
   const router = useRouter();
@@ -22,10 +21,9 @@ function TweetAndComments() {
   const tweetDelete = useSWRMutation(`/api/tweets/${router.query.id}`, fetchers.delete, {
     onError: (error: string) => toastMessage('error', error),
     onSuccess: data => {
-      router.replace(ROUTE_PATH.HOME);
       if (data.isSuccess) {
-        cache.delete('/api/tweets');
-        preload('/api/tweets', fetchers.get<TweetResponse[]>);
+        mutate('/api/tweets', () => fetch('/api/tweets'));
+        router.replace(ROUTE_PATH.HOME);
       }
       toastMessage('info', data.message);
     },
