@@ -6,38 +6,38 @@ import { withApiSession, withHandler } from '@/libs/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse | TweetResponse[]>>) {
+  const { user } = req.session;
+  const tweets = await db.tweet.findMany({
+    include: {
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+      likes: {
+        where: {
+          userId: user?.id,
+        },
+      },
+      user: {
+        select: {
+          email: true,
+          id: true,
+          name: true,
+          profile: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  const transformedTweets = tweets.map(tweet => ({
+    ...tweet,
+    isLiked: tweet.likes.some(like => like.userId === user?.id),
+  }));
   if (req.method === METHOD.GET) {
-    const { user } = req.session;
-    const tweets = await db.tweet.findMany({
-      include: {
-        _count: {
-          select: {
-            comments: true,
-            likes: true,
-          },
-        },
-        likes: {
-          where: {
-            userId: user?.id,
-          },
-        },
-        user: {
-          select: {
-            email: true,
-            id: true,
-            name: true,
-            profile: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-    const transformedTweets = tweets.map(tweet => ({
-      ...tweet,
-      isLiked: tweet.likes.some(like => like.userId === user?.id),
-    }));
     return res.status(200).json({ data: transformedTweets, isSuccess: true, message: null, statusCode: 200 });
   }
 
@@ -101,7 +101,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         },
       },
     });
-    return res.status(201).json({ data: newTweet, isSuccess: true, message: null, statusCode: 201 });
+    return res
+      .status(201)
+      .json({ data: [newTweet, ...transformedTweets], isSuccess: true, message: '추가 되었습니다.', statusCode: 201 });
   }
 }
 export default withApiSession(withHandler({ handler, methods: [METHOD.GET, METHOD.POST] }));

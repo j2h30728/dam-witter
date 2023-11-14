@@ -2,24 +2,36 @@ import { Layout, Textarea } from '@/components';
 import { ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
 import { basicTextValidator, fetchers, parameterToString } from '@/libs/client';
-import { UploadBasicInputText } from '@/types';
+import { DEFAULT_ERROR_MESSAGE } from '@/libs/client/constants';
+import { toastMessage } from '@/libs/client/toastMessage';
+import { TweetResponse, UploadBasicInputText } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePicture } from 'react-icons/ai';
+import { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 export default function Upload() {
   const router = useRouter();
   const [isTweetSubmissionInProgress, setIsTweetSubmissionInProgress] = useState(false);
+
   const { isMutating: isUploadTweetMutating, trigger } = useSWRMutation(
     '/api/tweets',
-    fetchers.post<UploadBasicInputText>,
+    fetchers.post<UploadBasicInputText, TweetResponse>,
     {
-      onSuccess: () => router.push(ROUTE_PATH.HOME),
+      onSuccess: async (data, key) => {
+        console.log(key);
+        await mutate(key);
+        if (data.isSuccess) {
+          toastMessage('success', data.message);
+          router.push(ROUTE_PATH.HOME);
+        } else {
+          toastMessage('error', data.message);
+        }
+      },
     }
   );
-
   const { errorMessage, errors, form, isError, onChange } = useForm<UploadBasicInputText>(
     { text: '' },
     { text: basicTextValidator }
@@ -28,7 +40,7 @@ export default function Upload() {
 
   const handleCreateTweet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isError) return alert(errorMessage.at(0));
+    if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
     setIsTweetSubmissionInProgress(true);
 
     if (!previewImage) {

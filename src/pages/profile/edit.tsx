@@ -2,6 +2,8 @@ import { Input, Layout, Textarea } from '@/components';
 import { ROUTE_PATH } from '@/constants';
 import { useForm, useSelectImage } from '@/hooks';
 import { bioValidator, fetchers, makeImagePath, parameterToString, usernameValidator } from '@/libs/client';
+import { DEFAULT_ERROR_MESSAGE } from '@/libs/client/constants';
+import { toastMessage } from '@/libs/client/toastMessage';
 import { ProfileResponse, ResponseType } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -30,13 +32,13 @@ export default function ProfileEdit() {
     '/api/users/profile',
     fetchers.put<EditProfileInput, ProfileResponse>,
     {
-      onError: error => console.error(error),
       onSuccess: data => {
         if (data.isSuccess) {
           setIsEditedProfileSubmissionInProgress(false);
+          if (data.message) toastMessage('success', data.message);
           router.push(ROUTE_PATH.PROFILE);
         } else {
-          alert(data.message);
+          if (data.message) toastMessage('error', data.message);
         }
       },
     }
@@ -45,7 +47,7 @@ export default function ProfileEdit() {
   const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
   const handleEditProfile = async () => {
-    if (isError) return alert(errorMessage.at(0));
+    if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
     setIsEditedProfileSubmissionInProgress(true);
     if (!previewImage) {
       trigger({
