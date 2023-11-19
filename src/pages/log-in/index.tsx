@@ -7,6 +7,7 @@ import { toastMessage } from '@/libs/client/toastMessage';
 import { UserInput } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 export default function LogIn() {
@@ -18,6 +19,7 @@ export default function LogIn() {
       onSuccess: data => {
         toastMessage('success', data.message);
         router.replace(ROUTE_PATH.HOME);
+        mutate('/api/users/profile', fetchers.get('/api/users/profile'));
       },
     }
   );

@@ -20,6 +20,7 @@ export default function Layout({
   const { trigger: logOut } = useSWRMutation('/api/users/log-out', fetchers.post, {
     onSuccess: () => {
       router.replace('/log-in');
+      cache.delete('/api/users/profile');
     },
   });
 
