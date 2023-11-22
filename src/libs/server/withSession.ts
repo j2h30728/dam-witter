@@ -1,24 +1,10 @@
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler } from 'next';
 
-declare module 'iron-session' {
-  interface IronSessionData {
-    user?: {
-      id: string;
-    };
-  }
-}
-
-const cookieOptions = {
-  cookieName: 'dam-witter',
-  cookieOptions: {
-    maxAge: undefined,
-  },
-  password: process.env.COOKIE_PASSWORD as string,
-};
+import sessionOptions from './sessionOptions';
 
 export function withApiSession(fn: NextApiHandler) {
-  return withIronSessionApiRoute(fn, cookieOptions);
+  return withIronSessionApiRoute(fn, sessionOptions);
 }
 
 export function withSsrSession<
@@ -26,5 +12,5 @@ export function withSsrSession<
     [key: string]: unknown;
   },
 >(fn: (context: GetServerSidePropsContext) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>) {
-  return withIronSessionSsr(fn, cookieOptions);
+  return withIronSessionSsr(fn, sessionOptions);
 }
