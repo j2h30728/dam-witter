@@ -11,7 +11,11 @@ declare module 'iron-session' {
 const sessionOptions: IronSessionOptions = {
   cookieName: 'dam-witter',
   cookieOptions: {
+    httpOnly: true,
     maxAge: undefined,
+    path: '/',
+    sameSite: 'lax',
+    secure: true,
   },
   password: process.env.COOKIE_PASSWORD as string,
 };
