@@ -55,6 +55,7 @@ model Like {
   tweetId   String
   @@index([userId])
   @@index([tweetId])
+  @@unique([tweetId, userId], name: "tweetId_userId")
 
 }
 
