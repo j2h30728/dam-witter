@@ -1,6 +1,7 @@
 import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } from '@/components';
-import { ROUTE_PATH } from '@/constants';
+import { METHOD, ROUTE_PATH } from '@/constants';
 import useLikeTweet from '@/hooks/tweets/useLikeTweet';
+import useDebounce from '@/hooks/useDebounce';
 import { formatDate, maskEmail } from '@/libs/client';
 import { db, withSsrSession } from '@/libs/server';
 import { ResponseType, TweetResponse } from '@/types';
@@ -17,9 +18,24 @@ const Home: NextPage = () => {
 
   const { trigger: toggleLike } = useLikeTweet();
 
-  const handleLikeToggle = async (tweet: TweetResponse) => {
+  const debouncedToggleLike = useDebounce((tweet: TweetResponse) => {
+    if (responseTweets) {
+      responseTweets.data?.forEach(responseTweet => {
+        if (responseTweet.id === tweet.id) {
+          toggleLike(
+            { method: responseTweet.isLiked ? METHOD.DELETE : METHOD.POST, tweetId: responseTweet.id },
+            { revalidate: false, rollbackOnError: true }
+          );
+        }
+      });
+    }
+  }, 500);
+
+  const handleLikeToggle = (tweet: TweetResponse) => {
+    debouncedToggleLike(tweet);
+
     if (responseTweets)
-      await tweetsMutate(
+      tweetsMutate(
         {
           ...responseTweets,
           data:
@@ -35,7 +51,6 @@ const Home: NextPage = () => {
         },
         false
       );
-    await toggleLike({ tweetId: tweet.id }, { rollbackOnError: true });
   };
 
   if (isLoading) {
