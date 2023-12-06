@@ -7,3 +7,5 @@ const METHOD = {
 } as const;
 
 export default METHOD;
+
+export type METHOD_TYPE = (typeof METHOD)[keyof typeof METHOD];
