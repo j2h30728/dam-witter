@@ -1,8 +1,9 @@
 import { Layout, LikeButton, LoadingSpinner, Symbol, TweetImage } from '@/components';
 import Comments from '@/components/comments';
 import DetailTweetContent from '@/components/tweets/DetailTweetContent';
-import { ROUTE_PATH } from '@/constants';
+import { METHOD, ROUTE_PATH } from '@/constants';
 import useLikeTweet from '@/hooks/tweets/useLikeTweet';
+import useDebounce from '@/hooks/useDebounce';
 import { fetchers } from '@/libs/client';
 import { toastMessage } from '@/libs/client/toastMessage';
 import { ProfileResponse, ResponseType, TweetResponse } from '@/types';
@@ -29,9 +30,16 @@ function TweetAndComments() {
     },
   });
 
+  const debouncedToggleLike = useDebounce((tweetIsLiked: boolean) => {
+    toggleLike.trigger(
+      { method: tweetIsLiked ? METHOD.DELETE : METHOD.POST, tweetId: `${router.query.id}` },
+      { revalidate: false, rollbackOnError: true }
+    );
+  }, 400);
+
   const handleLikeButton = () => {
     if (tweet.data && tweet.data.data) {
-      toggleLike.trigger({ tweetId: `${router.query.id}` }, { rollbackOnError: true });
+      debouncedToggleLike(tweet.data.isLiked);
       tweet.mutate(
         {
           ...tweet.data,
