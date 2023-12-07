@@ -32,7 +32,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Us
     });
 
   if (req.method === 'GET')
-    return res.status(200).json({ data: profile, isSuccess: true, message: '유요한 사용자입니다.', statusCode: 200 });
+    return res.status(200).json({ data: profile, isSuccess: true, message: '유효한 사용자입니다.', statusCode: 200 });
 
   return res.json({
     data: null,

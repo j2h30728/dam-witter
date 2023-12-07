@@ -44,7 +44,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Co
     if (!text)
       return res
         .status(404)
-        .json({ data: null, isSuccess: false, message: '요휴하지 않는 입력입니다.', statusCode: 404 });
+        .json({ data: null, isSuccess: false, message: '유효하지 않는 입력입니다.', statusCode: 404 });
 
     const comment = await db.comment.create({
       data: {
