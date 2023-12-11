@@ -63,13 +63,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
   }
 
   if (req.method === METHOD.DELETE) {
+    if (user?.id !== tweet.userId)
+      return res.status(401).json({ data: null, isSuccess: false, message: '권한이 없습니다.', statusCode: 401 });
+
     await db.tweet.delete({
       where: {
         id: tweet.id,
       },
     });
-    return res.status(200).json({ data: tweet, isSuccess: true, message: '삭제 되었습니다.', statusCode: 204 });
+    return res.status(204).json({ data: tweet, isSuccess: true, message: '삭제 되었습니다.', statusCode: 204 });
   }
 }
 
-export default withApiSession(withHandler({ handler, methods: [METHOD.GET, METHOD.DELETE] }));
+export default withApiSession(withHandler({ handler, isPrivate: true, methods: [METHOD.GET, METHOD.DELETE] }));

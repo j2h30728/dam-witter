@@ -106,4 +106,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       .json({ data: [newTweet, ...transformedTweets], isSuccess: true, message: '추가 되었습니다.', statusCode: 201 });
   }
 }
-export default withApiSession(withHandler({ handler, methods: [METHOD.GET, METHOD.POST] }));
+export default withApiSession(withHandler({ handler, isPrivate: true, methods: [METHOD.GET, METHOD.POST] }));

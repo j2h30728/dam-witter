@@ -83,4 +83,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Li
   }
 }
 
-export default withApiSession(withHandler({ handler, methods: [METHOD.POST, METHOD.DELETE] }));
+export default withApiSession(withHandler({ handler, isPrivate: true, methods: [METHOD.POST, METHOD.DELETE] }));
