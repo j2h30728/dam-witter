@@ -17,7 +17,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Co
         userId: user?.id,
       },
     });
-    if (user?.id == existComment?.userId)
+    if (user?.id !== existComment?.userId)
       return res.status(401).json({ data: null, isSuccess: false, message: '권한이 없습니다.', statusCode: 401 });
 
     if (!existComment)
