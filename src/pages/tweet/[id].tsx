@@ -28,6 +28,7 @@ function TweetAndComments() {
       }
       toastMessage('info', data.message);
     },
+    revalidate: false,
   });
 
   const debouncedToggleLike = useDebounce((tweetIsLiked: boolean) => {

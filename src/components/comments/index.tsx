@@ -27,7 +27,10 @@ const Comments = ({
     `/api/tweets/${router.query.id}/comments`,
     fetchers.post<UploadBasicInputText, CommentResponse>
   );
-  const deleteComment = useSWRMutation(`/api/tweets/${router.query.id}/comments`, fetchers.delete);
+  const deleteComment = useSWRMutation(`/api/tweets/${router.query.id}/comments`, fetchers.delete, {
+    revalidate: false,
+    rollbackOnError: true,
+  });
 
   const handleUploadComment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
