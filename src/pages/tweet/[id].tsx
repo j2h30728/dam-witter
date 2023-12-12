@@ -23,8 +23,8 @@ function TweetAndComments() {
     onError: (error: string) => toastMessage('error', error),
     onSuccess: data => {
       if (data.isSuccess) {
-        router.replace(ROUTE_PATH.HOME);
         mutate('/api/tweets', () => fetch('/api/tweets'));
+        router.replace(ROUTE_PATH.HOME);
       }
       toastMessage('info', data.message);
     },
