@@ -23,11 +23,12 @@ function TweetAndComments() {
     onError: (error: string) => toastMessage('error', error),
     onSuccess: data => {
       if (data.isSuccess) {
-        mutate('/api/tweets', () => fetch('/api/tweets'));
         router.replace(ROUTE_PATH.HOME);
+        mutate('/api/tweets', () => fetch('/api/tweets'));
       }
       toastMessage('info', data.message);
     },
+    revalidate: false,
   });
 
   const debouncedToggleLike = useDebounce((tweetIsLiked: boolean) => {
