@@ -1,4 +1,4 @@
-import type { ResponseType, TweetResponse } from '@/types';
+import type { ResponseType } from '@/types';
 
 import { METHOD } from '@/constants';
 import { db } from '@/libs/server';
@@ -17,55 +17,53 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Li
     if (!user) {
       throw Error('로그인이 필요합니다.');
     }
-    await db.$transaction(async prisma => {
-      const alreadyExists = await prisma.like.findUnique({
-        where: {
-          tweetId_userId: {
-            tweetId: String(id),
-            userId: user?.id,
+    const alreadyExists = await db.like.findUnique({
+      where: {
+        tweetId_userId: {
+          tweetId: String(id),
+          userId: user?.id,
+        },
+      },
+    });
+    if (method === METHOD.POST) {
+      if (alreadyExists) {
+        return res.status(204).end();
+      }
+
+      const like = await db.like.create({
+        data: {
+          tweet: {
+            connect: {
+              id: String(id),
+            },
+          },
+          user: {
+            connect: {
+              id: user?.id,
+            },
           },
         },
       });
-      if (method === METHOD.POST) {
-        if (alreadyExists) {
-          return res.status(204).end();
-        }
+      return res
+        .status(200)
+        .json({ data: like, isSuccess: true, message: '좋아요가 처리되었습니다.', statusCode: 201 });
+    }
 
-        const like = await prisma.like.create({
-          data: {
-            tweet: {
-              connect: {
-                id: String(id),
-              },
-            },
-            user: {
-              connect: {
-                id: user?.id,
-              },
+    if (method === METHOD.DELETE) {
+      if (alreadyExists) {
+        await db.like.delete({
+          where: {
+            tweetId_userId: {
+              tweetId: String(id),
+              userId: user.id,
             },
           },
         });
-        return res
-          .status(200)
-          .json({ data: like, isSuccess: true, message: '좋아요가 처리되었습니다.', statusCode: 201 });
       }
-
-      if (method === METHOD.DELETE) {
-        if (alreadyExists) {
-          await prisma.like.delete({
-            where: {
-              tweetId_userId: {
-                tweetId: String(id),
-                userId: user.id,
-              },
-            },
-          });
-        }
-        return res
-          .status(200)
-          .json({ data: null, isSuccess: true, message: '좋아요가 삭제되었습니다.', statusCode: 200 });
-      }
-    });
+      return res
+        .status(200)
+        .json({ data: null, isSuccess: true, message: '좋아요가 삭제되었습니다.', statusCode: 200 });
+    }
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
