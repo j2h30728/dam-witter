@@ -17,6 +17,11 @@
 
 [배포 페이지로 이동하기](https://dam-witter.vercel.app)<br/>
 
+> #### 테스트 계정
+>
+> - Email : test@test.dam
+> - Password : qweQWE123
+
 ## 🗓️ 프로젝트 제작
 
 ### 제작 : 2023.7.17 ~ 7.25
