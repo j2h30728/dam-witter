@@ -16,22 +16,21 @@ export default function Upload() {
   const router = useRouter();
   const [isTweetSubmissionInProgress, setIsTweetSubmissionInProgress] = useState(false);
 
-  const { isMutating: isUploadTweetMutating, trigger } = useSWRMutation(
-    '/api/tweets',
-    fetchers.post<UploadBasicInputText, TweetResponse>,
-    {
-      onSuccess: data => {
-        mutate('/api/tweets', () => fetch('/api/tweets'));
-        if (data.isSuccess) {
-          toastMessage('success', data.message);
-          router.push(ROUTE_PATH.HOME);
-        } else {
-          toastMessage('error', data.message);
-        }
-      },
-    }
-  );
-
+  const {
+    data: createdTweet,
+    isMutating: isUploadTweetMutating,
+    trigger,
+  } = useSWRMutation('/api/tweets', fetchers.post<UploadBasicInputText, TweetResponse>, {
+    onSuccess: async data => {
+      if (data.isSuccess) {
+        await mutate('/api/tweets', () => fetch('/api/tweets'));
+        toastMessage('success', data.message);
+        router.push(ROUTE_PATH.HOME);
+      } else {
+        toastMessage('error', data.message);
+      }
+    },
+  });
   const { errorMessage, errors, form, isError, onChange } = useForm<UploadBasicInputText>(
     { text: '' },
     { text: basicTextValidator }
@@ -56,7 +55,7 @@ export default function Upload() {
     }
   }, [imageId, form.text, trigger, isImageLoading, isTweetSubmissionInProgress]);
 
-  const isCreatingTweet = isTweetSubmissionInProgress || isUploadTweetMutating;
+  const isCreatingTweet = isTweetSubmissionInProgress || createdTweet?.isSuccess || isUploadTweetMutating;
 
   return (
     <Layout hasBackButton isLoggedIn title="TWEET UPLOAD">
@@ -65,7 +64,15 @@ export default function Upload() {
           className="relative flex items-center justify-center w-full border-2 border-dashed rounded-lg cursor-pointer h-60 border-beige3"
           htmlFor="image"
         >
-          <input accept="image/*" className="hidden" id="image" name="image" onChange={selectedImage} type="file" />
+          <input
+            accept="image/*"
+            className="hidden"
+            disabled={isCreatingTweet}
+            id="image"
+            name="image"
+            onChange={selectedImage}
+            type="file"
+          />
           {previewImage ? (
             <Image
               alt="preview Image"
