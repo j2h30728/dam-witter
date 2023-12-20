@@ -9,13 +9,15 @@ import { toastMessage } from '@/libs/client/toastMessage';
 import { ProfileResponse, ResponseType, TweetResponse } from '@/types';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { mutate } from 'swr/_internal';
+import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
 
 function TweetAndComments() {
   const router = useRouter();
 
-  const tweet = useSWR<ResponseType<TweetResponse>>(router.query.id ? `/api/tweets/${router.query.id}` : null);
+  const tweet = useSWR<ResponseType<TweetResponse>>(router.query.id ? `/api/tweets/${router.query.id}` : null, {
+    revalidateOnFocus: false,
+  });
   const { data: loggedInUser } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
   const toggleLike = useLikeTweet();
 
@@ -23,7 +25,7 @@ function TweetAndComments() {
     onError: (error: string) => toastMessage('error', error),
     onSuccess: data => {
       if (data.isSuccess) {
-        mutate('/api/tweets', () => fetch('/api/tweets'));
+        cache.delete('/api/tweets');
         router.replace(ROUTE_PATH.HOME);
       }
       toastMessage('info', data.message);
@@ -70,7 +72,7 @@ function TweetAndComments() {
   if (tweet.isLoading || !tweet.data || !loggedInUser?.data) {
     return <LoadingSpinner text={'불러오는 중..'} />;
   }
-  if (tweetDelete.isMutating || tweetDelete.data) {
+  if (tweetDelete.isMutating || tweetDelete.data?.isSuccess) {
     return <LoadingSpinner text="트윗 삭제 중 입니다." />;
   }
 
