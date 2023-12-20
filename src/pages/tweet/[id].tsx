@@ -18,8 +18,9 @@ function TweetAndComments() {
   const tweet = useSWR<ResponseType<TweetResponse>>(router.query.id ? `/api/tweets/${router.query.id}` : null, {
     revalidateOnFocus: false,
   });
-  const { data: loggedInUser } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile');
-
+  const { data: loggedInUser } = useSWR<ResponseType<ProfileResponse>>('/api/users/profile', {
+    revalidateOnFocus: false,
+  });
   const toggleLike = useLikeTweet();
 
   const tweetDelete = useSWRMutation(`/api/tweets/${router.query.id}`, fetchers.delete, {
