@@ -7,6 +7,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse | TweetResponse[]>>) {
   const { user } = req.session;
+  const { limit, pageIndex } = req.query;
+
+  const skip = Number(pageIndex ?? 0) * (Number(limit) ?? 10);
+  const take = Number(limit) ?? 10;
+
   const tweets = await db.tweet.findMany({
     include: {
       _count: {
@@ -32,6 +37,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
     orderBy: {
       createdAt: 'desc',
     },
+    skip,
+    take,
   });
   const transformedTweets = tweets.map(tweet => ({
     ...tweet,
