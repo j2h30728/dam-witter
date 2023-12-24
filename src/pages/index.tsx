@@ -2,7 +2,7 @@ import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } 
 import { METHOD, ROUTE_PATH } from '@/constants';
 import useLikeTweet from '@/hooks/tweets/useLikeTweet';
 import useDebounce from '@/hooks/useDebounce';
-import useGetInfiniteData from '@/hooks/useInfiniteScrollData';
+import useGetInfiniteData, { PAGE_SIZE } from '@/hooks/useInfiniteScrollData';
 import { formatDate, maskEmail } from '@/libs/client';
 import { db, withSsrSession } from '@/libs/server';
 import { ResponseType, TweetResponse } from '@/types';
@@ -15,45 +15,44 @@ const Home: NextPage = () => {
     useGetInfiniteData<ResponseType<TweetResponse[]>>('/api/tweets');
 
   const { trigger: toggleLike } = useLikeTweet();
+  const responseTweets = data.flatMap(tweet => tweet.data) as TweetResponse[];
 
   const debouncedToggleLike = useDebounce((tweet: TweetResponse) => {
-    if (responseTweets) {
-      responseTweets?.forEach(responseTweet => {
-        if (responseTweet.id === tweet.id) {
-          toggleLike(
-            { method: responseTweet.isLiked ? METHOD.DELETE : METHOD.POST, tweetId: responseTweet.id },
-            { revalidate: false, rollbackOnError: true }
-          );
-        }
-      });
-    }
+    toggleLike(
+      { method: tweet.isLiked ? METHOD.DELETE : METHOD.POST, tweetId: tweet.id },
+      { revalidate: false, rollbackOnError: true }
+    );
   }, 500);
 
-  const handleLikeToggle = (tweet: TweetResponse) => {
-    debouncedToggleLike(tweet);
-
-    // TODO infinite scroll 기준으로 좋아요 낙관적 업데이트 적용
-    if (responseTweets) mutate();
-    // {
-    //   ...responseTweets,
-    //   data:
-    //     responseTweets.data?.map(t => {
-    //       if (t.id === tweet.id) {
-    //         let newLikeStatus = !t.isLiked;
-    //         let newLikeCount = newLikeStatus ? t._count.likes + 1 : t._count.likes - 1;
-    //         return { ...t, _count: { ...t._count, likes: newLikeCount }, isLiked: newLikeStatus };
-    //       } else {
-    //         return t;
-    //       }
-    //     }) || [],
-    // },
-    // false
+  const handleLikeToggle = (selectedTweet: TweetResponse) => {
+    debouncedToggleLike(selectedTweet);
+    const currentTweetList = [...data];
+    const selectedTweetIndex = responseTweets.indexOf(selectedTweet);
+    const selectedDataIndex = Math.floor(selectedTweetIndex / PAGE_SIZE);
+    const tweetInList = currentTweetList[selectedDataIndex];
+    if (tweetInList.data) {
+      const modifiedTweetList = tweetInList.data?.map(tweet => {
+        if (tweet.id === selectedTweet.id) {
+          return {
+            ...selectedTweet,
+            _count: {
+              ...selectedTweet._count,
+              likes: selectedTweet.isLiked ? selectedTweet._count.likes - 1 : selectedTweet._count.likes + 1,
+            },
+            isLiked: !selectedTweet.isLiked,
+          };
+        } else {
+          return tweet;
+        }
+      });
+      currentTweetList[selectedDataIndex] = { ...tweetInList, data: modifiedTweetList ?? [] };
+    }
+    mutate([currentTweetList], false);
   };
 
   if (isLoading) {
     return <LoadingSpinner text={'불러오는 중..'} />;
   }
-  const responseTweets = data.flatMap(tweet => tweet.data) as TweetResponse[];
   return (
     <div className="gap-5 sub-layout">
       {responseTweets.map((tweet: TweetResponse) => (

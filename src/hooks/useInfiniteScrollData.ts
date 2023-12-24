@@ -2,7 +2,7 @@ import useSWRInfinite from 'swr/infinite';
 
 import useIntersectionObserver from './useIntersectionObserver';
 
-const PAGE_SIZE = 10;
+export const PAGE_SIZE = 10;
 
 const getKey = <T>(index: number, previousPageData: T[] | null, url: string) => {
   if (previousPageData && previousPageData.length === 0) return null;
