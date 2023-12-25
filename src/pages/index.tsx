@@ -84,7 +84,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       ))}
-      {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}>마지막</div>}
+      {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}
     </div>
   );
 };
