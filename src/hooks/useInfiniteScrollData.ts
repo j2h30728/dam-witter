@@ -1,3 +1,4 @@
+import { ResponseType } from '@/types';
 import useSWRInfinite from 'swr/infinite';
 
 import useIntersectionObserver from './useIntersectionObserver';
@@ -10,12 +11,17 @@ const getKey = <T>(index: number, previousPageData: T[] | null, url: string) => 
 };
 
 const useInfiniteScrollData = <T>(url: string) => {
-  const { data, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite<T[]>((...args) =>
+  const { data, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite<ResponseType<T[]>[]>((...args) =>
     getKey(...args, url)
   );
-  const { bottomItemRef } = useIntersectionObserver(() => setSize(size => size + 1));
-
   const flattedData = data?.flat() ?? [];
+
+  const isEmpty = flattedData.at(0)?.data?.length === 0;
+  const isLastPage = (flattedData.at(-1)?.data?.length ?? 0) < PAGE_SIZE;
+
+  const { bottomItemRef } = useIntersectionObserver(() => {
+    if (!isEmpty && !isLastPage) setSize(size => size + 1);
+  });
 
   return { bottomItemRef, data: flattedData, isLoading, isValidating, mutate, setSize };
 };
