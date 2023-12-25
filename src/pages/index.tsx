@@ -2,64 +2,60 @@ import { Layout, LikeButton, LoadingSpinner, ProfileImage, Symbol, TweetImage } 
 import { METHOD, ROUTE_PATH } from '@/constants';
 import useLikeTweet from '@/hooks/tweets/useLikeTweet';
 import useDebounce from '@/hooks/useDebounce';
+import useGetInfiniteData, { PAGE_SIZE } from '@/hooks/useInfiniteScrollData';
 import { formatDate, maskEmail } from '@/libs/client';
 import { db, withSsrSession } from '@/libs/server';
 import { ResponseType, TweetResponse } from '@/types';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import Link from 'next/link';
-import useSWR, { SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 
 const Home: NextPage = () => {
-  const {
-    data: responseTweets,
-    isLoading,
-    mutate: tweetsMutate,
-  } = useSWR<ResponseType<TweetResponse[]>>('/api/tweets');
+  const { bottomItemRef, data, isLoading, isValidating, mutate } =
+    useGetInfiniteData<ResponseType<TweetResponse[]>>('/api/tweets');
 
   const { trigger: toggleLike } = useLikeTweet();
+  const responseTweets = data.flatMap(tweet => tweet.data) as TweetResponse[];
 
   const debouncedToggleLike = useDebounce((tweet: TweetResponse) => {
-    if (responseTweets) {
-      responseTweets.data?.forEach(responseTweet => {
-        if (responseTweet.id === tweet.id) {
-          toggleLike(
-            { method: responseTweet.isLiked ? METHOD.DELETE : METHOD.POST, tweetId: responseTweet.id },
-            { revalidate: false, rollbackOnError: true }
-          );
-        }
-      });
-    }
+    toggleLike(
+      { method: tweet.isLiked ? METHOD.DELETE : METHOD.POST, tweetId: tweet.id },
+      { revalidate: false, rollbackOnError: true }
+    );
   }, 500);
 
-  const handleLikeToggle = (tweet: TweetResponse) => {
-    debouncedToggleLike(tweet);
-
-    if (responseTweets)
-      tweetsMutate(
-        {
-          ...responseTweets,
-          data:
-            responseTweets.data?.map(t => {
-              if (t.id === tweet.id) {
-                let newLikeStatus = !t.isLiked;
-                let newLikeCount = newLikeStatus ? t._count.likes + 1 : t._count.likes - 1;
-                return { ...t, _count: { ...t._count, likes: newLikeCount }, isLiked: newLikeStatus };
-              } else {
-                return t;
-              }
-            }) || [],
-        },
-        false
-      );
+  const handleLikeToggle = (selectedTweet: TweetResponse) => {
+    debouncedToggleLike(selectedTweet);
+    const currentTweetList = [...data];
+    const selectedTweetIndex = responseTweets.indexOf(selectedTweet);
+    const selectedDataIndex = Math.floor(selectedTweetIndex / PAGE_SIZE);
+    const tweetInList = currentTweetList[selectedDataIndex];
+    if (tweetInList.data) {
+      const modifiedTweetList = tweetInList.data?.map(tweet => {
+        if (tweet.id === selectedTweet.id) {
+          return {
+            ...selectedTweet,
+            _count: {
+              ...selectedTweet._count,
+              likes: selectedTweet.isLiked ? selectedTweet._count.likes - 1 : selectedTweet._count.likes + 1,
+            },
+            isLiked: !selectedTweet.isLiked,
+          };
+        } else {
+          return tweet;
+        }
+      });
+      currentTweetList[selectedDataIndex] = { ...tweetInList, data: modifiedTweetList ?? [] };
+    }
+    mutate([currentTweetList], false);
   };
 
   if (isLoading) {
     return <LoadingSpinner text={'불러오는 중..'} />;
   }
-
   return (
     <div className="gap-5 sub-layout">
-      {responseTweets?.data?.map((tweet: TweetResponse) => (
+      {responseTweets.map((tweet: TweetResponse) => (
         <div className="flex flex-col gap-4 pb-2 border-b-2 border-base1" key={tweet.id}>
           <div className="flex items-center gap-3 px-3">
             <ProfileImage avatarId={tweet.user.profile?.avatar} />
@@ -89,6 +85,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       ))}
+      {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}>마지막</div>}
     </div>
   );
 };
