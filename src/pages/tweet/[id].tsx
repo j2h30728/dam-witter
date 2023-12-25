@@ -22,11 +22,11 @@ function TweetAndComments() {
     revalidateOnFocus: false,
   });
   const toggleLike = useLikeTweet();
-
   const tweetDelete = useSWRMutation(`/api/tweets/${router.query.id}`, fetchers.delete, {
     onError: (error: string) => toastMessage('error', error),
     onSuccess: data => {
       if (data.isSuccess) {
+        cache.delete('$inf$/api/tweets');
         cache.delete('/api/tweets');
         router.replace(ROUTE_PATH.HOME);
       }
