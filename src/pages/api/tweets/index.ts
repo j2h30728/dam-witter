@@ -9,8 +9,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
   const { user } = req.session;
   const { limit, pageIndex } = req.query;
 
-  const skip = Number(pageIndex ?? 0) * (Number(limit) ?? 10);
-  const take = Number(limit) ?? 10;
+  const take = Number(limit ?? 10);
+  const skip = Number(pageIndex ?? 0) * take;
 
   const tweets = await db.tweet.findMany({
     include: {

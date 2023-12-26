@@ -11,8 +11,7 @@ import Link from 'next/link';
 import { SWRConfig } from 'swr';
 
 const Home: NextPage = () => {
-  const { bottomItemRef, data, isLoading, isValidating, mutate } =
-    useGetInfiniteData<ResponseType<TweetResponse[]>>('/api/tweets');
+  const { bottomItemRef, data, isLoading, isValidating, mutate } = useGetInfiniteData<TweetResponse>('/api/tweets');
 
   const { trigger: toggleLike } = useLikeTweet();
   const responseTweets = data.flatMap(tweet => tweet.data) as TweetResponse[];
@@ -85,7 +84,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       ))}
-      {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}>마지막</div>}
+      {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}
     </div>
   );
 };
