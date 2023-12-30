@@ -27,6 +27,10 @@
 ### 제작 : 2023.7.17 ~ 7.25
 
 - 계속적으로 리팩토링 및 고도화 진행 중, [Pull Request](https://github.com/j2h30728/dam-witter/pulls) 참고
+  <details>
+  <summary>Pull Request 내용 자세히 보기</summary>
+  <div markdown="1">
+
   1.  [Feature #2 트윗추가 및 프로필 사진 변경시 이미지 등록 로직 변경 #3](https://github.com/j2h30728/dam-witter/pull/3) : 2023.08.11, Image 등록 로직 리팩토링
   2.  [Feature #9 API mutate 로직 리팩토링 #10](https://github.com/j2h30728/dam-witter/pull/10) : 2023.08.22 ~ 2023.11.12, 자체 커스텀훅 useMutation에서 swr이 제공하는 수동트리거 useSRWMutation으로 리팩토링
   3.  [Feature #13 toast message 추가 및 적용 #14](https://github.com/j2h30728/dam-witter/pull/14) : 2023.11.13 ~ 2023.11.14
@@ -40,6 +44,12 @@
   6.  삭제 권한 대한 문지 해결 :
       - [Feature #24 삭제 권한 취약점 문제 해결 #25](https://github.com/j2h30728/dam-witter/pull/25) : 2023.12.11
       - [Feature #26 트윗 및 코멘트 삭제 기능 관련 문제 해결 #27](https://github.com/j2h30728/dam-witter/pull/27) : 2023.12.12
+  7.  무한 스크롤 기능 구현 :
+      - [Feature #32 트윗 리스트를 무한 스크롤 구현 #33](https://github.com/j2h30728/dam-witter/pull/33) : 2023.12.23~2023.12.24
+      - [Feature #34 트윗 리스트를 무한 스크롤 구현 2 (보완)#35](https://github.com/j2h30728/dam-witter/pull/35) : 2023.12.25
+
+  </div>
+  </details>
 
 ### 구현
 
@@ -116,7 +126,15 @@
 >   사용자가 '좋아요' 버튼을 연속해서 누를 때 발생하는 **중복 API 호출을 최소화하기 위해 `debounce` 기술을 도입**하여, 연속되는 여러 요청 대신 마지막 요청만 서버로 전송하도록 변경했습니다.
 >   POST 메서드로만 구현되어 있던 '좋아요' API를 RESTful하게 POST와 DELETE로 분리했습니다. 또한, useId와 tweetId 복합키를 유니크 키로 두어 데이터베이스의 중복 등록 문제를 해결하였습니다.
 
-3. 내용
+5. 트윗 리스트 무한 스크롤
+
+- 트윗 리스트(메인페이지)에서 전체 데이터를 일괄적으로 불러오는 대신, 필요에 따라 추가 데이터를 요청함으로써 성능 부담을 줄였습니다.
+- 트윗 리스트 API 에서 페이지네이션을 구현하여 클라이언트의 요청에 따라 필요한 데이터만 반환합니다.
+- 클라이언트에서는 무한 스크롤을 구현하기위해 마지막 트윗인지를 확인하고 다음 데이터를 요청하기위해 Intersection Observer API를 사용했습니다.
+  - 브라우저 리플로우 문제를 방지하고자 스크롤 이벤트가 아닌 Intersection Observer API를 채택했습니다.
+- 추가 데이터를 불러오는 대기 시간 동안의 사용자 경험을 개선하기위해 로딩 스피너의 활용하였습니다.
+
+4. 내용
 
 - 개인정보보호를 위하여 이메일을 masking 처리 하였습니다.
 - 트윗과 코멘트 작성시간은 '분, 시간, 일, 주' 단위로 기재 됩니다.
