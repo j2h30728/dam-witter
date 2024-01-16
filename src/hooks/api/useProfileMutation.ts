@@ -1,4 +1,4 @@
-import fetchers from '@/api/fetchers';
+import { putFetcher } from '@/api/fetchers';
 import { ROUTE_PATH } from '@/constants';
 import { toastMessage } from '@/libs/client/toastMessage';
 import { EditProfileInput, ProfileResponse } from '@/types';
@@ -11,21 +11,17 @@ interface useProfileMutationParams {
 
 const useProfileMutation = (params: useProfileMutationParams) => {
   const router = useRouter();
-  const { isMutating, trigger } = useSWRMutation(
-    '/api/users/profile',
-    fetchers.put<EditProfileInput, ProfileResponse>,
-    {
-      onSuccess: data => {
-        if (data.isSuccess) {
-          params.endEditingProfileSubmission();
-          if (data.message) toastMessage('success', data.message);
-          router.push(ROUTE_PATH.PROFILE);
-        } else {
-          if (data.message) toastMessage('error', data.message);
-        }
-      },
-    }
-  );
+  const { isMutating, trigger } = useSWRMutation('/api/users/profile', putFetcher<EditProfileInput, ProfileResponse>, {
+    onSuccess: data => {
+      if (data.isSuccess) {
+        params.endEditingProfileSubmission();
+        if (data.message) toastMessage('success', data.message);
+        router.push(ROUTE_PATH.PROFILE);
+      } else {
+        if (data.message) toastMessage('error', data.message);
+      }
+    },
+  });
   return { isEditProfileMutating: isMutating, mutateProfile: trigger };
 };
 

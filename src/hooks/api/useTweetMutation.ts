@@ -1,4 +1,4 @@
-import fetchers from '@/api/fetchers';
+import { postFetcher } from '@/api/fetchers';
 import { ROUTE_PATH } from '@/constants';
 import { END_POINTS } from '@/constants/api';
 import { toastMessage } from '@/libs/client/toastMessage';
@@ -12,7 +12,7 @@ const useTweetMutation = () => {
 
   const { data, isMutating, trigger } = useSWRMutation(
     END_POINTS.TWEETS,
-    fetchers.post<UploadBasicInputText, TweetResponse>,
+    postFetcher<UploadBasicInputText, TweetResponse>,
     {
       onSuccess: async data => {
         if (data.isSuccess) {

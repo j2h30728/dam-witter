@@ -1,4 +1,4 @@
-import fetchers from '@/api/fetchers';
+import { deleteFetcher } from '@/api/fetchers';
 import { ROUTE_PATH } from '@/constants';
 import { END_POINTS } from '@/constants/api';
 import { toastMessage } from '@/libs/client/toastMessage';
@@ -9,7 +9,7 @@ import useSWRMutation from 'swr/mutation';
 const useDeleteTweet = () => {
   const router = useRouter();
 
-  const { data, isMutating, trigger } = useSWRMutation(END_POINTS.TWEET(router.query.id as string), fetchers.delete, {
+  const { data, isMutating, trigger } = useSWRMutation(END_POINTS.TWEET(router.query.id as string), deleteFetcher, {
     onError: (error: string) => toastMessage('error', error),
     onSuccess: data => {
       if (data.isSuccess) {
