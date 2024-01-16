@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
 
-const useLoginMutation = () => {
+const useLogInMutation = () => {
   const router = useRouter();
 
   const { isMutating, trigger } = useSWRMutation(
@@ -25,4 +25,4 @@ const useLoginMutation = () => {
   return { isLoginMutating: isMutating, mutateLogIn: trigger };
 };
 
-export default useLoginMutation;
+export default useLogInMutation;
