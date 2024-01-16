@@ -10,7 +10,7 @@ const getFetcher = async <F = unknown>(url: string): Promise<ResponseType<F>> =>
   }
   return response.json();
 };
-const postFetcher = async <T, F = unknown>(url: string, { arg }: { arg: T }): Promise<ResponseType<F>> => {
+export const postFetcher = async <T, F = unknown>(url: string, { arg }: { arg: T }): Promise<ResponseType<F>> => {
   const response = await fetch(url, {
     body: JSON.stringify(arg),
     method: METHOD.POST,

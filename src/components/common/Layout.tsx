@@ -1,5 +1,6 @@
+import fetchers from '@/api/fetchers';
 import { ROUTE_PATH } from '@/constants';
-import { fetchers, parameterToString } from '@/libs/client';
+import { parameterToString } from '@/libs/client';
 import { useRouter } from 'next/router';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
 import { cache } from 'swr/_internal';

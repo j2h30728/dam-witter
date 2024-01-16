@@ -1,48 +1,22 @@
 import { Input, Layout, Symbol } from '@/components';
 import { ROUTE_PATH } from '@/constants';
-import { useForm } from '@/hooks';
-import { emailValidator, fetchers, passwordValidator } from '@/libs/client';
-import { DEFAULT_ERROR_MESSAGE } from '@/libs/client/constants';
-import { toastMessage } from '@/libs/client/toastMessage';
-import { UserInput } from '@/types';
+import useLogIn from '@/hooks/auth/useLogIn';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { mutate } from 'swr';
-import useSWRMutation from 'swr/mutation';
 
 export default function LogIn() {
-  const router = useRouter();
-  const { isMutating, trigger } = useSWRMutation(
-    '/api/users/log-in',
-    fetchers.post<Pick<UserInput, 'email' | 'password'>>,
-    {
-      onSuccess: data => {
-        toastMessage('success', data.message);
-        router.replace(ROUTE_PATH.HOME);
-        mutate('/api/users/profile', fetchers.get('/api/users/profile'));
-      },
-    }
-  );
-
-  const { errorMessage, errors, form, isError, onChange } = useForm<Pick<UserInput, 'email' | 'password'>>(
-    { email: '', password: '' },
-    { email: emailValidator, password: passwordValidator }
-  );
-
-  const handleLogIn = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
-    trigger({ email: form.email, password: form.password });
-  };
+  const {
+    form: { isError, onChange, values: form },
+    login: { isLoginMutating, onSubmit },
+  } = useLogIn();
 
   return (
     <Layout title="LOG IN">
       <div className="flex flex-col items-center px-3 sub-layout">
         <Symbol className="m-16" height={130} width={130} />
-        <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleLogIn}>
+        <form className="flex flex-col w-full gap-1 px-10" onSubmit={onSubmit}>
           <Input
-            disabled={isMutating}
-            errorMassage={form.email && !errors.email.isValid && errors.email.message}
+            disabled={isLoginMutating}
+            errorMassage={isError.email}
             name="email"
             onChange={onChange}
             placeholder="Your email"
@@ -51,8 +25,8 @@ export default function LogIn() {
             value={form.email}
           />
           <Input
-            disabled={isMutating}
-            errorMassage={form.password && !errors.password.isValid && errors.password.message}
+            disabled={isLoginMutating}
+            errorMassage={isError.password}
             name="password"
             onChange={onChange}
             placeholder="Your password"
@@ -60,8 +34,8 @@ export default function LogIn() {
             type="password"
             value={form.password}
           />
-          <button className="w-full mt-8 button " disabled={isMutating}>
-            <span className="text-lg font-semibold ">{isMutating ? 'Loading...' : 'Log-In'}</span>
+          <button className="w-full mt-8 button " disabled={isLoginMutating}>
+            <span className="text-lg font-semibold ">{isLoginMutating ? 'Loading...' : 'Log-In'}</span>
           </button>
         </form>
         <nav className="flex gap-3 mt-5 ">

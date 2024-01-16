@@ -1,7 +1,7 @@
 import ProfileImage from '@/components/images/ProfileImage';
 import TweetImage from '@/components/images/TweetImage';
+import { DEFAULT_ERROR_MESSAGE } from '@/constants/api';
 import { formatDate, maskEmail } from '@/libs/client';
-import { DEFAULT_ERROR_MESSAGE } from '@/libs/client/constants';
 import { TweetResponse } from '@/types';
 import { AiOutlineDelete } from 'react-icons/ai';
 

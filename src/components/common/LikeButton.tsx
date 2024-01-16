@@ -1,6 +1,6 @@
 import { TiHeart, TiHeartOutline } from 'react-icons/ti';
 
-export default function LikeButton({ isLiked, toggleLike }: { isLiked: boolean; toggleLike: () => void }) {
+export default function LikeButton({ isLiked, toggleLike }: { isLiked?: boolean; toggleLike: () => void }) {
   return (
     <button
       className="origin-center transform rounded-full hover:bg-gray-100 hover:scale-110 active:scale-90"
