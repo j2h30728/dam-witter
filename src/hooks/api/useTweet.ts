@@ -11,7 +11,11 @@ const useTweet = (params?: UserTweetParams) => {
   const router = useRouter();
 
   const { data, isLoading, isValidating, mutate } = useSWR<ResponseType<TweetResponse>>(
-    params?.tweetId ? END_POINTS.TWEET(params.tweetId) : END_POINTS.TWEET(router.query.id as string)
+    params?.tweetId
+      ? END_POINTS.TWEET(params.tweetId)
+      : router.query.id
+      ? END_POINTS.TWEET(router.query.id as string)
+      : null
   );
 
   return { data, isLoading, isValidating, mutate };
