@@ -1,5 +1,4 @@
-import useDeleteComment from '@/hooks/api/useDeleteComment';
-import useTweet from '@/hooks/api/useTweet';
+import useCommentViewModel from '@/hooks/viewModel/useCommentViewModel';
 import { CommentResponse } from '@/types';
 
 import CommentItem from './CommentItem';
@@ -12,40 +11,14 @@ const Comments = ({
   loggedInUserId: string;
   tweetComments?: CommentResponse[] | null;
 }) => {
-  const { onDelete } = useDeleteComment();
+  const { onDelete } = useCommentViewModel();
 
-  const tweet = useTweet();
-
-  const handleRemoveComment = (commentId: string) => {
-    onDelete(commentId);
-    if (tweet.data && tweet.data.data) {
-      tweet.mutate(
-        {
-          ...tweet.data,
-          data: {
-            ...tweet.data.data,
-            _count: {
-              ...tweet.data.data._count,
-              comments: tweet.data.data._count.comments - 1,
-            },
-            comments: tweet.data.data.comments?.filter(prev => prev.id !== commentId),
-          },
-        },
-        false
-      );
-    }
-  };
   return (
     <>
       <UploadCommentFrom />
       <div className="flex flex-col gap-3">
         {tweetComments?.map(comment => (
-          <CommentItem
-            comment={comment}
-            key={comment.id}
-            loggedInUserId={loggedInUserId}
-            onRemove={handleRemoveComment}
-          />
+          <CommentItem comment={comment} key={comment.id} loggedInUserId={loggedInUserId} onRemove={onDelete} />
         ))}
       </div>
     </>

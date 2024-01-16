@@ -22,7 +22,7 @@ const useDeleteTweet = () => {
     revalidate: false,
   });
 
-  return { isDeleting: isMutating || data?.isSuccess, onDelete: trigger };
+  return { deleteTweet: trigger, isDeleting: isMutating || data?.isSuccess };
 };
 
 export default useDeleteTweet;

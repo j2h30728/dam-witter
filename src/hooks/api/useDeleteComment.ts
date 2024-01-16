@@ -6,12 +6,12 @@ import useSWRMutation from 'swr/mutation';
 const useDeleteComment = () => {
   const router = useRouter();
 
-  const deleteComment = useSWRMutation(END_POINTS.COMMENTS(router.query.id as string), fetchers.delete, {
+  const { trigger } = useSWRMutation(END_POINTS.COMMENTS(router.query.id as string), fetchers.delete, {
     revalidate: false,
   });
 
   return {
-    onDelete: deleteComment.trigger,
+    deleteComment: trigger,
   };
 };
 

@@ -27,11 +27,11 @@ const useComment = () => {
     await tweet.mutate();
   };
 
-  const { onDelete } = useDeleteComment();
+  const { deleteComment } = useDeleteComment();
 
   return {
     form: { onChange, value: form },
-    onDelete,
+    onDelete: deleteComment,
     upload: { isUploadingComment, mutationComment, onSubmit },
   };
 };
