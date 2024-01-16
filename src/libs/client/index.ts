@@ -1,4 +1,3 @@
-export { default as fetchers } from './fetchers';
 export { default as formatDate } from './formatDate';
 export { default as getImageId } from './getImageId';
 export { default as makeImagePath } from './makeImagePath';

@@ -50,3 +50,4 @@ export interface CommentResponse extends Comment {
 }
 
 export type UploadBasicInputText = { imageId?: string; text: string };
+export type EditProfileInput = { avatarId?: string; bio: string; name: string };

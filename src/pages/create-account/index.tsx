@@ -1,99 +1,61 @@
-import type { UserInput } from '@/types';
-
 import { Input, Layout, Symbol } from '@/components';
 import { ROUTE_PATH } from '@/constants';
-import { useForm } from '@/hooks';
-import { emailValidator, fetchers, passwordValidator, usernameValidator } from '@/libs/client';
-import { DEFAULT_ERROR_MESSAGE } from '@/libs/client/constants';
-import { toastMessage } from '@/libs/client/toastMessage';
+import useCreateAccount from '@/hooks/auth/useCreateAccount';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import useSWRMutation from 'swr/mutation';
 
-interface CreateAccount extends UserInput {
-  confirmPassword: string;
-}
 export default function CreateAccount() {
-  const router = useRouter();
-  const { errorMessage, errors, form, isError, onChange } = useForm<CreateAccount>(
-    {
-      confirmPassword: '',
-      email: '',
-      name: '',
-      password: '',
-    },
-    {
-      confirmPassword: passwordValidator,
-      email: emailValidator,
-      name: usernameValidator,
-      password: passwordValidator,
-    }
-  );
-  const { isMutating, trigger } = useSWRMutation('/api/users/create-account', fetchers.post<UserInput>, {
-    onSuccess: data => {
-      toastMessage('success', data.message);
-      router.replace(ROUTE_PATH.LOG_IN);
-    },
-  });
-
-  const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
-
-    trigger({
-      email: form.email,
-      name: form.name,
-      password: form.password,
-    });
-  };
+  const {
+    form: { isError, onChange, values },
+    register: { isCreateAccountMutating, onSubmit },
+  } = useCreateAccount();
 
   return (
     <Layout title="CREATE ACCOUNT">
       <div className="flex flex-col items-center px-3 sub-layout">
         <Symbol className="m-16" height={130} width={130} />
-        <form className="flex flex-col w-full gap-1 px-10" onSubmit={handleCreateAccount}>
+        <form className="flex flex-col w-full gap-1 px-10" onSubmit={onSubmit}>
           <Input
-            disabled={isMutating}
-            errorMassage={form.name && !errors.name.isValid && errors.name.message}
+            disabled={isCreateAccountMutating}
+            errorMassage={isError.name}
             name="name"
             onChange={onChange}
             placeholder="Your Name"
             title="Name"
             type="text"
-            value={form.name}
+            value={values.name}
           />
           <Input
-            disabled={isMutating}
-            errorMassage={form.email && !errors.email.isValid && errors.email.message}
+            disabled={isCreateAccountMutating}
+            errorMassage={isError.email}
             name="email"
             onChange={onChange}
             placeholder="Your email"
             title="Email"
             type="email"
-            value={form.email}
+            value={values.email}
           />
           <Input
-            disabled={isMutating}
-            errorMassage={form.password && !errors.password.isValid && errors.password.message}
+            disabled={isCreateAccountMutating}
+            errorMassage={isError.password}
             name="password"
             onChange={onChange}
             placeholder="Your password"
             title="Password"
             type="password"
-            value={form.password}
+            value={values.password}
           />
           <Input
-            disabled={isMutating}
-            errorMassage={form.confirmPassword && !errors.confirmPassword.isValid && errors.confirmPassword.message}
+            disabled={isCreateAccountMutating}
+            errorMassage={isError.confirmPassword}
             name="confirmPassword"
             onChange={onChange}
             placeholder="Your confirmPassword"
             title="ConfirmPassword"
             type="password"
-            value={form.confirmPassword}
+            value={values.confirmPassword}
           />
-          <button className="w-full mt-8 button" disabled={isMutating}>
-            <span className="text-lg font-semibold ">{isMutating ? 'Loading...' : 'Create Account'}</span>
+          <button className="w-full mt-8 button" disabled={isCreateAccountMutating}>
+            <span className="text-lg font-semibold ">{isCreateAccountMutating ? 'Loading...' : 'Create Account'}</span>
           </button>
         </form>
         <nav className="flex gap-3 mt-5 ">

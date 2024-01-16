@@ -59,7 +59,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       })
     );
 
-    return res.status(200).json({ data: tweet, isLiked, isSuccess: true, message: null, statusCode: 200 });
+    return res
+      .status(200)
+      .json({ data: { ...tweet, isLiked: isLiked }, isSuccess: true, message: null, statusCode: 200 });
   }
 
   if (req.method === METHOD.DELETE) {

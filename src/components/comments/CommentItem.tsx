@@ -5,12 +5,12 @@ import { AiOutlineDelete } from 'react-icons/ai';
 
 const CommentItem = ({
   comment,
-  handleRemoveComment,
   loggedInUserId,
+  onRemove,
 }: {
   comment: CommentResponse;
-  handleRemoveComment: (commentId: string) => void;
   loggedInUserId: string;
+  onRemove: (commentId: string) => void;
 }) => {
   return (
     <div className="flex items-center gap-2 " key={comment.id}>
@@ -19,11 +19,7 @@ const CommentItem = ({
       <span className="w-1/2">{comment.text}</span>
       <small className="ml-auto w-fit text-stone-500">{formatDate(comment.createdAt)}</small>
       {loggedInUserId === comment.user.id && (
-        <AiOutlineDelete
-          className="cursor-pointer fill-stone-400"
-          onClick={() => handleRemoveComment(comment.id)}
-          size={20}
-        />
+        <AiOutlineDelete className="cursor-pointer fill-stone-400" onClick={() => onRemove(comment.id)} size={20} />
       )}
     </div>
   );

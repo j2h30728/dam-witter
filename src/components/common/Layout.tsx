@@ -1,5 +1,6 @@
+import { postFetcher } from '@/api/fetchers';
 import { ROUTE_PATH } from '@/constants';
-import { fetchers, parameterToString } from '@/libs/client';
+import { parameterToString } from '@/libs/client';
 import { useRouter } from 'next/router';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
 import { cache } from 'swr/_internal';
@@ -17,7 +18,7 @@ export default function Layout({
   title: React.ReactNode;
 }) {
   const router = useRouter();
-  const { trigger: logOut } = useSWRMutation('/api/users/log-out', fetchers.post, {
+  const { trigger: logOut } = useSWRMutation('/api/users/log-out', postFetcher, {
     onSuccess: () => {
       router.replace('/log-in');
       cache.delete('/api/users/profile');
