@@ -12,22 +12,16 @@ const useTweetViewModel = () => {
 
   const optimisticToggleLike = () => {
     if (data && data.data) {
-      toggleLike(data.data);
+      const { data: tweetData } = data;
+      const target = { ...tweetData, _count: { ...tweetData._count } };
+      target._count.likes = tweetData.isLiked ? tweetData._count.likes - 1 : tweetData._count.likes + 1;
+      target.isLiked = !tweetData.isLiked;
+
+      toggleLike(tweetData);
       mutate(
         {
           ...data,
-          data: {
-            ...data.data,
-            _count: {
-              ...data.data._count,
-              likes: data.data._count
-                ? data.data.isLiked
-                  ? data.data._count.likes - 1
-                  : data.data._count.likes + 1
-                : 1,
-            },
-            isLiked: !data.data.isLiked,
-          },
+          data: target,
         },
         false
       );

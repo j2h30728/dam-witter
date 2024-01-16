@@ -4,22 +4,19 @@ import useTweet from '../api/useTweet';
 const useCommentViewModel = () => {
   const { deleteComment } = useDeleteComment();
 
-  const tweet = useTweet();
+  const { data, mutate } = useTweet();
 
   const onDelete = (commentId: string) => {
     deleteComment(commentId);
-    if (tweet.data && tweet.data.data) {
-      tweet.mutate(
+    if (data && data.data) {
+      const { data: tweetData } = data;
+      const target = { ...tweetData, _count: { ...tweetData._count } };
+      target._count.comments = tweetData._count.comments - 1;
+      target.comments = tweetData.comments?.filter(prev => prev.id !== commentId);
+      mutate(
         {
-          ...tweet.data,
-          data: {
-            ...tweet.data.data,
-            _count: {
-              ...tweet.data.data._count,
-              comments: tweet.data.data._count.comments - 1,
-            },
-            comments: tweet.data.data.comments?.filter(prev => prev.id !== commentId),
-          },
+          ...data,
+          data: target,
         },
         false
       );
