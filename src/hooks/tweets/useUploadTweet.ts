@@ -13,7 +13,7 @@ const useUploadTweet = () => {
 
   const { createdTweet, isUploadTweetMutating, uploadTweetMutate } = useTweetMutation();
 
-  const { errorMessage, errors, form, isError, onChange } = useForm<UploadBasicInputText>(
+  const { errorMessage, form, getErrorMessage, isError, onChange } = useForm<UploadBasicInputText>(
     { text: '' },
     { text: basicTextValidator }
   );
@@ -41,8 +41,7 @@ const useUploadTweet = () => {
 
   return {
     form: {
-      errors,
-      isError: { text: form.text && !errors.text.isValid && errors.text.message },
+      errorMessage: { text: getErrorMessage('text') },
       onChange,
       value: form,
     },

@@ -6,7 +6,7 @@ import { AiOutlinePicture } from 'react-icons/ai';
 
 export default function Upload() {
   const {
-    form: { isError, onChange, value },
+    form: { errorMessage, onChange, value },
     image: { cancelImage, previewImage, selectedImage },
     upload: { isCreatingTweet, onSubmit },
   } = useUploadTweet();
@@ -46,7 +46,7 @@ export default function Upload() {
         </button>
         <Textarea
           disabled={isCreatingTweet}
-          errorMassage={isError.text}
+          errorMassage={errorMessage.text}
           name="text"
           onChange={onChange}
           placeholder="텍스트를 입력해주세요."
