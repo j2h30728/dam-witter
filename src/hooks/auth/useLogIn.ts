@@ -9,7 +9,7 @@ import useForm from '../common/useForm';
 const useLogIn = () => {
   const { isLoginMutating, mutateLogIn } = useLoginMutation();
 
-  const { errorMessage, errors, form, isError, onChange } = useForm<Pick<UserInput, 'email' | 'password'>>(
+  const { errorMessage, form, getErrorMessage, isError, onChange } = useForm<Pick<UserInput, 'email' | 'password'>>(
     { email: '', password: '' },
     { email: emailValidator, password: passwordValidator }
   );
@@ -22,10 +22,9 @@ const useLogIn = () => {
 
   return {
     form: {
-      isError: {
-        email: form.email && !errors.email.isValid && errors.email.message,
-        name: form.name && !errors.name.isValid && errors.name.message,
-        password: form.password && !errors.password.isValid && errors.password.message,
+      errorMessage: {
+        email: getErrorMessage('email'),
+        password: getErrorMessage('password'),
       },
       onChange,
       values: form,

@@ -20,7 +20,7 @@ const useEditProfile = () => {
     setIsEditedProfileSubmissionInProgress(false);
   };
 
-  const { errorMessage, errors, form, isError, onChange } = useForm<EditProfileInput>(
+  const { errorMessage, form, getErrorMessage, isError, onChange } = useForm<EditProfileInput>(
     {
       bio: profile?.profile?.bio || '',
       name: profile?.name || '',
@@ -67,8 +67,8 @@ const useEditProfile = () => {
     edit: { isEditProfile, onSubmit },
     form: {
       isError: {
-        bio: form.bio && !errors.bio.isValid && errors.bio.message,
-        name: form.name && !errors.name.isValid && errors.name.message,
+        bio: getErrorMessage('bio'),
+        name: getErrorMessage('name'),
       },
       onChange,
       values: form,

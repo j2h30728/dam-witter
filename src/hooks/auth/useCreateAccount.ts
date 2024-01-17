@@ -11,7 +11,7 @@ interface CreateAccount extends UserInput {
 }
 
 const useCreateAccount = () => {
-  const { errorMessage, errors, form, isError, onChange } = useForm<CreateAccount>(
+  const { errorMessage, form, getErrorMessage, isError, onChange } = useForm<CreateAccount>(
     {
       confirmPassword: '',
       email: '',
@@ -42,10 +42,10 @@ const useCreateAccount = () => {
   return {
     form: {
       isError: {
-        confirmPassword: form.confirmPassword && !errors.confirmPassword.isValid && errors.confirmPassword.message,
-        email: form.email && !errors.email.isValid && errors.email.message,
-        name: form.name && !errors.name.isValid && errors.name.message,
-        password: form.password && !errors.password.isValid && errors.password.message,
+        confirmPassword: getErrorMessage('confirmPassword'),
+        email: getErrorMessage('email'),
+        name: getErrorMessage('name'),
+        password: getErrorMessage('password'),
       },
       onChange,
       values: form,

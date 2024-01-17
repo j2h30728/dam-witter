@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function LogIn() {
   const {
-    form: { isError, onChange, values: form },
+    form: { errorMessage, onChange, values: form },
     login: { isLoginMutating, onSubmit },
   } = useLogIn();
 
@@ -16,7 +16,7 @@ export default function LogIn() {
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={onSubmit}>
           <Input
             disabled={isLoginMutating}
-            errorMassage={isError.email}
+            errorMassage={errorMessage.email}
             name="email"
             onChange={onChange}
             placeholder="Your email"
@@ -26,7 +26,7 @@ export default function LogIn() {
           />
           <Input
             disabled={isLoginMutating}
-            errorMassage={isError.password}
+            errorMassage={errorMessage.password}
             name="password"
             onChange={onChange}
             placeholder="Your password"
