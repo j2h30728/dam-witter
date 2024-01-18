@@ -1,10 +1,5 @@
+import { ValidationField, Validator } from '@/libs/client/validators';
 import { useState } from 'react';
-
-type Validator<T> = (
-  value: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>['value'],
-  entryValues?: T
-) => ValidationField;
-type ValidationField = { isValid: boolean; message: string };
 
 function useForm<T extends Record<string, any>>(initialForm: T, validators: { [K in keyof T]: Validator<T> }) {
   type ValidatedResult = { [K in keyof T]: ValidationField };
@@ -14,9 +9,7 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: { [K
     Object.keys(initialForm).reduce(
       (acc, key) => ({
         ...acc,
-        [key]: form[key]
-          ? { isValid: true, message: '' }
-          : { isValid: false, message: `${key}의 입력값을 채워주세요.` },
+        [key]: form[key] && { isValid: true, message: '' },
       }),
       {} as ValidatedResult
     )
@@ -26,7 +19,7 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: { [K
     const { name, value } = event.target;
 
     setForm(prevForm => {
-      const updatedForm = { ...prevForm, [name]: value };
+      const updatedForm = { ...prevForm, [name]: value } as T;
 
       const newValidatedResult: ValidatedResult = {
         ...validatedResult,
