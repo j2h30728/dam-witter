@@ -1,5 +1,6 @@
 import { Layout, Symbol } from '@/components';
-import TestInput from '@/components/common/Input';
+import Button from '@/components/common/Button';
+import Input from '@/components/common/Input';
 import { ROUTE_PATH } from '@/constants';
 import useLogIn from '@/hooks/auth/useLogIn';
 import Link from 'next/link';
@@ -15,7 +16,7 @@ export default function LogIn() {
       <div className="flex flex-col items-center px-3 sub-layout">
         <Symbol className="m-16" height={130} width={130} />
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={onSubmit}>
-          <TestInput
+          <Input
             disabled={isLoginMutating}
             errorMassage={errorMessage.email}
             isValidated
@@ -26,7 +27,7 @@ export default function LogIn() {
             type="email"
             value={form.email}
           />
-          <TestInput
+          <Input
             disabled={isLoginMutating}
             errorMassage={errorMessage.password}
             isValidated
@@ -37,9 +38,9 @@ export default function LogIn() {
             type="password"
             value={form.password}
           />
-          <button className="w-full mt-8 button " disabled={isLoginMutating}>
-            <span className="text-lg font-semibold ">{isLoginMutating ? 'Loading...' : 'Log-In'}</span>
-          </button>
+          <Button disabled={isLoginMutating} size="lg" type="submit" width="w-full">
+            {isLoginMutating ? 'Loading...' : 'Log-In'}
+          </Button>
         </form>
         <nav className="flex gap-3 mt-5 ">
           <span>계정이 없으신가요?</span>

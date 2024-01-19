@@ -1,4 +1,5 @@
 import { Input, Layout, Symbol } from '@/components';
+import Button from '@/components/common/Button';
 import { ROUTE_PATH } from '@/constants';
 import useCreateAccount from '@/hooks/auth/useCreateAccount';
 import Link from 'next/link';
@@ -58,9 +59,9 @@ export default function CreateAccount() {
             type="password"
             value={values.confirmPassword}
           />
-          <button className="w-full mt-8 button" disabled={isCreateAccountMutating}>
-            <span className="text-lg font-semibold ">{isCreateAccountMutating ? 'Loading...' : 'Create Account'}</span>
-          </button>
+          <Button disabled={isCreateAccountMutating} size="lg" type="submit" width="w-full">
+            {isCreateAccountMutating ? 'Loading...' : 'Login In'}
+          </Button>
         </form>
         <nav className="flex gap-3 mt-5 ">
           <span>계정이 있으신가요?</span>

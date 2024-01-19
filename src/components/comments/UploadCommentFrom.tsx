@@ -10,7 +10,7 @@ const UploadCommentFrom = () => {
   } = useComment();
 
   return (
-    <form className="flex items-center w-full gap-1" onSubmit={onSubmit}>
+    <form className="flex items-center w-full gap-1 my-2" onSubmit={onSubmit}>
       <Input
         disabled={isUploadingComment}
         id="comment"

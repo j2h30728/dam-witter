@@ -33,7 +33,7 @@ const useEditProfile = () => {
 
   const { isEditProfileMutating, mutateProfile } = useProfileMutation({ endEditingProfileSubmission });
 
-  const { imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
+  const { cancelImage, imageId, isImageLoading, previewImage, selectedImage } = useSelectImage();
 
   const onSubmit = async () => {
     if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
@@ -73,7 +73,7 @@ const useEditProfile = () => {
       onChange,
       values: form,
     },
-    image: { previewImage, selectedImage },
+    image: { cancelImage, previewImage, selectedImage },
     profile: { avatar: profile?.profile?.avatar, email: profile?.email },
   };
 };
