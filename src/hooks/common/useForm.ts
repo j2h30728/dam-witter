@@ -6,10 +6,10 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: { [K
 
   const [form, setForm] = useState<T>(initialForm);
   const [validatedResult, setValidatedResult] = useState<ValidatedResult>(
-    Object.keys(initialForm).reduce(
-      (acc, key) => ({
+    Object.entries(initialForm).reduce(
+      (acc, [key, value]) => ({
         ...acc,
-        [key]: form[key] && { isValid: true, message: '' },
+        [key]: validators[key](value, initialForm),
       }),
       {} as ValidatedResult
     )
@@ -20,7 +20,6 @@ function useForm<T extends Record<string, any>>(initialForm: T, validators: { [K
 
     setForm(prevForm => {
       const updatedForm = { ...prevForm, [name]: value } as T;
-
       const newValidatedResult: ValidatedResult = {
         ...validatedResult,
         [name]: validators[name](value, updatedForm),
