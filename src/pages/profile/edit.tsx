@@ -1,15 +1,12 @@
-import { Input, Layout, Textarea } from '@/components';
+import { Input, Layout, ProfileImage, Textarea } from '@/components';
 import Button from '@/components/common/Button';
 import useEditProfile from '@/hooks/users/useEditProfile';
-import { makeImagePath } from '@/libs/client';
-import Image from 'next/image';
-import { FaUserCircle } from 'react-icons/fa';
 
 export default function ProfileEdit() {
   const {
     edit: { isEditProfile, onSubmit },
     form: { onChange, values },
-    image: { previewImage, selectedImage },
+    image: { cancelImage, previewImage, selectedImage },
     profile: { avatar, email },
   } = useEditProfile();
 
@@ -17,34 +14,21 @@ export default function ProfileEdit() {
     <Layout hasBackButton isLoggedIn title="MY PAGE">
       <main className="flex flex-col mt-10">
         <div className="flex flex-col items-center gap-2 px-2">
-          {previewImage ? (
-            <div className="relative w-40 h-40">
-              <Image
-                alt="preview Image"
-                className="object-cover w-full overflow-hidden rounded-full h-50 "
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                src={previewImage}
-              />
-            </div>
-          ) : avatar ? (
-            <div className="relative w-40 h-40">
-              <Image
-                alt="preview Image"
-                className="object-cover w-full overflow-hidden rounded-full h-50 "
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                src={makeImagePath(avatar)}
-              />
-            </div>
-          ) : (
-            <FaUserCircle className="fill-stone-500" size={150} />
-          )}
-          <label className="absolute top-56 button" htmlFor="image">
+          <div className="relative w-50 h-50">
+            {previewImage ? (
+              <ProfileImage alt="preview Image" previewImage={previewImage} size="lg" />
+            ) : (
+              <ProfileImage alt="avatar Image" avatarId={avatar} size="lg" />
+            )}
+          </div>
+          <label className="button" htmlFor="image">
             프로필 사진 수정하기
           </label>
+          {previewImage && (
+            <Button className="absolute top-60 opacity-60" disabled={isEditProfile} onClick={cancelImage} size="sm">
+              사진등록취소
+            </Button>
+          )}
           <input
             accept="image/*"
             className="hidden"
