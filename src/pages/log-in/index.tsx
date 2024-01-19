@@ -1,4 +1,5 @@
-import { Input, Layout, Symbol } from '@/components';
+import { Layout, Symbol } from '@/components';
+import TestInput from '@/components/common/Input';
 import { ROUTE_PATH } from '@/constants';
 import useLogIn from '@/hooks/auth/useLogIn';
 import Link from 'next/link';
@@ -14,23 +15,25 @@ export default function LogIn() {
       <div className="flex flex-col items-center px-3 sub-layout">
         <Symbol className="m-16" height={130} width={130} />
         <form className="flex flex-col w-full gap-1 px-10" onSubmit={onSubmit}>
-          <Input
+          <TestInput
             disabled={isLoginMutating}
             errorMassage={errorMessage.email}
+            isValidated
+            label="Email"
             name="email"
             onChange={onChange}
             placeholder="Your email"
-            title="Email"
             type="email"
             value={form.email}
           />
-          <Input
+          <TestInput
             disabled={isLoginMutating}
             errorMassage={errorMessage.password}
+            isValidated
+            label="Password"
             name="password"
             onChange={onChange}
             placeholder="Your password"
-            title="Password"
             type="password"
             value={form.password}
           />

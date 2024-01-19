@@ -1,62 +1,57 @@
 import { parameterToString } from '@/libs/client';
+import { ComponentPropsWithoutRef } from 'react';
 
-export default function Input({
+interface InputProps extends ComponentPropsWithoutRef<'input'> {
+  errorMassage?: string;
+  isValidated?: boolean;
+  label?: string;
+}
+
+const Input = ({
   disabled,
   errorMassage,
-  isEditMode = false,
+  isValidated = false,
+  label,
   name,
   onChange,
   placeholder,
-  title,
-  type,
+  type = 'text',
   value,
-}: {
-  disabled: boolean;
-  errorMassage?: false | string;
-  isEditMode?: boolean;
-  name: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  title: string;
-  type: 'email' | 'password' | 'text';
-  value: string;
-}) {
+  ...props
+}: InputProps) => {
   return (
-    <div className="flex flex-col gap-3">
-      {!isEditMode ? (
-        <div className="flex justify-between w-full">
-          <label className="w-3/5 text-lg font-semibold" htmlFor={name}>
-            {title}
-          </label>
-          <input
-            className={parameterToString(
-              'w-full px-3 h-9 rounded-md ',
-              errorMassage ? 'border-2 border-red-500' : 'border border-stone-500'
-            )}
-            disabled={disabled}
-            id={name}
-            inputMode={type === 'email' ? 'email' : 'text'}
-            name={name}
-            onChange={onChange}
-            placeholder={placeholder}
-            required
-            type={type}
-            value={value}
-          />
-        </div>
-      ) : (
+    <div className="flex justify-between w-full">
+      {label && (
+        <label
+          className={parameterToString(
+            'flex mr-3 font-bold text-md',
+            isValidated ? 'pt-1 w-2/5' : 'w-1/5  items-center justify-center'
+          )}
+          htmlFor={name}
+        >
+          {label}
+        </label>
+      )}
+      <div className="w-full">
         <input
-          className="mt-2 text-3xl font-bold"
+          className={parameterToString(
+            'w-full px-3 h-9 rounded-md ',
+            errorMassage ? 'border-2 border-red-500 text-xs' : 'border border-stone-500'
+          )}
           disabled={disabled}
+          id={name}
           name={name}
           onChange={onChange}
           placeholder={placeholder}
-          title={title}
-          type="text"
+          required
+          type={type}
           value={value}
+          {...props}
         />
-      )}
-      <p className="h-6 mb-1 text-red-500">{errorMassage ? errorMassage : ''}</p>
+        {isValidated && <p className="h-6 my-1 text-sm text-red-500">{errorMassage}</p>}
+      </div>
     </div>
   );
-}
+};
+
+export default Input;

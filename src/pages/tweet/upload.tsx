@@ -1,12 +1,12 @@
 import { Layout, Textarea } from '@/components';
+import Button from '@/components/common/Button';
 import useUploadTweet from '@/hooks/tweets/useUploadTweet';
-import { parameterToString } from '@/libs/client';
 import Image from 'next/image';
 import { AiOutlinePicture } from 'react-icons/ai';
 
 export default function Upload() {
   const {
-    form: { errorMessage, onChange, value },
+    form: { onChange, value },
     image: { cancelImage, previewImage, selectedImage },
     upload: { isCreatingTweet, onSubmit },
   } = useUploadTweet();
@@ -41,26 +41,19 @@ export default function Upload() {
             </div>
           )}
         </label>
-        <button className="button" disabled={isCreatingTweet} onClick={cancelImage} type="button">
+        <Button className="button" disabled={isCreatingTweet} onClick={cancelImage} size="sm">
           사진등록취소
-        </button>
+        </Button>
         <Textarea
           disabled={isCreatingTweet}
-          errorMassage={errorMessage.text}
           name="text"
           onChange={onChange}
           placeholder="텍스트를 입력해주세요."
-          textareaStyle="w-11/12 h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
           value={value.text}
         />
-        <button
-          className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
-          disabled={isCreatingTweet}
-        >
-          <span className={parameterToString('font-semibold ', isCreatingTweet ? 'text-stone-100' : '')}>
-            {isCreatingTweet ? '트윗 등록중...' : '추가하기'}
-          </span>
-        </button>
+        <Button disabled={isCreatingTweet} type="submit" width="w-full">
+          {isCreatingTweet ? '트윗 등록중...' : '추가하기'}
+        </Button>
       </form>
     </Layout>
   );

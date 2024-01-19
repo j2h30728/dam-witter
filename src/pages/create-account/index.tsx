@@ -17,40 +17,44 @@ export default function CreateAccount() {
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.name}
+            isValidated
+            label="Name"
             name="name"
             onChange={onChange}
             placeholder="Your Name"
-            title="Name"
             type="text"
             value={values.name}
           />
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.email}
+            isValidated
+            label="Email"
             name="email"
             onChange={onChange}
             placeholder="Your email"
-            title="Email"
             type="email"
             value={values.email}
           />
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.password}
+            isValidated
+            label="Password"
             name="password"
             onChange={onChange}
             placeholder="Your password"
-            title="Password"
             type="password"
             value={values.password}
           />
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.confirmPassword}
+            isValidated
+            label="ConfirmPassword"
             name="confirmPassword"
             onChange={onChange}
             placeholder="Your confirmPassword"
-            title="ConfirmPassword"
             type="password"
             value={values.confirmPassword}
           />
