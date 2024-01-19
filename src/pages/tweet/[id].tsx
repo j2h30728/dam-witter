@@ -1,5 +1,6 @@
 import { Layout, LikeButton, LoadingSpinner, Symbol } from '@/components';
-import Comments from '@/components/comments/Comments';
+import CommentFeed from '@/components/comments/CommentFeed';
+import UploadCommentFrom from '@/components/comments/UploadCommentFrom';
 import DetailTweetContent from '@/components/tweets/DetailTweetContent';
 import useTweetViewModel from '@/hooks/viewModel/useTweetViewModel';
 
@@ -27,7 +28,8 @@ function TweetAndComments() {
         </div>
         <span>코멘트 {data?._count.comments} 개</span>
       </div>
-      <Comments loggedInUserId={loggedInUser.id} tweetComments={data?.comments} />
+      <UploadCommentFrom />
+      <CommentFeed loggedInUserId={loggedInUser.id} tweetComments={data?.comments} />
     </main>
   );
 }
