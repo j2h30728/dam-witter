@@ -20,7 +20,6 @@ const useComment = () => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!form.text.trim()) return toastMessage('error', '코멘트를 입력해주세요.');
     if (isError) return toastMessage('error', errorMessage.at(0) ?? DEFAULT_ERROR_MESSAGE);
     await mutationComment({ text: form.text });
     reset();

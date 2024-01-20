@@ -1,14 +1,12 @@
-import { Input, Layout, Textarea } from '@/components';
+import { Input, Layout, ProfileImage, Textarea } from '@/components';
+import Button from '@/components/common/Button';
 import useEditProfile from '@/hooks/users/useEditProfile';
-import { makeImagePath, parameterToString } from '@/libs/client';
-import Image from 'next/image';
-import { FaUserCircle } from 'react-icons/fa';
 
 export default function ProfileEdit() {
   const {
     edit: { isEditProfile, onSubmit },
-    form: { isError, onChange, values: form },
-    image: { previewImage, selectedImage },
+    form: { onChange, values },
+    image: { cancelImage, previewImage, selectedImage },
     profile: { avatar, email },
   } = useEditProfile();
 
@@ -16,74 +14,53 @@ export default function ProfileEdit() {
     <Layout hasBackButton isLoggedIn title="MY PAGE">
       <main className="flex flex-col mt-10">
         <div className="flex flex-col items-center gap-2 px-2">
-          {previewImage ? (
-            <div className="relative w-40 h-40">
-              <Image
-                alt="preview Image"
-                className="object-cover w-full overflow-hidden rounded-full h-50 "
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                src={previewImage}
-              />
-            </div>
-          ) : avatar ? (
-            <div className="relative w-40 h-40">
-              <Image
-                alt="preview Image"
-                className="object-cover w-full overflow-hidden rounded-full h-50 "
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                src={makeImagePath(avatar)}
-              />
-            </div>
-          ) : (
-            <FaUserCircle className="fill-stone-500" size={150} />
-          )}
-          <label className="absolute top-56 button" htmlFor="image">
+          <div className="relative w-50 h-50">
+            {previewImage ? (
+              <ProfileImage alt="preview Image" previewImage={previewImage} size="lg" />
+            ) : (
+              <ProfileImage alt="avatar Image" avatarId={avatar} size="lg" />
+            )}
+          </div>
+          <label className="button" htmlFor="image">
             프로필 사진 수정하기
-            <input
-              accept="image/*"
-              className="hidden"
-              disabled={isEditProfile}
-              id="image"
-              name="image"
-              onChange={selectedImage}
-              type="file"
-            />
           </label>
-          <Input
+          {previewImage && (
+            <Button className="absolute top-60 opacity-60" disabled={isEditProfile} onClick={cancelImage} size="sm">
+              사진등록취소
+            </Button>
+          )}
+          <input
+            accept="image/*"
+            className="hidden"
             disabled={isEditProfile}
-            errorMassage={isError.name}
-            isEditMode
-            name="name"
-            onChange={onChange}
-            placeholder="이름"
-            title=""
-            type="text"
-            value={form.name}
+            id="image"
+            name="image"
+            onChange={selectedImage}
+            type="file"
           />
-          <small className="text-stone-500">{email}</small>
+
+          <div className="flex flex-col items-center w-2/5 mt-6">
+            <Input
+              disabled={isEditProfile}
+              name="name"
+              onChange={onChange}
+              placeholder="이름"
+              type="text"
+              value={values.name}
+            />
+            <small className="text-stone-500">{email}</small>
+          </div>
         </div>
         <Textarea
           disabled={isEditProfile}
-          errorMassage={isError.bio}
           name="bio"
           onChange={onChange}
-          placeholder="자기소개"
-          textareaStyle="h-40 p-2 mx-5 mt-10 text-lg border-2 resize-none rounded-xl border-stone-200"
-          value={form.bio}
+          placeholder="자기소개를 입력해주세요."
+          value={values.bio}
         />
-        <button
-          className="w-3/5 text-center button disabled:border-none disabled:bg-stone-400"
-          disabled={isEditProfile}
-          onClick={onSubmit}
-        >
-          <span className={parameterToString('font-semibold ', isEditProfile ? 'text-stone-100' : '')}>
-            {isEditProfile ? '수정중...' : '수정완료'}
-          </span>
-        </button>
+        <Button disabled={isEditProfile} onClick={onSubmit} width="w-full">
+          {isEditProfile ? '수정중...' : '수정완료'}
+        </Button>
       </main>
     </Layout>
   );

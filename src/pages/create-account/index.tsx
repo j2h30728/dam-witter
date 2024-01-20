@@ -1,4 +1,5 @@
 import { Input, Layout, Symbol } from '@/components';
+import Button from '@/components/common/Button';
 import { ROUTE_PATH } from '@/constants';
 import useCreateAccount from '@/hooks/auth/useCreateAccount';
 import Link from 'next/link';
@@ -17,46 +18,50 @@ export default function CreateAccount() {
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.name}
+            isValidated
+            label="Name"
             name="name"
             onChange={onChange}
             placeholder="Your Name"
-            title="Name"
             type="text"
             value={values.name}
           />
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.email}
+            isValidated
+            label="Email"
             name="email"
             onChange={onChange}
             placeholder="Your email"
-            title="Email"
             type="email"
             value={values.email}
           />
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.password}
+            isValidated
+            label="Password"
             name="password"
             onChange={onChange}
             placeholder="Your password"
-            title="Password"
             type="password"
             value={values.password}
           />
           <Input
             disabled={isCreateAccountMutating}
             errorMassage={isError.confirmPassword}
+            isValidated
+            label="ConfirmPassword"
             name="confirmPassword"
             onChange={onChange}
             placeholder="Your confirmPassword"
-            title="ConfirmPassword"
             type="password"
             value={values.confirmPassword}
           />
-          <button className="w-full mt-8 button" disabled={isCreateAccountMutating}>
-            <span className="text-lg font-semibold ">{isCreateAccountMutating ? 'Loading...' : 'Create Account'}</span>
-          </button>
+          <Button disabled={isCreateAccountMutating} size="lg" type="submit" width="w-full">
+            {isCreateAccountMutating ? 'Loading...' : 'Login In'}
+          </Button>
         </form>
         <nav className="flex gap-3 mt-5 ">
           <span>계정이 있으신가요?</span>

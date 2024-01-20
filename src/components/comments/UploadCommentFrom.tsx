@@ -1,5 +1,8 @@
 import useComment from '@/hooks/comments/useComment';
 
+import Button from '../common/Button';
+import Input from '../common/Input';
+
 const UploadCommentFrom = () => {
   const {
     form: { onChange, value },
@@ -7,23 +10,19 @@ const UploadCommentFrom = () => {
   } = useComment();
 
   return (
-    <form className="flex items-center justify-around w-full gap-1" onSubmit={onSubmit}>
-      <label className="font-semibold" htmlFor="comment">
-        코멘트
-      </label>
-      <input
-        className="w-4/6 h-8 px-2 border rounded-sm border-base1"
+    <form className="flex items-center w-full gap-1 my-2" onSubmit={onSubmit}>
+      <Input
         disabled={isUploadingComment}
         id="comment"
+        label="코멘트"
         name="text"
         onChange={onChange}
-        title="comment"
         type="text"
         value={value.text}
       />
-      <button className="button" disabled={isUploadingComment}>
-        {isUploadingComment ? <span>등록중...</span> : <span>등 록</span>}
-      </button>
+      <Button disabled={isUploadingComment} size="sm" type="submit">
+        {isUploadingComment ? '등록중...' : '등 록'}
+      </Button>
     </form>
   );
 };

@@ -1,4 +1,6 @@
-import { Input, Layout, Symbol } from '@/components';
+import { Layout, Symbol } from '@/components';
+import Button from '@/components/common/Button';
+import Input from '@/components/common/Input';
 import { ROUTE_PATH } from '@/constants';
 import useLogIn from '@/hooks/auth/useLogIn';
 import Link from 'next/link';
@@ -17,26 +19,28 @@ export default function LogIn() {
           <Input
             disabled={isLoginMutating}
             errorMassage={errorMessage.email}
+            isValidated
+            label="Email"
             name="email"
             onChange={onChange}
             placeholder="Your email"
-            title="Email"
             type="email"
             value={form.email}
           />
           <Input
             disabled={isLoginMutating}
             errorMassage={errorMessage.password}
+            isValidated
+            label="Password"
             name="password"
             onChange={onChange}
             placeholder="Your password"
-            title="Password"
             type="password"
             value={form.password}
           />
-          <button className="w-full mt-8 button " disabled={isLoginMutating}>
-            <span className="text-lg font-semibold ">{isLoginMutating ? 'Loading...' : 'Log-In'}</span>
-          </button>
+          <Button disabled={isLoginMutating} size="lg" type="submit" width="w-full">
+            {isLoginMutating ? 'Loading...' : 'Log-In'}
+          </Button>
         </form>
         <nav className="flex gap-3 mt-5 ">
           <span>계정이 없으신가요?</span>

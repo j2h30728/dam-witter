@@ -57,7 +57,7 @@ export default function Layout({
           </div>
         </div>
       </header>
-      <div className="w-full h-screen pt-16 pb-32 overflow-auto border-solid overscroll-contain border-x-4 border-base">
+      <div className="w-full h-screen px-2 pt-16 pb-32 overflow-auto border-solid overscroll-contain border-x-4 border-base">
         {children}
       </div>
       {isLoggedIn ? (
