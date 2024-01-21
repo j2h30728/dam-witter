@@ -1,11 +1,11 @@
 import useDeleteTweet from '../api/useDeleteTweet';
-import useProfile from '../api/useProfile';
+import useMyProfile from '../api/useMyProfile';
 import useTweet from '../api/useTweet';
 import useLike from '../tweets/useLike';
 
 const useTweetViewModel = () => {
   const { data, isLoading, isValidating, mutate } = useTweet();
-  const { profile: loggedInUser } = useProfile({ option: { revalidateOnFocus: false } });
+  const { profile: loggedInUser } = useMyProfile({ option: { revalidateOnFocus: false } });
 
   const { toggleLike } = useLike();
   const { deleteTweet, isDeleting } = useDeleteTweet();
