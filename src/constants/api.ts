@@ -3,6 +3,7 @@ export const END_POINTS = {
   COMMENTS: (tweetId: string) => `/api/tweets/${tweetId}/comments`,
   CREATE_ACCOUNT: '/api/users/create-account',
   FILES: '/api/files',
+  FOLLOWING: `/api/follows`,
   LIKE: (tweetId: string) => `/api/tweets/${tweetId}/like`,
   LOGIN: '/api/users/log-in',
   LOGOUT: '/api/users/log-out',
