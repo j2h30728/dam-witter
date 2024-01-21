@@ -15,15 +15,15 @@ export const Author = () => {
   const isAuthor = profile?.id === tweet?.userId;
 
   return (
-    <div className="flex items-center w-full gap-3 cursor-pointer">
-      <ProfileImage
-        alt="author"
-        avatarId={tweet?.user.profile?.avatar}
+    <div className="w-full ">
+      <div
+        className="flex items-center gap-3 cursor-pointer w-fit"
         onClick={() => router.push(isAuthor ? `${ROUTE_PATH.PROFILE}` : `${ROUTE_PATH.PROFILE}/${tweet?.userId}`)}
-        size="md"
-      />
-      <h3 className="text-xl font-bold">{tweet?.user.name}</h3>
-      <small>{maskEmail(tweet?.user.email ?? DEFAULT_ERROR_MESSAGE)}</small>
+      >
+        <ProfileImage alt="author" avatarId={tweet?.user.profile?.avatar} size="md" />
+        <h3 className="text-xl font-bold">{tweet?.user.name}</h3>
+        <small>{maskEmail(tweet?.user.email ?? DEFAULT_ERROR_MESSAGE)}</small>
+      </div>
     </div>
   );
 };

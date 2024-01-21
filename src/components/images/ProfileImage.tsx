@@ -14,21 +14,16 @@ const styles = {
 export default function ProfileImage({
   alt = '',
   avatarId,
-  onClick,
   previewImage,
   size,
 }: {
   alt: string;
   avatarId?: string | undefined;
-  onClick?: () => void;
   previewImage?: string;
   size: keyof typeof styles.size;
 }) {
   return (
-    <div
-      className={parameterToString('relative border rounded-full border-stone-100', styles.size[size])}
-      onClick={onClick}
-    >
+    <div className={parameterToString('relative border rounded-full border-stone-100', styles.size[size])}>
       <Image
         alt={alt}
         className="object-cover overflow-hidden rounded-full"
