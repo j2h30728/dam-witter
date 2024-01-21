@@ -1,10 +1,10 @@
 import { Layout } from '@/components';
-import ProfileContent from '@/components/profile/ProfileContent';
+import MyProfile from '@/components/profiles/MyProfile';
 
 export default function Profile() {
   return (
     <Layout hasBackButton isLoggedIn title="MY PAGE">
-      <ProfileContent />
+      <MyProfile />
     </Layout>
   );
 }
