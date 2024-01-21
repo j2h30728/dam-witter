@@ -5,7 +5,7 @@ import defaultProfileImage from '../../../public/default_profile.png';
 
 const styles = {
   size: {
-    lg: 'w-48 h-48',
+    lg: 'w-40 h-40',
     md: 'w-12 h-12',
     sm: 'w-8 h-8',
   },
@@ -14,16 +14,21 @@ const styles = {
 export default function ProfileImage({
   alt = '',
   avatarId,
+  onClick,
   previewImage,
   size,
 }: {
   alt: string;
   avatarId?: string | undefined;
+  onClick?: () => void;
   previewImage?: string;
   size: keyof typeof styles.size;
 }) {
   return (
-    <div className={parameterToString('relative border rounded-full border-stone-100', styles.size[size])}>
+    <div
+      className={parameterToString('relative border rounded-full border-stone-100', styles.size[size])}
+      onClick={onClick}
+    >
       <Image
         alt={alt}
         className="object-cover overflow-hidden rounded-full"
