@@ -1,4 +1,4 @@
-import { Comment, Like, Profile, Tweet, User } from '@prisma/client';
+import { Comment, Follow, Like, Profile, Tweet, User } from '@prisma/client';
 
 export interface ResponseType<T> {
   [key: string]: any;
@@ -36,11 +36,13 @@ export interface TweetResponse extends Tweet {
 }
 
 export interface ProfileResponse extends UserWithoutPassword {
+  followers: Follow[];
+  following: Follow[];
+  isFollowing?: boolean;
   likes: Like[];
   profile: Profile | null;
   tweets: Tweet[];
 }
-
 export interface CommentResponse extends Comment {
   tweet?: {
     id: string;
