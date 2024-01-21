@@ -17,7 +17,7 @@
     ]
   },
   "dependencies": {
-    "@prisma/client": "^5.4.2",
+    "@prisma/client": "^5.8.1",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
@@ -45,6 +45,6 @@
     "iron-session": "^6.3.1",
     "lint-staged": "^13.2.3",
     "prettier": "^3.0.0",
-    "prisma": "^5.4.2"
+    "prisma": "^5.8.1"
   }
 }
