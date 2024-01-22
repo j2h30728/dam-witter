@@ -1,7 +1,5 @@
 import Button from '@/components/common/Button';
-import { METHOD } from '@/constants';
 import { DEFAULT_ERROR_MESSAGE } from '@/constants/api';
-import useFollowingMutation from '@/hooks/api/useFollowingMutation';
 import useToggleFollowing from '@/hooks/users/useToggleFollowing';
 import { toastMessage } from '@/libs/client/toastMessage';
 
