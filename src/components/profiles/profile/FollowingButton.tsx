@@ -1,22 +1,20 @@
 import Button from '@/components/common/Button';
 import { METHOD } from '@/constants';
+import { DEFAULT_ERROR_MESSAGE } from '@/constants/api';
 import useFollowingMutation from '@/hooks/api/useFollowingMutation';
+import useToggleFollowing from '@/hooks/users/useToggleFollowing';
+import { toastMessage } from '@/libs/client/toastMessage';
 
 import useProfileContext from './useProfileContext';
 
 const FollowingButton = () => {
-  const { profile, refreshProfile } = useProfileContext();
-  const { mutateFollowing } = useFollowingMutation();
+  const { toggleFollowing } = useToggleFollowing();
+  const { profile, refreshProfile } = useProfileContext()!;
 
   const handleFollowing = async () => {
-    if (profile.isFollowing) {
-      await mutateFollowing({ method: METHOD.DELETE, userId: profile.id });
-    } else {
-      await mutateFollowing({ method: METHOD.POST, userId: profile.id });
-    }
-    if (refreshProfile) {
-      refreshProfile();
-    }
+    if (!profile.profile) return toastMessage('error', DEFAULT_ERROR_MESSAGE);
+    toggleFollowing({ isFollowing: !!profile.isFollowing, userId: profile.profile.userId });
+    if (refreshProfile) refreshProfile();
   };
 
   return <Button onClick={handleFollowing}>{profile.isFollowing ? '팔로잉 취소' : '팔로잉'}</Button>;

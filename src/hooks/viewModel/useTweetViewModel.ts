@@ -1,4 +1,5 @@
 import useDeleteTweet from '../api/useDeleteTweet';
+import useFollowingMutation from '../api/useFollowingMutation';
 import useMyProfile from '../api/useMyProfile';
 import useTweet from '../api/useTweet';
 import useLike from '../tweets/useLike';
@@ -9,6 +10,7 @@ const useTweetViewModel = () => {
 
   const { toggleLike } = useLike();
   const { deleteTweet, isDeleting } = useDeleteTweet();
+  const { postFollowing } = useFollowingMutation();
 
   const optimisticToggleLike = () => {
     if (data && data.data) {
@@ -27,7 +29,22 @@ const useTweetViewModel = () => {
       );
     }
   };
+  const optimisticFollowing = () => {
+    if (data && data.data) {
+      const { data: tweetData } = data;
+      const target = { ...tweetData };
+      target.isFollowing = !tweetData.isFollowing;
 
+      postFollowing(tweetData.userId);
+      mutate(
+        {
+          ...data,
+          data: target,
+        },
+        false
+      );
+    }
+  };
   const onDelete = () => {
     if (confirm('삭제하시겠습니까?')) {
       deleteTweet();
@@ -35,6 +52,7 @@ const useTweetViewModel = () => {
   };
 
   return {
+    following: { onFollowing: optimisticFollowing },
     like: { onToggleLike: optimisticToggleLike },
     loggedInUser,
     tweet: { data: data?.data, isDeleting, isLoading, isValidating, onDelete },

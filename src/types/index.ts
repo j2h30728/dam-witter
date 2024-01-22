@@ -29,6 +29,7 @@ export interface TweetInComment extends Comment {
 export interface TweetResponse extends Tweet {
   _count: { comments: number; likes: number };
   comments?: TweetInComment[];
+  isFollowing?: boolean;
   isLiked?: boolean;
   likedTweetsByLoggedInUser?: boolean;
   likes?: Like[];

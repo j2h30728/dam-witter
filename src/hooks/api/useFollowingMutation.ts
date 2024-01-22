@@ -1,5 +1,5 @@
 import { END_POINTS } from '@/constants/api';
-import { METHOD_TYPE } from '@/constants/method';
+import METHOD, { METHOD_TYPE } from '@/constants/method';
 import useSWRMutation from 'swr/mutation';
 
 const useFollowingMutation = () => {
@@ -11,8 +11,9 @@ const useFollowingMutation = () => {
       });
     }
   );
+  const postFollowing = (userId: string) => trigger({ method: METHOD.POST, userId });
 
-  return { following: data, isFollowingMutating: isMutating, mutateFollowing: trigger };
+  return { following: data, isFollowingMutating: isMutating, mutateFollowing: trigger, postFollowing };
 };
 
 export default useFollowingMutation;
