@@ -2,9 +2,6 @@ import useProfile from '@/hooks/api/useProfile';
 
 import LoadingSpinner from '../common/LoadingSpinner';
 import { Profile } from './profile';
-import DefaultProfileContent from './profile/DefaultProfileContent';
-import DefaultUserFooter from './profile/DefaultUserFooter';
-import FollowingButton from './profile/FollowingButton';
 
 const DefaultUserProfile = () => {
   const { isLoading, profile, refreshProfile } = useProfile();
@@ -15,10 +12,10 @@ const DefaultUserProfile = () => {
 
   return (
     <Profile profile={profile} refreshProfile={refreshProfile}>
-      <DefaultProfileContent>
-        <FollowingButton />
-      </DefaultProfileContent>
-      <DefaultUserFooter />
+      <Profile.DefaultProfileContent>
+        <Profile.FollowingButton />
+      </Profile.DefaultProfileContent>
+      <Profile.DefaultUserFooter />
     </Profile>
   );
 };

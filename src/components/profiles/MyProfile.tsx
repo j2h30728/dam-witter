@@ -2,8 +2,6 @@ import useMyProfile from '@/hooks/api/useMyProfile';
 
 import LoadingSpinner from '../common/LoadingSpinner';
 import { Profile } from './profile';
-import DefaultProfileContent from './profile/DefaultProfileContent';
-import MyProfileFooter from './profile/MyProfileFooter';
 
 const MyProfile = () => {
   const { isLoading, profile } = useMyProfile();
@@ -14,8 +12,8 @@ const MyProfile = () => {
 
   return (
     <Profile profile={profile}>
-      <DefaultProfileContent />
-      <MyProfileFooter />
+      <Profile.DefaultProfileContent />
+      <Profile.MyProfileFooter />
     </Profile>
   );
 };
