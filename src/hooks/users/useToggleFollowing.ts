@@ -11,13 +11,10 @@ const useToggleFollowing = () => {
     userId,
   }: {
     isFollowing: boolean;
-    onSuccess: () => void;
+    onSuccess: (data: any) => void;
     userId: string;
   }) => {
-    mutateFollowing(
-      { method: isFollowing ? METHOD.DELETE : METHOD.POST, userId: userId },
-      { onSuccess: () => onSuccess() }
-    );
+    mutateFollowing({ method: isFollowing ? METHOD.DELETE : METHOD.POST, userId: userId }, { onSuccess });
   };
 
   return { toggleFollowing };
