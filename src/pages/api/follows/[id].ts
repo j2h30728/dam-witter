@@ -1,13 +1,12 @@
-import type { ResponseType } from '@/types';
+import type { FollowResponse, ResponseType } from '@/types';
 
 import { METHOD } from '@/constants';
 import { db } from '@/libs/server';
 import { withApiSession, withHandler } from '@/libs/server';
-import { Follow } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Follow>>) {
+async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<FollowResponse>>) {
   const {
     method,
     query: { id },
@@ -17,6 +16,54 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Fo
     if (!user) {
       throw Error('로그인이 필요합니다.');
     }
+    if (method === METHOD.GET) {
+      const following = await db.follow.findMany({
+        include: {
+          following: {
+            select: {
+              email: true,
+              id: true,
+              name: true,
+              profile: true,
+            },
+          },
+        },
+        where: {
+          followerId: String(id),
+        },
+      });
+      const followers = await db.follow.findMany({
+        include: {
+          follower: {
+            select: {
+              email: true,
+              id: true,
+              name: true,
+              profile: true,
+            },
+          },
+        },
+        where: {
+          followingId: String(id),
+        },
+      });
+      const profile = await db.profile.findUnique({
+        include: {
+          user: {
+            select: {
+              email: true,
+              id: true,
+              name: true,
+            },
+          },
+        },
+        where: { userId: String(id) },
+      });
+      return res
+        .status(200)
+        .json({ data: { followers, following, profile }, isSuccess: true, message: null, statusCode: 200 });
+    }
+
     const alreadyExists = await db.follow.findUnique({
       where: {
         follower_following: {
@@ -25,25 +72,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Fo
         },
       },
     });
-    if (method === METHOD.GET) {
-      const follow = await db.follow.create({
-        data: {
-          follower: {
-            connect: { id: user?.id },
-          },
-          following: {
-            connect: { id: String(id) },
-          },
-        },
-      });
-      return res.status(200).json({ data: follow, isSuccess: true, message: null, statusCode: 201 });
-    }
+
     if (method === METHOD.POST) {
       if (alreadyExists) {
         return res.status(204).end();
       }
 
-      const follow = await db.follow.create({
+      await db.follow.create({
         data: {
           follower: {
             connect: { id: user?.id },
@@ -53,7 +88,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Fo
           },
         },
       });
-      return res.status(201).json({ data: follow, isSuccess: true, message: '팔로잉 되었습니다.', statusCode: 201 });
+      return res.status(201).json({ data: null, isSuccess: true, message: '팔로잉 되었습니다.', statusCode: 201 });
     }
 
     if (method === METHOD.DELETE) {

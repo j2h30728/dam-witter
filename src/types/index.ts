@@ -10,7 +10,7 @@ export interface ResponseType<T> {
 
 export type Method = 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
 type UserWithoutPassword = Omit<User, 'password'>;
-type IncludeUser = {
+export type UserInformation = {
   email: string;
   id: string;
   name: string;
@@ -23,7 +23,7 @@ export interface UserInput {
 }
 
 export interface TweetInComment extends Comment {
-  user: IncludeUser;
+  user: UserInformation;
 }
 
 export interface TweetResponse extends Tweet {
@@ -33,7 +33,7 @@ export interface TweetResponse extends Tweet {
   isLiked?: boolean;
   likedTweetsByLoggedInUser?: boolean;
   likes?: Like[];
-  user: IncludeUser;
+  user: UserInformation;
 }
 
 export interface ProfileResponse extends UserWithoutPassword {
@@ -49,7 +49,12 @@ export interface CommentResponse extends Comment {
     id: string;
     text: string;
   };
-  user: IncludeUser;
+  user: UserInformation;
+}
+export interface FollowResponse {
+  followers: ({ follower: UserInformation } & Follow)[];
+  following: ({ following: UserInformation } & Follow)[];
+  profile: (Profile & { user: { email: string; id: string; name: string } }) | null;
 }
 
 export type UploadBasicInputText = { imageId?: string; text: string };
