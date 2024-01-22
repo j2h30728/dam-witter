@@ -79,7 +79,7 @@ export default function Layout({
             </div>
             <div
               className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
-              onClick={() => router.push(ROUTE_PATH.PROFILE)}
+              onClick={() => router.push(ROUTE_PATH.MY_PROFILE)}
             >
               <AiOutlineUser className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
               <span>마이페이지</span>

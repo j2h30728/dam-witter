@@ -21,7 +21,7 @@ const CommentItem = ({
     <div className="flex items-center gap-2 mt-1" key={comment.id}>
       <div
         className="flex items-center w-1/4 gap-2 cursor-pointer"
-        onClick={() => router.push(isAuthor ? `${ROUTE_PATH.PROFILE}` : `${ROUTE_PATH.PROFILE}/${comment?.userId}`)}
+        onClick={() => router.push(isAuthor ? `${ROUTE_PATH.MY_PROFILE}` : `${ROUTE_PATH.PROFILE(comment?.userId)}`)}
       >
         <ProfileImage alt="avatar" avatarId={comment.user.profile?.avatar} size="sm" />
         <span className="font-semibold">{comment.user.name}</span>

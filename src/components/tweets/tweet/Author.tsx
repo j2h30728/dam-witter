@@ -23,8 +23,10 @@ export const Author = ({ onFollowing }: { onFollowing: (selectedTweet: TweetResp
   return (
     <div className="flex justify-between w-full">
       <div
+        onClick={() =>
+          router.push(isAuthor ? `${ROUTE_PATH.MY_PROFILE}` : `${ROUTE_PATH.PROFILE(tweet?.userId || '')}`)
+        }
         className="flex items-center gap-3 cursor-pointer w-fit"
-        onClick={() => router.push(isAuthor ? `${ROUTE_PATH.PROFILE}` : `${ROUTE_PATH.PROFILE}/${tweet?.userId}`)}
       >
         <ProfileImage alt="author" avatarId={tweet?.user.profile?.avatar} size="md" />
         <h3 className="text-xl font-bold">{tweet?.user.name}</h3>

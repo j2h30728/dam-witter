@@ -1,9 +1,12 @@
 const ROUTE_PATH = {
   CREATE_ACCOUNT: '/create-account',
   EDIT: '/edit',
+  FOLLOWERS: (profileUserId: string) => `${ROUTE_PATH.MY_PROFILE}/${profileUserId}/followers`,
+  FOLLOWING: (profileUserId: string) => `${ROUTE_PATH.MY_PROFILE}/${profileUserId}/following`,
   HOME: '/',
   LOG_IN: '/log-in',
-  PROFILE: '/profile',
+  MY_PROFILE: '/profile',
+  PROFILE: (userId: string) => `/profile/${userId}`,
   TWEETS: '/tweet',
   UPLOAD: '/upload',
 } as const;
