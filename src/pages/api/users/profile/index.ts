@@ -14,6 +14,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Pr
       comments: true,
       createdAt: true,
       email: true,
+      followers: true,
+      following: true,
       id: true,
       likes: true,
       name: true,
@@ -65,9 +67,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Pr
         id: user?.id,
       },
     });
-    return res
-      .status(200)
-      .json({ data: updatedProfile, isSuccess: true, message: '프로필이 수정되었습니다.', statusCode: 200 });
+    return res.status(200).json({ data: null, isSuccess: true, message: '프로필이 수정되었습니다.', statusCode: 200 });
   }
 
   return res.json({

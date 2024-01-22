@@ -28,6 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       user: {
         select: {
           email: true,
+          followers: true,
           id: true,
           name: true,
           profile: true,
@@ -42,6 +43,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
   });
   const transformedTweets = tweets.map(tweet => ({
     ...tweet,
+    isFollowing: tweet.user.followers.some(follower => follower.followerId === user?.id),
     isLiked: tweet.likes.some(like => like.userId === user?.id),
   }));
   if (req.method === METHOD.GET) {

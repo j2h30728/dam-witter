@@ -7,6 +7,7 @@ import { Tweet } from './tweet';
 
 const TweetDetailWithComments = () => {
   const {
+    following: { onFollowing },
     like: { onToggleLike },
     loggedInUser,
     tweet: { data, isDeleting, isLoading, onDelete },
@@ -22,7 +23,7 @@ const TweetDetailWithComments = () => {
   return (
     <>
       <Tweet tweet={data}>
-        <Tweet.Author />
+        <Tweet.Author onFollowing={onFollowing} />
         <Tweet.DeleteButton loggedInUserId={loggedInUser?.id} onDelete={onDelete} />
         <Tweet.Content />
         <Tweet.Description onToggleLike={onToggleLike} />

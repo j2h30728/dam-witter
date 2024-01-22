@@ -1,19 +1,16 @@
 import { END_POINTS } from '@/constants/api';
 import { ProfileResponse, ResponseType } from '@/types';
+import { useRouter } from 'next/router';
 import useSWR, { SWRConfiguration } from 'swr';
 
-interface ProfileParams {
-  option?: SWRConfiguration;
-  userId?: string;
-}
-
-const useProfile = (profileParams?: ProfileParams) => {
-  const { data, isLoading } = useSWR<ResponseType<ProfileResponse>>(
-    profileParams?.userId ? END_POINTS.PROFILE(profileParams.userId) : END_POINTS.MY_PROFILE,
+const useProfile = (profileParams?: { option?: SWRConfiguration }) => {
+  const { query } = useRouter();
+  const { data, isLoading, mutate } = useSWR<ResponseType<ProfileResponse>>(
+    query?.id ? END_POINTS.PROFILE(query?.id as string) : END_POINTS.MY_PROFILE,
     profileParams?.option
   );
 
-  return { isLoading, profile: data?.data };
+  return { isLoading, isMyProfile: !query?.id, profile: data?.data, refreshProfile: mutate };
 };
 
 export default useProfile;

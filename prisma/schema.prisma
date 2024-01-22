@@ -22,6 +22,9 @@ model User {
   likes     Like[]
   comments  Comment[]
   profile   Profile?
+
+  followers  Follow[] @relation("following")
+  following  Follow[] @relation("follower")
 }
 
 model Profile {
@@ -69,4 +72,17 @@ model Comment {
   tweetId   String
   @@index([userId])
   @@index([tweetId])
+}
+
+model Follow {
+  id           String   @id @default(uuid())
+  followerId   String  
+  followingId  String  
+  createdAt    DateTime @default(now())
+
+  follower     User @relation("follower", fields: [followerId], references: [id], onDelete:Cascade)
+  following    User @relation("following", fields: [followingId], references: [id], onDelete:Cascade)
+
+  @@index([followingId])
+  @@unique([followerId, followingId], name: "follower_following")
 }
