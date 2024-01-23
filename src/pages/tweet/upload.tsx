@@ -12,7 +12,7 @@ export default function Upload() {
   } = useUploadTweet();
 
   return (
-    <Layout hasBackButton isLoggedIn title="TWEET UPLOAD">
+    <Layout hasBackButton isLoggedIn title={'TWEET UPLOAD'}>
       <form className="flex flex-col items-center justify-center space-y-4 " onSubmit={onSubmit}>
         <label
           className="relative flex items-center justify-center w-full border-2 border-dashed rounded-lg cursor-pointer h-60 border-beige3"

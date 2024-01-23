@@ -35,7 +35,7 @@ export default function Layout({
             <div className="w-[25px]"></div>
           )}
         </div>
-        <div className="text-xl font-bold text-gray-800 cursor-pointer text-beige1 ">{title}</div>
+        <div className="text-xl font-bold text-gray-800 cursor-default text-beige1 ">{title}</div>
         <div
           onClick={() => {
             if (confirm('로그아웃 하시겠습니까?')) {
