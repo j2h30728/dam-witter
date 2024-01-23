@@ -33,6 +33,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
           createdAt: 'asc',
         },
       },
+      likes: {
+        include: {
+          user: {
+            select: {
+              email: true,
+              id: true,
+              name: true,
+              profile: true,
+            },
+          },
+        },
+      },
       user: {
         select: {
           email: true,
