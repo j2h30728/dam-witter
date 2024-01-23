@@ -13,7 +13,7 @@ import useTweetContext from './useTweetContext';
 export const Author = ({ onFollowing }: { onFollowing: (selectedTweet: TweetResponse) => void }) => {
   const { loggedInUserId, tweet } = useTweetContext();
   const router = useRouter();
-  const isAuthor = loggedInUserId === tweet.userId;
+  const isAuthor = loggedInUserId === tweet?.userId;
   const handleFollowing = () => {
     if (tweet) onFollowing(tweet);
   };

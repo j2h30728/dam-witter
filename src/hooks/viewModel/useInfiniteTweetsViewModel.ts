@@ -65,7 +65,7 @@ const useInfiniteTweetsViewModel = () => {
     following: { onFollowing: optimisticFollowing },
     like: { onToggleLike: optimisticToggleLike },
     loggedInUser,
-    tweets: { bottomItemRef, isLoading, isValidating, responseTweets },
+    tweets: { bottomItemRef, isLoading, isValidating, refreshTweets: mutate, responseTweets },
   };
 };
 

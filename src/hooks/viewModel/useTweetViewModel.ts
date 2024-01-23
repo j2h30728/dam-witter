@@ -55,7 +55,7 @@ const useTweetViewModel = () => {
     following: { onFollowing: optimisticFollowing },
     like: { onToggleLike: optimisticToggleLike },
     loggedInUser,
-    tweet: { data: data?.data, isDeleting, isLoading, isValidating, onDelete },
+    tweet: { data: data?.data, isDeleting, isLoading, isValidating, onDelete, refreshTweet: mutate },
   };
 };
 

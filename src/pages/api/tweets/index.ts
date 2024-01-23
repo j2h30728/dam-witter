@@ -21,8 +21,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
         },
       },
       likes: {
-        where: {
-          userId: user?.id,
+        include: {
+          user: {
+            select: {
+              email: true,
+              id: true,
+              name: true,
+              profile: true,
+            },
+          },
         },
       },
       user: {

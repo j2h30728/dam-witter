@@ -7,6 +7,7 @@ const ROUTE_PATH = {
   LOG_IN: '/log-in',
   MY_PROFILE: '/profile',
   PROFILE: (userId: string) => `/profile/${userId}`,
+  TWEET: (tweetId: string) => `/tweet/${tweetId}`,
   TWEETS: '/tweet',
   UPLOAD: '/upload',
 } as const;

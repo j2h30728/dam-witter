@@ -5,7 +5,7 @@ import defaultProfileImage from '../../../public/default_profile.png';
 
 const styles = {
   size: {
-    lg: 'w-40 h-40',
+    lg: 'w-40 h-40 ',
     md: 'w-12 h-12',
     sm: 'w-8 h-8',
   },

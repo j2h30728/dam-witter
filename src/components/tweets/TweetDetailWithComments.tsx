@@ -10,7 +10,7 @@ const TweetDetailWithComments = () => {
     following: { onFollowing },
     like: { onToggleLike },
     loggedInUser,
-    tweet: { data, isDeleting, isLoading, onDelete },
+    tweet: { data, isDeleting, isLoading, onDelete, refreshTweet },
   } = useTweetViewModel();
 
   if (isLoading || !data || !loggedInUser) {
@@ -26,7 +26,7 @@ const TweetDetailWithComments = () => {
         <Tweet.Author onFollowing={onFollowing} />
         <Tweet.DeleteButton loggedInUserId={loggedInUser?.id} onDelete={onDelete} />
         <Tweet.Content />
-        <Tweet.Description onToggleLike={onToggleLike} />
+        <Tweet.Description modalOpenCallbackFn={refreshTweet} onToggleLike={onToggleLike} />
       </Tweet>
       <UploadCommentFrom />
       <CommentFeed loggedInUserId={loggedInUser.id} tweetComments={data.comments} />
