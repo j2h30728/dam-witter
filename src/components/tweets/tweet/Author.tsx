@@ -8,14 +8,12 @@ import { TweetResponse } from '@/types';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 
-import { tweetContext } from '.';
+import useTweetContext from './useTweetContext';
 
 export const Author = ({ onFollowing }: { onFollowing: (selectedTweet: TweetResponse) => void }) => {
-  const tweet = useContext(tweetContext);
+  const { loggedInUserId, tweet } = useTweetContext();
   const router = useRouter();
-  const { profile } = useMyProfile();
-  const isAuthor = profile?.id === tweet?.userId;
-
+  const isAuthor = loggedInUserId === tweet.userId;
   const handleFollowing = () => {
     if (tweet) onFollowing(tweet);
   };
@@ -23,20 +21,18 @@ export const Author = ({ onFollowing }: { onFollowing: (selectedTweet: TweetResp
   return (
     <div className="flex justify-between w-full">
       <div
-        onClick={() =>
-          router.push(isAuthor ? `${ROUTE_PATH.MY_PROFILE}` : `${ROUTE_PATH.PROFILE(tweet?.userId || '')}`)
-        }
         className="flex items-center gap-3 cursor-pointer w-fit"
+        onClick={() => router.push(isAuthor ? `${ROUTE_PATH.MY_PROFILE}` : `${ROUTE_PATH.PROFILE(tweet?.userId)}`)}
       >
         <ProfileImage alt="author" avatarId={tweet?.user.profile?.avatar} size="md" />
         <h3 className="text-xl font-bold">{tweet?.user.name}</h3>
         <small>{maskEmail(tweet?.user.email ?? DEFAULT_ERROR_MESSAGE)}</small>
       </div>
-      {!isAuthor && !tweet?.isFollowing && (
+      {!isAuthor && !tweet?.isFollowing ? (
         <Button onClick={handleFollowing} size="sm">
           팔로잉
         </Button>
-      )}
+      ) : null}
     </div>
   );
 };

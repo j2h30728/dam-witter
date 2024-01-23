@@ -2,11 +2,13 @@ import { PAGE_SIZE } from '@/constants/api';
 import { TweetResponse } from '@/types';
 
 import useFollowingMutation from '../api/useFollowingMutation';
+import useMyProfile from '../api/useMyProfile';
 import useInfiniteTweets from '../tweets/useInfiniteTweets';
 import useLike from '../tweets/useLike';
 
 const useInfiniteTweetsViewModel = () => {
   const { bottomItemRef, isLoading, isValidating, mutate, originTweets, responseTweets } = useInfiniteTweets();
+  const { profile: loggedInUser } = useMyProfile();
 
   const { toggleLike } = useLike();
   const { postFollowing } = useFollowingMutation();
@@ -62,6 +64,7 @@ const useInfiniteTweetsViewModel = () => {
   return {
     following: { onFollowing: optimisticFollowing },
     like: { onToggleLike: optimisticToggleLike },
+    loggedInUser,
     tweets: { bottomItemRef, isLoading, isValidating, responseTweets },
   };
 };
