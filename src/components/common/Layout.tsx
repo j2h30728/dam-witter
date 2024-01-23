@@ -2,9 +2,12 @@ import { postFetcher } from '@/api/fetchers';
 import { ROUTE_PATH } from '@/constants';
 import { parameterToString } from '@/libs/client';
 import { useRouter } from 'next/router';
+import { useRef } from 'react';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
 import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
+
+import ScrollTopButton from './ScrollTopButton';
 
 export default function Layout({
   children,
@@ -24,6 +27,8 @@ export default function Layout({
       cache.delete('/api/users/profile');
     },
   });
+
+  const containerRef = useRef(null);
 
   return (
     <div className="container mx-auto">
@@ -55,7 +60,10 @@ export default function Layout({
           </div>
         </div>
       </header>
-      <div className="w-full h-screen px-2 pt-16 pb-32 overflow-auto border-solid overscroll-contain border-x-4 border-base">
+      <div
+        className="w-full h-screen px-2 pt-16 pb-32 overflow-auto border-solid overscroll-contain border-x-4 border-base"
+        ref={containerRef}
+      >
         {children}
       </div>
       {isLoggedIn ? (
@@ -85,6 +93,7 @@ export default function Layout({
           </nav>
         </footer>
       ) : null}
+      {!hasBackButton && isLoggedIn && <ScrollTopButton targetRef={containerRef} />}
     </div>
   );
 }

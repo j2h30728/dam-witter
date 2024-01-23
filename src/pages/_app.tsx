@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
         refreshInterval: 1000 * 60,
       }}
     >
-      <div className="w-full max-w-xl mx-auto bg-beige0">
+      <div className="relative w-full max-w-xl mx-auto bg-beige0">
         <Component {...pageProps} />
         <ToastContainer />
       </div>
