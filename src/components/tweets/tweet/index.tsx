@@ -1,16 +1,14 @@
-import { createContext } from 'react';
+import { PropsWithChildren } from 'react';
 
-import { TweetResponse } from '../../../types/index';
 import { Author } from './Author';
 import { Content, ContentWithLink } from './Content';
 import { DeleteButton } from './DeleteButton';
 import { Description } from './Description';
+import { TweetContext, tweetContext } from './useTweetContext';
 
-export const tweetContext = createContext<TweetResponse | null>(null);
-
-export const TweetRoot = ({ children, tweet }: { children: React.ReactNode; tweet: TweetResponse }) => {
+export const TweetRoot = ({ children, loggedInUserId, tweet }: PropsWithChildren<TweetContext>) => {
   return (
-    <tweetContext.Provider value={tweet}>
+    <tweetContext.Provider value={{ loggedInUserId, tweet }}>
       <div className="relative flex flex-col items-center w-full gap-4 px-2 py-3 mb-2 border-b border-stone-400">
         {children}
       </div>

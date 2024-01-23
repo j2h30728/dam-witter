@@ -7,7 +7,7 @@ export const followingFetcher = async (
   url: string,
   { arg }: { arg: { method: METHOD_TYPE; userId: string } }
 ): Promise<ResponseType<Profile>> => {
-  const response = await fetch(END_POINTS.FOLLOWING + `/${arg.userId}`, {
+  const response = await fetch(END_POINTS.FOLLOW + `/${arg.userId}`, {
     method: arg.method,
   });
   if (!response.ok) {

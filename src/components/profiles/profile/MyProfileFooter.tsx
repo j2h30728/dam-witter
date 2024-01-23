@@ -16,7 +16,7 @@ const MyProfileFooter = () => {
           <small className="text-stone-300">자기소개가 추가해주세요.</small>
         )}
       </p>
-      <Link href={ROUTE_PATH.PROFILE + ROUTE_PATH.EDIT}>
+      <Link href={ROUTE_PATH.MY_PROFILE + ROUTE_PATH.EDIT}>
         <Button width="w-full">수정하기</Button>
       </Link>
     </>

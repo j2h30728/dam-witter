@@ -1,12 +1,12 @@
 import TweetImage from '@/components/images/TweetImage';
 import { ROUTE_PATH } from '@/constants';
 import Link from 'next/link';
-import { useContext } from 'react';
 
-import { tweetContext } from '.';
+import useTweetContext from './useTweetContext';
 
 export const ContentWithLink = () => {
-  const tweet = useContext(tweetContext);
+  const { tweet } = useTweetContext();
+
   return (
     <Link className="w-full" href={`${ROUTE_PATH.TWEETS}/${tweet?.id}`}>
       {tweet?.image && <TweetImage imageId={tweet.image} />}
@@ -15,7 +15,8 @@ export const ContentWithLink = () => {
   );
 };
 export const Content = () => {
-  const tweet = useContext(tweetContext);
+  const { tweet } = useTweetContext();
+
   return (
     <div className="w-full">
       {tweet?.image && <TweetImage imageId={tweet.image} />}

@@ -22,7 +22,7 @@ const TweetDetailWithComments = () => {
 
   return (
     <>
-      <Tweet tweet={data}>
+      <Tweet loggedInUserId={loggedInUser.id} tweet={data}>
         <Tweet.Author onFollowing={onFollowing} />
         <Tweet.DeleteButton loggedInUserId={loggedInUser?.id} onDelete={onDelete} />
         <Tweet.Content />

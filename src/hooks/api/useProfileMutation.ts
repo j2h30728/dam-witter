@@ -16,7 +16,7 @@ const useProfileMutation = (params: useProfileMutationParams) => {
       if (data.isSuccess) {
         params.endEditingProfileSubmission();
         if (data.message) toastMessage('success', data.message);
-        router.push(ROUTE_PATH.PROFILE);
+        router.push(ROUTE_PATH.MY_PROFILE);
       } else {
         if (data.message) toastMessage('error', data.message);
       }

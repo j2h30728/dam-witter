@@ -1,12 +1,11 @@
 import LikeButton from '@/components/common/LikeButton';
 import { formatDate } from '@/libs/client';
 import { TweetResponse } from '@/types';
-import { useContext } from 'react';
 
-import { tweetContext } from '.';
+import useTweetContext from './useTweetContext';
 
 export const Description = ({ onToggleLike }: { onToggleLike: (selectedTweet?: TweetResponse) => void }) => {
-  const tweet = useContext(tweetContext);
+  const { tweet } = useTweetContext();
   return (
     <div className="flex items-center justify-between w-full gap-2">
       <div className="flex items-center gap-3 w-fit">

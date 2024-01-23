@@ -5,7 +5,7 @@ import { toastMessage } from '@/libs/client/toastMessage';
 import useSWRMutation from 'swr/mutation';
 
 const useFollowingMutation = () => {
-  const { data, isMutating, trigger } = useSWRMutation(END_POINTS.FOLLOWING, followingFetcher, {
+  const { data, isMutating, trigger } = useSWRMutation(END_POINTS.FOLLOW, followingFetcher, {
     onSuccess: data => {
       toastMessage('success', data.message);
     },
