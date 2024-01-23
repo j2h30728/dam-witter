@@ -21,7 +21,7 @@ const DefaultProfileContent = ({ children }: { children?: React.ReactNode }) => 
         <small className="text-stone-500">{profile.email}</small>
       </div>
       <div className="flex flex-col items-center self-start justify-center w-full sm:gap-10 sm:mt-14">
-        <div className="flex flex-col justify-center gap-2 text-lg w-fit sm:w-full sm:gap-10 sm:flex-row ">
+        <div className="flex flex-col justify-center gap-2 mb-1 text-lg w-fit sm:w-full sm:gap-10 sm:flex-row">
           <div className={styles.link}>
             <p>게시물</p>
             <p className={styles.count}>{profile.tweets.length}</p>
