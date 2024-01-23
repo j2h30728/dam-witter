@@ -18,7 +18,7 @@ const TweetFeed = () => {
   return (
     <>
       {responseTweets.map((tweet: TweetResponse) => (
-        <Tweet key={tweet.id} loggedInUserId={loggedInUser?.id} tweet={tweet}>
+        <Tweet key={tweet?.id} loggedInUserId={loggedInUser?.id} tweet={tweet}>
           <Tweet.Author onFollowing={onFollowing} />
           <Tweet.ContentWithLink />
           <Tweet.Description onToggleLike={() => onToggleLike(tweet)} />
