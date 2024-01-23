@@ -8,7 +8,7 @@ export const ContentWithLink = () => {
   const { tweet } = useTweetContext();
 
   return (
-    <Link className="w-full" href={`${ROUTE_PATH.TWEETS}/${tweet?.id}`}>
+    <Link className="w-full" href={ROUTE_PATH.TWEET(tweet?.id)}>
       {tweet?.image && <TweetImage imageId={tweet.image} />}
       <p className="px-3 whitespace-pre-line">{tweet?.text}</p>
     </Link>

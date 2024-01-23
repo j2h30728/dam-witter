@@ -16,7 +16,7 @@ const LikedUsersModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col justify-between w-72 h-[500px] min-h-fit ">
-        <h3 className="mt-5 text-xl font-bold text-center text-base3">좋아요를 누른 사람들</h3>
+        <h3 className="mt-5 text-xl font-bold text-center text-base3">좋아하는 사람</h3>
         <div className="flex flex-col h-[65%] gap-3 my-5 overflow-y-auto overflow-x-hidden">
           {likedUser.map(user => (
             <UserInformationItem key={user.id} user={user} />

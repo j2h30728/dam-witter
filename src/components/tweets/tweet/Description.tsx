@@ -1,6 +1,8 @@
 import LikeButton from '@/components/common/LikeButton';
+import { ROUTE_PATH } from '@/constants';
 import { formatDate } from '@/libs/client';
 import { TweetResponse } from '@/types';
+import Link from 'next/link';
 import { useState } from 'react';
 
 import LikedUsersModal from './LikedUsersModal';
@@ -19,9 +21,9 @@ export const Description = ({ onToggleLike }: { onToggleLike: (selectedTweet?: T
           <div className="cursor-pointer" onClick={() => setIsModalOpen(true)}>
             좋아요 <strong>{tweet?._count.likes}</strong> 개
           </div>
-          <div>
+          <Link href={ROUTE_PATH.TWEET(tweet.id)}>
             코멘트 <strong>{tweet?._count.comments}</strong> 개
-          </div>
+          </Link>
         </div>
         <small className="ml-auto text-stone-500">{formatDate(tweet?.createdAt)}</small>
       </div>
