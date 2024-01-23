@@ -29,11 +29,11 @@ export default function Layout({
     <div className="container mx-auto">
       <header className="fixed z-10 flex items-center justify-between w-full max-w-xl px-10 border-b border-beige3 bg-base2 h-14">
         <div className="cursor-pointer" onClick={() => router.back()}>
-          <AiOutlineLeft
-            className={parameterToString(' stroke-beige1 fill-beige1', hasBackButton ? '' : 'hidden')}
-            size={25}
-            strokeWidth={40}
-          />
+          {hasBackButton ? (
+            <AiOutlineLeft className={parameterToString(' stroke-beige1 fill-beige1')} size={25} strokeWidth={40} />
+          ) : (
+            <div className="w-[25px]"></div>
+          )}
         </div>
         <div className="text-xl font-bold text-gray-800 cursor-pointer text-beige1 ">{title}</div>
         <div
