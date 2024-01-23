@@ -8,7 +8,7 @@ import ProfileImage from '../images/ProfileImage';
 const UserInformation = ({ follow }: { follow: UserInformation }) => {
   return (
     <Link
-      className="flex items-center w-full gap-3"
+      className="flex items-center w-full gap-3 hover:scale-105 hover:translate-x-3 hover:ease-in-out hover:transition hover:duration-300"
       href={`${ROUTE_PATH.PROFILE(follow.profile?.userId || '')}`}
       key={follow.id}
     >

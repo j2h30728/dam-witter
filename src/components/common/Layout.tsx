@@ -35,9 +35,7 @@ export default function Layout({
             strokeWidth={40}
           />
         </div>
-        <div className="cursor-pointer" onClick={() => router.push(ROUTE_PATH.HOME)}>
-          <div className="text-xl font-bold text-gray-800 text-beige1 ">{title}</div>
-        </div>
+        <div className="text-xl font-bold text-gray-800 cursor-pointer text-beige1 ">{title}</div>
         <div
           onClick={() => {
             if (confirm('로그아웃 하시겠습니까?')) {
