@@ -9,7 +9,7 @@ const TweetFeed = () => {
     following: { onFollowing },
     like: { onToggleLike },
     loggedInUser,
-    tweets: { bottomItemRef, isLoading, isValidating, responseTweets },
+    tweets: { bottomItemRef, isLoading, isValidating, refreshTweets, responseTweets },
   } = useInfiniteTweetsViewModel();
 
   if (isLoading || !responseTweets || !loggedInUser) {
@@ -21,7 +21,7 @@ const TweetFeed = () => {
         <Tweet key={tweet?.id} loggedInUserId={loggedInUser?.id} tweet={tweet}>
           <Tweet.Author onFollowing={onFollowing} />
           <Tweet.ContentWithLink />
-          <Tweet.Description onToggleLike={() => onToggleLike(tweet)} />
+          <Tweet.Description modalOpenCallbackFn={refreshTweets} onToggleLike={() => onToggleLike(tweet)} />
         </Tweet>
       ))}
       {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}

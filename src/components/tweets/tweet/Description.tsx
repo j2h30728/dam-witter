@@ -8,17 +8,27 @@ import { useState } from 'react';
 import LikedUsersModal from './LikedUsersModal';
 import useTweetContext from './useTweetContext';
 
-export const Description = ({ onToggleLike }: { onToggleLike: (selectedTweet?: TweetResponse) => void }) => {
+export const Description = ({
+  modalOpenCallbackFn,
+  onToggleLike,
+}: {
+  modalOpenCallbackFn: () => void;
+  onToggleLike: (selectedTweet?: TweetResponse) => void;
+}) => {
   const { tweet } = useTweetContext();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const handelLikedUserListModalOpen = () => {
+    modalOpenCallbackFn();
+    setIsModalOpen(true);
+  };
 
   return (
     <>
       <div className="flex items-center justify-between w-full gap-2">
         <div className="flex items-center gap-3 w-fit">
           <LikeButton isLiked={tweet?.isLiked} toggleLike={onToggleLike} />
-          <div className="cursor-pointer" onClick={() => setIsModalOpen(true)}>
+          <div className="cursor-pointer" onClick={handelLikedUserListModalOpen}>
             좋아요 <strong>{tweet?._count.likes}</strong> 개
           </div>
           <Link href={ROUTE_PATH.TWEET(tweet.id)}>
