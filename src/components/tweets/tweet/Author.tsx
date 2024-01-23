@@ -30,7 +30,7 @@ export const Author = ({ onFollowing }: { onFollowing: (selectedTweet: TweetResp
       </div>
       {!isAuthor && !tweet?.isFollowing ? (
         <Button onClick={handleFollowing} size="sm">
-          팔로잉
+          팔로우
         </Button>
       ) : null}
     </div>

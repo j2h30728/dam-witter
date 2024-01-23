@@ -23,7 +23,7 @@ const FollowingButton = () => {
     }
   };
 
-  return <Button onClick={handleFollowing}>{profile.isFollowing ? '팔로잉 취소' : '팔로잉'}</Button>;
+  return <Button onClick={handleFollowing}>{profile.isFollowing ? '언팔로우 하기' : '팔로우'}</Button>;
 };
 
 export default FollowingButton;

@@ -88,7 +88,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Fo
           },
         },
       });
-      return res.status(201).json({ data: null, isSuccess: true, message: '팔로잉 되었습니다.', statusCode: 201 });
+      return res.status(201).json({ data: null, isSuccess: true, message: '팔로우 되었습니다.', statusCode: 201 });
     }
 
     if (method === METHOD.DELETE) {
@@ -102,9 +102,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Fo
           },
         });
       }
-      return res
-        .status(200)
-        .json({ data: null, isSuccess: true, message: '팔로잉이 취소되었습니다.', statusCode: 200 });
+      return res.status(200).json({ data: null, isSuccess: true, message: '언팔로우 되었습니다.', statusCode: 200 });
     }
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
