@@ -22,7 +22,7 @@ export default function CreateAccount() {
             label="Name"
             name="name"
             onChange={onChange}
-            placeholder="Your Name"
+            placeholder="Your name"
             type="text"
             value={values.name}
           />
@@ -60,7 +60,7 @@ export default function CreateAccount() {
             value={values.confirmPassword}
           />
           <Button disabled={isCreateAccountMutating} size="lg" type="submit" width="w-full">
-            {isCreateAccountMutating ? 'Loading...' : 'Login In'}
+            {isCreateAccountMutating ? 'Loading...' : 'Create account'}
           </Button>
         </form>
         <nav className="flex gap-3 mt-5 ">
