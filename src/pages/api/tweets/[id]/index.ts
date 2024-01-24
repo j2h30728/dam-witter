@@ -5,7 +5,7 @@ import { db } from '@/libs/server';
 import { withApiSession, withHandler } from '@/libs/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse | TweetResponse[]>>) {
+async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse>>) {
   const {
     query: { id },
     session: { user },
@@ -62,18 +62,25 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
     return res.status(400).json({ data: null, isSuccess: false, message: '잘못된 접근입니다.', statusCode: 400 });
 
   if (req.method === METHOD.GET) {
-    const isLiked = Boolean(
-      await db.like.findFirst({
-        where: {
+    const isLiked = await db.like.findUnique({
+      where: {
+        tweetId_userId: {
           tweetId: tweet.id,
           userId: String(user?.id),
         },
-      })
-    );
-
-    return res
-      .status(200)
-      .json({ data: { ...tweet, isLiked: isLiked }, isSuccess: true, message: null, statusCode: 200 });
+      },
+    });
+    const isFollowing = await db.follow.findUnique({
+      where: {
+        follower_following: { followerId: String(user?.id), followingId: tweet.userId },
+      },
+    });
+    return res.status(200).json({
+      data: { ...tweet, isFollowing: !!isFollowing, isLiked: !!isLiked },
+      isSuccess: true,
+      message: null,
+      statusCode: 200,
+    });
   }
 
   if (req.method === METHOD.DELETE) {
