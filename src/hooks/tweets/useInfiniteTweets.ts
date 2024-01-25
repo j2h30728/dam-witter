@@ -1,5 +1,5 @@
 import { END_POINTS } from '@/constants/api';
-import useGetInfiniteData from '@/hooks/common/useInfiniteScrollData';
+import useGetInfiniteData from '@/hooks/api/useInfiniteScrollData';
 import { TweetResponse } from '@/types';
 
 const useInfiniteTweets = () => {
