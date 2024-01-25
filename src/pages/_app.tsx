@@ -1,7 +1,10 @@
 import type { AppProps } from 'next/app';
 
+import { getFetcher } from '@/api/fetchers';
+import DefaultErrorBoundary from '@/components/common/DefaultErrorBoundary';
 import { toastMessage } from '@/libs/client/toastMessage';
 import '@/styles/globals.css';
+import { ErrorBoundary } from 'react-error-boundary';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SWRConfig } from 'swr';
@@ -10,16 +13,16 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <SWRConfig
       value={{
-        fetcher: (url: string) => fetch(url).then(response => response.json()),
+        fetcher: getFetcher,
         onError: (error: string) => toastMessage('error', error),
-
         refreshInterval: 1000 * 60,
+        shouldRetryOnError: false,
       }}
     >
-      <div className="relative w-full max-w-xl mx-auto bg-beige0">
+      <ErrorBoundary FallbackComponent={DefaultErrorBoundary}>
         <Component {...pageProps} />
         <ToastContainer />
-      </div>
+      </ErrorBoundary>
     </SWRConfig>
   );
 }

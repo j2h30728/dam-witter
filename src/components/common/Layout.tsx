@@ -31,7 +31,7 @@ export default function Layout({
   const containerRef = useRef(null);
 
   return (
-    <div className="container mx-auto">
+    <div className="container relative w-full max-w-xl mx-auto bg-beige0">
       <header className="fixed z-10 flex items-center justify-between w-full max-w-xl px-10 border-b border-beige3 bg-base2 h-14">
         <div className="cursor-pointer" onClick={() => router.back()}>
           {hasBackButton ? (
