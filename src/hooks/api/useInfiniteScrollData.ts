@@ -2,7 +2,7 @@ import { PAGE_SIZE } from '@/constants/api';
 import { ResponseType } from '@/types';
 import useSWRInfinite from 'swr/infinite';
 
-import useIntersectionObserver from './useIntersectionObserver';
+import useIntersectionObserver from '../common/useIntersectionObserver';
 
 const getKey = <T>(index: number, previousPageData: T[] | null, url: string) => {
   if (previousPageData && previousPageData.length === 0) return null;
