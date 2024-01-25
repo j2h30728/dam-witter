@@ -1,4 +1,4 @@
-import { END_POINTS } from '@/constants/api';
+import { DEFAULT_ERROR_MESSAGE, END_POINTS } from '@/constants/api';
 import { METHOD_TYPE } from '@/constants/method';
 import { ResponseType } from '@/types';
 import { Profile } from '@prisma/client';
@@ -11,7 +11,8 @@ export const followingFetcher = async (
     method: arg.method,
   });
   if (!response.ok) {
-    throw (await response.json()).message;
+    const errorData = await response.json();
+    throw new Error(errorData.message || DEFAULT_ERROR_MESSAGE);
   }
   return response.json();
 };
