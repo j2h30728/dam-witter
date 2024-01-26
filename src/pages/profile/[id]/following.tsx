@@ -1,25 +1,17 @@
-import { Layout, LoadingSpinner } from '@/components';
+import { LoadingSpinner } from '@/components';
+import FollowLayout from '@/components/follows/FollowLayout';
 import Following from '@/components/follows/Following';
-import { ROUTE_PATH } from '@/constants';
 import useFollow from '@/hooks/api/useFollow';
-import Link from 'next/link';
+import { NextPageWithLayout } from '@/pages/_app';
 import { useRouter } from 'next/router';
 
-export default function FollowingPage() {
+const FollowingPage: NextPageWithLayout = () => {
   const { query } = useRouter();
   const { follows, isLoading } = useFollow({ userId: query.id as string });
 
-  return (
-    <Layout
-      title={
-        <Link href={follows?.profile?.user.id ? ROUTE_PATH.PROFILE(follows?.profile?.user?.id) : ROUTE_PATH.HOME}>
-          {follows?.profile?.user.name}
-        </Link>
-      }
-      hasBackButton
-      isLoggedIn
-    >
-      {!follows || isLoading ? <LoadingSpinner /> : <Following follows={follows} />}
-    </Layout>
-  );
-}
+  return <> {!follows || isLoading ? <LoadingSpinner /> : <Following follows={follows} />}</>;
+};
+FollowingPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <FollowLayout>{page}</FollowLayout>;
+};
+export default FollowingPage;
