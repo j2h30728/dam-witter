@@ -1,13 +1,23 @@
 import { PAGE_SIZE } from '@/constants/api';
+import useGetInfiniteData from '@/hooks/api/useInfiniteScrollData';
 import { TweetResponse } from '@/types';
 
 import useFollowingMutation from '../api/useFollowingMutation';
 import useMyProfile from '../api/useMyProfile';
-import useInfiniteTweets from '../tweets/useInfiniteTweets';
 import useLike from '../tweets/useLike';
+export interface TweetsFeedEndpoint {
+  endpoint: string;
+}
+const useInfiniteTweetsViewModel = ({ endpoint }: TweetsFeedEndpoint) => {
+  const {
+    bottomItemRef,
+    data: originTweets,
+    isLoading,
+    isValidating,
+    mutate,
+  } = useGetInfiniteData<TweetResponse>(endpoint);
+  const responseTweets = originTweets.flatMap(tweet => tweet.data) as TweetResponse[];
 
-const useInfiniteTweetsViewModel = () => {
-  const { bottomItemRef, isLoading, isValidating, mutate, originTweets, responseTweets } = useInfiniteTweets();
   const { profile: loggedInUser } = useMyProfile();
 
   const { toggleLike } = useLike();

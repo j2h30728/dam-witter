@@ -5,13 +5,25 @@ import { db } from '@/libs/server';
 import { withApiSession, withHandler } from '@/libs/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<TweetResponse[]>>) {
+async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<any[]>>) {
   const { user } = req.session;
   const { limit, pageIndex } = req.query;
 
   const take = Number(limit ?? 10);
   const skip = Number(pageIndex ?? 0) * take;
+
   if (req.method === METHOD.GET) {
+    const followingUsers = await db.follow.findMany({
+      select: {
+        followingId: true,
+      },
+      where: {
+        followerId: String(user?.id),
+      },
+    });
+
+    const followingIds = followingUsers.map(follow => follow.followingId);
+
     const tweets = await db.tweet.findMany({
       include: {
         _count: {
@@ -47,31 +59,26 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType<Tw
       },
       skip,
       take,
+      where: {
+        userId: {
+          in: followingIds,
+        },
+      },
     });
+
     const transformedTweets = tweets.map(tweet => ({
       ...tweet,
       isFollowing: tweet.user.followers.some(follower => follower.followerId === user?.id),
       isLiked: tweet.likes.some(like => like.user.id === user?.id),
     }));
-    return res.status(200).json({ data: transformedTweets, isSuccess: true, message: null, statusCode: 200 });
-  }
 
-  if (req.method === METHOD.POST) {
-    const { imageId, text } = JSON.parse(req.body);
-    const { user } = req.session;
-    await db.tweet.create({
-      data: {
-        image: imageId ?? null,
-        text,
-        user: {
-          connect: {
-            id: user?.id,
-          },
-        },
-      },
+    return res.status(200).json({
+      data: transformedTweets,
+      isSuccess: true,
+      message: null,
+      statusCode: 200,
     });
-
-    return res.status(201).json({ data: null, isSuccess: true, message: null, statusCode: 201 });
   }
 }
-export default withApiSession(withHandler({ handler, isPrivate: true, methods: [METHOD.GET, METHOD.POST] }));
+
+export default withApiSession(withHandler({ handler, isPrivate: true, methods: [METHOD.GET] }));

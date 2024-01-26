@@ -32,7 +32,7 @@ export interface TweetResponse extends Tweet {
   isFollowing?: boolean;
   isLiked?: boolean;
   likedTweetsByLoggedInUser?: boolean;
-  likes?: (Like & { user: UserInformation })[];
+  likes?: { user: UserInformation }[];
   user: UserInformation;
 }
 

@@ -2,7 +2,6 @@ import { postFetcher } from '@/api/fetchers';
 import { ROUTE_PATH } from '@/constants';
 import { parameterToString } from '@/libs/client';
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
 import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
 import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
@@ -27,8 +26,6 @@ export default function Layout({
       cache.delete('/api/users/profile');
     },
   });
-
-  const containerRef = useRef(null);
 
   return (
     <div className="container relative w-full max-w-xl mx-auto bg-beige0">
@@ -60,12 +57,7 @@ export default function Layout({
           </div>
         </div>
       </header>
-      <div
-        className="w-full h-screen px-2 pt-16 pb-32 overflow-auto border-solid overscroll-contain border-x-4 border-base"
-        ref={containerRef}
-      >
-        {children}
-      </div>
+      <div className="h-screen pt-16 pb-14">{children}</div>
       {isLoggedIn ? (
         <footer>
           <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
@@ -93,7 +85,6 @@ export default function Layout({
           </nav>
         </footer>
       ) : null}
-      {!hasBackButton && isLoggedIn && <ScrollTopButton targetRef={containerRef} />}
     </div>
   );
 }

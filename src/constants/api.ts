@@ -10,6 +10,7 @@ export const END_POINTS = {
   LOGOUT: '/api/users/log-out',
   MY_PROFILE: '/api/users/profile',
   MY_PROFILE_EDIT: '/api/users/profile/edit',
+  OPTION_TWEETS: (options: string) => `/api/tweets/${options}`,
   PROFILE: (userId: string) => `/api/users/profile/${userId}`,
   TWEET: (tweetId: string) => `/api/tweets/${tweetId}`,
   TWEETS: '/api/tweets',
