@@ -6,8 +6,6 @@ import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiO
 import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
 
-import ScrollTopButton from './ScrollTopButton';
-
 export default function Layout({
   children,
   hasBackButton,
@@ -57,7 +55,7 @@ export default function Layout({
           </div>
         </div>
       </header>
-      <div className="h-screen pt-16 pb-14">{children}</div>
+      <div className="h-screen px-2 pt-16 border-solid pb-14 border-x-4 border-base">{children}</div>
       {isLoggedIn ? (
         <footer>
           <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
