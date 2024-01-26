@@ -2,7 +2,6 @@ import useInfiniteTweetsViewModel, { TweetsFeedEndpoint } from '@/hooks/viewMode
 import { TweetResponse } from '@/types';
 
 import LoadingSpinner from '../common/LoadingSpinner';
-import TweetFeedHeader from './TweetFeedHeader';
 import { Tweet } from './tweet';
 
 const TweetFeed = ({ endpoint }: TweetsFeedEndpoint) => {
@@ -18,7 +17,7 @@ const TweetFeed = ({ endpoint }: TweetsFeedEndpoint) => {
   }
 
   return (
-    <TweetFeedHeader>
+    <>
       {responseTweets.map((tweet: TweetResponse) => (
         <Tweet key={tweet?.id} loggedInUserId={loggedInUser?.id} tweet={tweet}>
           <Tweet.Author onFollowing={onFollowing} />
@@ -27,7 +26,7 @@ const TweetFeed = ({ endpoint }: TweetsFeedEndpoint) => {
         </Tweet>
       ))}
       {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}
-    </TweetFeedHeader>
+    </>
   );
 };
 
