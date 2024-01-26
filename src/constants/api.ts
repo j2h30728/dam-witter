@@ -13,6 +13,7 @@ export const END_POINTS = {
   PROFILE: (userId: string) => `/api/users/profile/${userId}`,
   TWEET: (tweetId: string) => `/api/tweets/${tweetId}`,
   TWEETS: '/api/tweets',
+  TWEETS_OPTION: (options: string) => `/api/tweets/${options}`,
 };
 
 export const DEFAULT_ERROR_MESSAGE = '잠시후 요청부탁드립니다.';
