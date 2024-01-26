@@ -12,7 +12,7 @@ export default function ProfileEdit() {
 
   return (
     <Layout hasBackButton isLoggedIn title="MY PAGE">
-      <main className="flex flex-col mt-10">
+      <main className="flex flex-col justify-start h-full">
         <div className="flex flex-col items-center gap-2 px-2">
           <div className="relative w-50 h-50">
             {previewImage ? (
@@ -58,7 +58,7 @@ export default function ProfileEdit() {
           placeholder="자기소개를 입력해주세요."
           value={values.bio}
         />
-        <Button disabled={isEditProfile} onClick={onSubmit} width="w-full">
+        <Button className="mt-auto mb-[20%]" disabled={isEditProfile} onClick={onSubmit} width="w-full">
           {isEditProfile ? '수정중...' : '수정완료'}
         </Button>
       </main>

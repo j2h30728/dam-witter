@@ -3,6 +3,7 @@ const ROUTE_PATH = {
   EDIT: '/edit',
   FOLLOWERS: (profileUserId: string) => `${ROUTE_PATH.MY_PROFILE}/${profileUserId}/followers`,
   FOLLOWING: (profileUserId: string) => `${ROUTE_PATH.MY_PROFILE}/${profileUserId}/following`,
+  FOLLOWING_TWEETS: `/tweet/following`,
   HOME: '/',
   LOG_IN: '/log-in',
   MY_PROFILE: '/profile',
