@@ -32,9 +32,7 @@ const FollowLayout = ({ children }: React.PropsWithChildren<{}>) => {
       hasBackButton
       isLoggedIn
     >
-      <NestedLayout navigation={followHeader}>
-        <div className="flex flex-col h-screen gap-3 pt-10 overflow-auto">{children}</div>
-      </NestedLayout>
+      <NestedLayout navigation={followHeader}>{children}</NestedLayout>
     </Layout>
   );
 };
