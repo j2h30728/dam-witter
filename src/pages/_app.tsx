@@ -25,7 +25,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <SWRConfig
       value={{
         fetcher: getFetcher,
-        onError: (error: string) => toastMessage('error', error),
+        onError: (error: Error) => toastMessage('error', error.message),
         refreshInterval: 1000 * 60,
         shouldRetryOnError: false,
       }}
