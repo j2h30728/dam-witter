@@ -36,7 +36,8 @@ const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ na
             <div
               className={parameterToString(
                 nav.isCurrentPath ? 'font-bold text-orange-800' : 'text-stone-400',
-                'border-b-2 w-full'
+                'border-b-2 w-full',
+                'cursor-pointer'
               )}
               key={nav.title}
               onClick={() => handleNavigation(nav.href)}
