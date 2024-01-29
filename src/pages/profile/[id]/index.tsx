@@ -1,10 +1,15 @@
 import { Layout } from '@/components';
 import DefaultUserProfile from '@/components/profiles/DefaultUserProfile';
+import { NextPageWithLayout } from '@/pages/_app';
 
-export default function Profile() {
+const Profile: NextPageWithLayout = () => {
+  return <DefaultUserProfile />;
+};
+Profile.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <Layout hasBackButton isLoggedIn title="PROFILE">
-      <DefaultUserProfile />
+      {page}
     </Layout>
   );
-}
+};
+export default Profile;

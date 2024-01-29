@@ -17,7 +17,7 @@ export const ProfileRoot = ({
 }) => {
   return (
     <profileContext.Provider value={{ profile, refreshProfile }}>
-      <div className="flex flex-col justify-center gap-5 mt-2">{children}</div>
+      <div className="flex flex-col h-full gap-5 px-2 mt-2">{children}</div>
     </profileContext.Provider>
   );
 };

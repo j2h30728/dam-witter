@@ -1,25 +1,18 @@
-import { Layout, LoadingSpinner } from '@/components';
-import Followers from '@/components/follows/Followers';
-import { ROUTE_PATH } from '@/constants';
+import { LoadingSpinner } from '@/components';
+import FollowLayout from '@/components/follows/FollowLayout';
+import FollowersList from '@/components/follows/FollowersList';
 import useFollow from '@/hooks/api/useFollow';
-import Link from 'next/link';
+import { NextPageWithLayout } from '@/pages/_app';
 import { useRouter } from 'next/router';
 
-export default function FollowersPage() {
+const FollowerPage: NextPageWithLayout = () => {
   const { query } = useRouter();
   const { follows, isLoading } = useFollow({ userId: query.id as string });
 
-  return (
-    <Layout
-      title={
-        <Link href={follows?.profile?.user.id ? ROUTE_PATH.PROFILE(follows?.profile?.user?.id) : ROUTE_PATH.HOME}>
-          {follows?.profile?.user.name}
-        </Link>
-      }
-      hasBackButton
-      isLoggedIn
-    >
-      {!follows || isLoading ? <LoadingSpinner /> : <Followers follows={follows} />}
-    </Layout>
-  );
-}
+  return <>{!follows || isLoading ? <LoadingSpinner text="불러오는 중..." /> : <FollowersList follows={follows} />}</>;
+};
+
+FollowerPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <FollowLayout>{page}</FollowLayout>;
+};
+export default FollowerPage;

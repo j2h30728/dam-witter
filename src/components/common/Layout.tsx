@@ -6,8 +6,6 @@ import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiO
 import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
 
-import ScrollTopButton from './ScrollTopButton';
-
 export default function Layout({
   children,
   hasBackButton,
@@ -28,8 +26,8 @@ export default function Layout({
   });
 
   return (
-    <div className="container relative w-full max-w-xl mx-auto bg-beige0">
-      <header className="fixed z-10 flex items-center justify-between w-full max-w-xl px-10 border-b border-beige3 bg-base2 h-14">
+    <div className="container relative w-full h-screen max-w-xl mx-auto border-solid bg-beige0 border-x-4 border-base">
+      <header className="fixed top-0 z-10 flex items-center justify-between w-full max-w-xl px-10 border-b border-beige3 bg-base2 h-14">
         <div className="cursor-pointer" onClick={() => router.back()}>
           {hasBackButton ? (
             <AiOutlineLeft className={parameterToString(' stroke-beige1 fill-beige1')} size={25} strokeWidth={40} />
@@ -57,33 +55,31 @@ export default function Layout({
           </div>
         </div>
       </header>
-      <div className="h-screen pt-16 pb-14">{children}</div>
+      <div className="pt-16">{children}</div>
       {isLoggedIn ? (
-        <footer>
-          <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
-            <div
-              className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
-              onClick={() => router.push(ROUTE_PATH.HOME)}
-            >
-              <AiOutlineHome className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-              <span>홈</span>
-            </div>
-            <div
-              className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
-              onClick={() => router.push(ROUTE_PATH.TWEETS + ROUTE_PATH.UPLOAD)}
-            >
-              <AiOutlinePlusCircle className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-              <span>트윗추가</span>
-            </div>
-            <div
-              className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
-              onClick={() => router.push(ROUTE_PATH.MY_PROFILE)}
-            >
-              <AiOutlineUser className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-              <span>마이페이지</span>
-            </div>
-          </nav>
-        </footer>
+        <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
+          <div
+            className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
+            onClick={() => router.push(ROUTE_PATH.HOME)}
+          >
+            <AiOutlineHome className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
+            <span>홈</span>
+          </div>
+          <div
+            className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
+            onClick={() => router.push(ROUTE_PATH.TWEETS + ROUTE_PATH.UPLOAD)}
+          >
+            <AiOutlinePlusCircle className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
+            <span>트윗추가</span>
+          </div>
+          <div
+            className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
+            onClick={() => router.push(ROUTE_PATH.MY_PROFILE)}
+          >
+            <AiOutlineUser className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
+            <span>마이페이지</span>
+          </div>
+        </nav>
       ) : null}
     </div>
   );

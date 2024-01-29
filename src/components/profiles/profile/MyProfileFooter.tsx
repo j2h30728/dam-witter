@@ -8,7 +8,7 @@ const MyProfileFooter = () => {
   const { profile } = useProfileContext();
 
   return (
-    <>
+    <div className="flex flex-col justify-between h-full">
       <p className="h-40 mx-5 mt-10 text-lg">
         {profile?.profile?.bio ? (
           profile?.profile?.bio
@@ -17,9 +17,9 @@ const MyProfileFooter = () => {
         )}
       </p>
       <Link href={ROUTE_PATH.MY_PROFILE + ROUTE_PATH.EDIT}>
-        <Button width="w-full">수정하기</Button>
+        <Button width="w-full mt-auto mb-[20%]">수정하기</Button>
       </Link>
-    </>
+    </div>
   );
 };
 
