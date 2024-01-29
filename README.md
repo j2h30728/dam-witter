@@ -97,21 +97,65 @@
   - 브라우저 리플로우 문제를 방지하고자 스크롤 이벤트가 아닌 Intersection Observer API를 채택했습니다.
 - 추가 데이터를 불러오는 대기 시간 동안의 사용자 경험을 개선하기위해 로딩 스피너의 활용하였습니다.
 
-### 6. 스크롤 탑 버튼 구현 : **[Feature #53 무한스크롤로 구현된 트윗리스트에 사용할 탑버튼 구현](https://github.com/j2h30728/dam-witter/pull/54)**
+#### 5.1) 사용자들의 전체 트윗을 불러오는 '전체보기'와 로그인한 사용자가 팔로잉한 사용자들의 트윗을 볼 수 잇는 '팔로잉' 섹션이 존재 :
+
+**[Feature #55 팔로우한 사용자들의 게시글을 모아 볼 수 있는 기능 #62](https://github.com/j2h30728/dam-witter/pull/62)**
+
+- 로그인 한 사용자가 팔로잉하고 있는 사용자가 작성한 트윗을 모아 '팔로잉' TweetFeed에서 확인할 수 있습니다.
+- '전체보기'와 '팔로잉'은 공통의 `TweetFeed` 컴포넌트를 공유합니다.
+
+| 전체보기                                             | 팔로잉                                                     |
+| ---------------------------------------------------- | ---------------------------------------------------------- |
+| <img src="./images/tweetfeed-all.png" width='300' /> | <img src="./images/tweetfeed-following.png" width="300" /> |
+
+### 6. 스크롤 탑 버튼 구현 :
+
+**[Feature #53 무한스크롤로 구현된 트윗리스트에 사용할 탑버튼 구현](https://github.com/j2h30728/dam-witter/pull/54)**
+**[Feature #63 레이아웃 컴포넌트 리팩토링 및 Nested Layout, Scroll to top 생성 #64](https://github.com/j2h30728/dam-witter/pull/64)**
 
 무한 스크롤링으로 구현되어있는 트윗 리스트에서 스크롤 탑 버튼을 사용하여 트윗리스트 상단으로 이동할 수 있습니다.
 
-- 브라우저 전체 페이지를 기준으로 스크롤이 생성된 것이 아닌, 프로젝트의 **레이아웃 컴포넌트 기준으로 스크롤이 생성되기 때문에 `useRef`를 사용하여 스크롤 탑 버튼을 구현**하였습니다.
-- 레이아웃의 ref를 인자로 받아, `targetRef.current`의 `scrollTo` 메서드를 사용하였습니다.
+- 브라우저 전체 페이지를 기준으로 스크롤이 생성된 것이 아닌, 프로젝트의 **레이아웃 컴포넌트 기준으로 스크롤이 생성되기 때문에 `useRef`와 `useImperativeHandle`를 사용하여 스크롤 탑 버튼을 구현**하였습니다.
+- 레이아웃 컴포넌트에서 `useImperativeHandle`을 사용하여, 레이아웃 컴포넌트의 래퍼 컴포넌트의 `ref`에 `scrollToTop` 메서드를 생성하였습니다.
+  ```ts
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollToTop: () => {
+        containerRef.current?.scrollTo({ behavior: 'smooth', top: 0 });
+      },
+    }),
+    []
+  );
+  ```
+- ScrollTopButton 컴포넌트를 클릭할 경우 `nestedLayoutRef.current?.scrollToTop()`로 메서드를 실행 시켰습니다.
 
 <p align='center'><img src='./images/top-button.gif' width='300' alt='top button'/></p>
 
-### 6. 내용
+### 7. 레이아웃 네비게이션 버튼 클릭 시 컴포넌트 상단으로 이동
+
+: **[Feature #63 레이아웃 컴포넌트 리팩토링 및 Nested Layout, Scroll to top 생성 #64](https://github.com/j2h30728/dam-witter/pull/64)**
+
+스크롤위치가 최상단이 아니어도 네비게이션을 클릭하면 해당 리스트의 컴포넌트 최상단으로 이동됩니다.
+
+- 같은 컴포넌트를 공유하는 TweetFeed와 FollowList는 레이아웃 네비게이션 버튼을 클릭하게되면 스크롤 위치 또한 공유하게 됩니다.
+  스크롤 위치를 공유하지않고 섹션을 바꿀 때 마다 컴포넌트 최상단으로 올리기 위해 `useRef`와 `useRouter`의 `push` 메서드를 결합하여 사용했습니다.
+
+  ```ts
+  const handleNavigation = async (href: string) => {
+    await router.push(href);
+    if (containerRef.current) containerRef.current.scrollTop = 0;
+  };
+  ```
+
+  <p align='center' ><img width='300' src='./images/nestedlayout.gif' alt='nested layout'></p>
+
+### 8. 내용
 
 - 개인정보보호를 위하여 이메일을 masking 처리 하였습니다.
 - 트윗과 코멘트 작성시간은 ‘분, 시간, 일, 주’ 단위로 기재 됩니다.
 
-### 7. 삭제 기능
+### 9. 삭제 기능
 
 - 작성자에게만 삭제 버튼을 렌더함하며, 트윗과 코멘트는 **작성자만 삭제** 할 수 있습니다.
 
@@ -135,9 +179,9 @@
 
 언팔로우 하기는 해당 사용자의 프로필 페이지에서만 가능하게 구현했습니다.
 
-| 트윗리스트(메인페이지)     | 트윗상세페이지                             | 팔로잉 할 사용자의 프로필 페이지 |
-| -------------------------- | ------------------------------------------ | -------------------------------- |
-| ![main](./images/main.png) | ![detail tweet](./images/detail-tweet.png) | ![profile](./images/profile.png) |
+| 트윗리스트(메인페이지)                                          | 트윗상세페이지                                                         | 팔로잉 할 사용자의 프로필 페이지                             |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------ |
+| <img src="./images/tweetfeed-all.png" alt="main" width='400' /> | <img width='400' src="./images/detail-tweet.png" alt="detail tweet" /> | <img src="./images/profile.png" alt="profile" width='400' /> |
 
 ### 2. 팔로잉, 팔로워 리스트 확인 : **[Feature #49 팔로우, 팔로잉 리스트를 렌더 기능 및 페이지 구현 #50](https://github.com/j2h30728/dam-witter/pull/50)**
 
@@ -210,9 +254,9 @@
 - 사용자가 등록한 **이미지를 프리뷰** 보여줍니다. 만약, 사용자가 다른 이미지를 선택하거나 이미지를 등록하고 싶지않을 때 프리뷰 이미지를 제거하고 등록을 취소하는 **`사진등록취소`버튼**을 만들어 두었습니다.
   회원정보수정에서 **`사진등록취소` 버튼**을 누를 경우, 이전에 설정되어있는 프로필 사진으로 자동 교체\*\*됩니다.
 
-| 트윗 작성 페이지                           | 회원 정보 수정 페이지 (이미지 등록 전)     | 회원 정보 수정 페이지 (이미지 등록 후)       |
-| ------------------------------------------ | ------------------------------------------ | -------------------------------------------- |
-| ![upload tweet](./images/upload-tweet.png) | ![edit profile](./images/edit-profile.png) | ![edit-profile2](./images/edit-profile2.png) |
+| 트윗 작성 페이지                                                       | 회원 정보 수정 페이지 (이미지 등록 전)                                | 회원 정보 수정 페이지 (이미지 등록 후)                                   |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| <img src="./images/upload-tweet.png" width="400" alt="upload tweet" /> | <img src="./images/edit-profile.png" alt="edit profile" width="400"/> | <img src="./images/edit-profile2.png" alt="edit-profile2" width="400" /> |
 
 ## 프로필
 
