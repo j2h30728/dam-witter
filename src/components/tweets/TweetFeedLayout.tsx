@@ -2,12 +2,12 @@ import { ROUTE_PATH } from '@/constants';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
 
-import NestedLayout, { Navigation } from '../common/NestedLayout';
+import NestedLayout, { Navigation, NestedLayoutHandle } from '../common/NestedLayout';
 import ScrollTopButton from '../common/ScrollTopButton';
 
 const TweetFeedLayout = ({ children }: { children: React.ReactNode }) => {
   const { pathname } = useRouter();
-  const containerRef = useRef(null);
+  const nestedLayoutRef = useRef<NestedLayoutHandle>(null);
 
   const tweetHeader: Navigation[] = [
     {
@@ -22,14 +22,16 @@ const TweetFeedLayout = ({ children }: { children: React.ReactNode }) => {
     },
   ];
 
+  const handleScrollToTop = () => {
+    nestedLayoutRef.current?.scrollToTop();
+  };
+
   return (
     <>
-      <NestedLayout navigation={tweetHeader}>
-        <div className="h-screen pt-10 overflow-auto" ref={containerRef}>
-          {children}
-        </div>
+      <NestedLayout navigation={tweetHeader} ref={nestedLayoutRef}>
+        {children}
       </NestedLayout>
-      <ScrollTopButton targetRef={containerRef} />
+      <ScrollTopButton onClick={handleScrollToTop} />
     </>
   );
 };

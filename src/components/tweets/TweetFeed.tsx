@@ -25,7 +25,9 @@ const TweetFeed = ({ endpoint }: TweetsFeedEndpoint) => {
           <Tweet.Description modalOpenCallbackFn={refreshTweets} onToggleLike={() => onToggleLike(tweet)} />
         </Tweet>
       ))}
-      {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}
+      <div className="h-52">
+        {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}
+      </div>
     </>
   );
 };
