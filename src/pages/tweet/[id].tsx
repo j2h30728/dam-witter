@@ -13,3 +13,4 @@ DetailTweet.getLayout = function getLayout(page: React.ReactElement) {
     </Layout>
   );
 };
+export default DetailTweet;
