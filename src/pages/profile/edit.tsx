@@ -13,7 +13,7 @@ const ProfileEdit: NextPageWithLayout = () => {
   } = useEditProfile();
 
   return (
-    <main className="flex flex-col justify-start h-full">
+    <main className="flex flex-col justify-start h-full px-2 mt-2">
       <div className="flex flex-col items-center gap-2 px-2">
         <div className="relative w-50 h-50">
           {previewImage ? (
@@ -26,7 +26,12 @@ const ProfileEdit: NextPageWithLayout = () => {
           프로필 사진 수정하기
         </label>
         {previewImage && (
-          <Button className="absolute top-60 opacity-60" disabled={isEditProfile} onClick={cancelImage} size="sm">
+          <Button
+            className="absolute top-40 opacity-80 bg-beige1 hover:bg-beige2 active:bg-beige3"
+            disabled={isEditProfile}
+            onClick={cancelImage}
+            size="sm"
+          >
             사진등록취소
           </Button>
         )}
