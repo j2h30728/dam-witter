@@ -3,8 +3,8 @@ import useFollow from '@/hooks/api/useFollow';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import Layout from '../common/Layout';
-import NestedLayout, { Navigation } from '../common/NestedLayout';
+import Layout from '../common/layout/Layout';
+import NestedLayout, { Navigation } from '../common/layout/NestedLayout';
 
 const FollowLayout = ({ children }: React.PropsWithChildren<{}>) => {
   const { pathname, query } = useRouter();

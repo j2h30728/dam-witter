@@ -1,5 +1,4 @@
 import { parameterToString } from '@/libs/client';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
@@ -9,7 +8,7 @@ export interface NestedLayoutHandle {
   scrollToTop: () => void;
 }
 
-const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ navigation: Navigation[] }>>(
+const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ navigation?: Navigation[] }>>(
   ({ children, navigation }, ref) => {
     const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -32,7 +31,7 @@ const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ na
     return (
       <>
         <nav className="fixed z-10 flex justify-around w-full max-w-xl pt-3 text-lg text-center top-14 bg-beige0 ">
-          {navigation.map(nav => (
+          {navigation?.map(nav => (
             <div
               className={parameterToString(
                 nav.isCurrentPath ? 'font-bold text-orange-800' : 'text-stone-400',

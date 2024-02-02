@@ -1,26 +1,10 @@
-import { ROUTE_PATH } from '@/constants';
-import { useRouter } from 'next/router';
 import { useRef } from 'react';
 
-import NestedLayout, { Navigation, NestedLayoutHandle } from '../common/NestedLayout';
 import ScrollTopButton from '../common/ScrollTopButton';
+import NestedLayout, { Navigation, NestedLayoutHandle } from '../common/layout/NestedLayout';
 
-const TweetFeedLayout = ({ children }: { children: React.ReactNode }) => {
-  const { pathname } = useRouter();
+const TweetFeedLayout = ({ children, navigation }: { children: React.ReactNode; navigation?: Navigation[] }) => {
   const nestedLayoutRef = useRef<NestedLayoutHandle>(null);
-
-  const tweetHeader: Navigation[] = [
-    {
-      href: ROUTE_PATH.HOME,
-      isCurrentPath: pathname === ROUTE_PATH.HOME,
-      title: '전체 보기',
-    },
-    {
-      href: ROUTE_PATH.FOLLOWING_TWEETS,
-      isCurrentPath: pathname.includes('following'),
-      title: '팔로잉',
-    },
-  ];
 
   const handleScrollToTop = () => {
     nestedLayoutRef.current?.scrollToTop();
@@ -28,7 +12,7 @@ const TweetFeedLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <NestedLayout navigation={tweetHeader} ref={nestedLayoutRef}>
+      <NestedLayout navigation={navigation} ref={nestedLayoutRef}>
         {children}
       </NestedLayout>
       <ScrollTopButton onClick={handleScrollToTop} />
