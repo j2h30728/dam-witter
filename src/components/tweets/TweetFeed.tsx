@@ -1,7 +1,7 @@
 import useInfiniteTweetsViewModel, { TweetsFeedEndpoint } from '@/hooks/viewModel/useInfiniteTweetsViewModel';
 import { TweetResponse } from '@/types';
 
-import LoadingSpinner from '../common/LoadingSpinner';
+import LoadingSpinner from '../common/loader/LoadingSpinner';
 import { Tweet } from './tweet';
 
 const TweetFeed = ({ endpoint }: TweetsFeedEndpoint) => {
