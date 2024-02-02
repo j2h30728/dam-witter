@@ -2,7 +2,7 @@ import { ROUTE_PATH } from '@/constants';
 import { useRouter } from 'next/router';
 
 import Button from './Button';
-import Layout from './Layout';
+import Layout from './layout/Layout';
 
 interface ErrorBoundaryProps {
   error: Error;

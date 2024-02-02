@@ -13,7 +13,7 @@ const CommentFeed = ({
   const { onDelete } = useCommentViewModel();
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 px-2">
       {tweetComments?.map(comment => (
         <CommentItem comment={comment} key={comment.id} loggedInUserId={loggedInUserId} onRemove={onDelete} />
       ))}

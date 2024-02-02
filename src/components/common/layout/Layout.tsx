@@ -55,9 +55,7 @@ export default function Layout({
           </div>
         </div>
       </header>
-      <div className="h-[calc(100vh-7.5em)] mt-14 pt-2 pb-2 first-letter:overflow-x-hidden overflow-y-auto">
-        {children}
-      </div>
+      <div className="h-[calc(100vh-7.5rem)] pt-2 mt-14 first-letter:overflow-x-hidden overflow-y-auto">{children}</div>
       {isLoggedIn ? (
         <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
           <div

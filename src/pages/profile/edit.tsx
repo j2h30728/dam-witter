@@ -13,7 +13,7 @@ const ProfileEdit: NextPageWithLayout = () => {
   } = useEditProfile();
 
   return (
-    <main className="flex flex-col justify-start h-full px-2 mt-2">
+    <main className="flex flex-col justify-start px-2 mt-2 h-fit">
       <div className="flex flex-col items-center gap-2 px-2">
         <div className="relative w-50 h-50">
           {previewImage ? (
