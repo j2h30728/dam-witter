@@ -1,13 +1,13 @@
+import { Loader } from '@/components';
 import useProfile from '@/hooks/api/useProfile';
 
-import LoadingSpinner from '../common/LoadingSpinner';
 import { Profile } from './profile';
 
 const DefaultUserProfile = () => {
   const { isLoading, profile, refreshProfile } = useProfile();
 
   if (!profile || isLoading) {
-    return <LoadingSpinner text={'불러오는 중..'} />;
+    return <Loader loaderText="불러오는 중.." />;
   }
 
   return (

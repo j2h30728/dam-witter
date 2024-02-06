@@ -26,7 +26,7 @@ export default function Layout({
   });
 
   return (
-    <div className="container relative w-full h-screen max-w-xl mx-auto border-solid bg-beige0 border-x-4 border-base">
+    <div className="container relative w-full max-w-xl mx-auto border-solid bg-beige0 border-x-4 border-base">
       <header className="fixed top-0 z-10 flex items-center justify-between w-full max-w-xl px-10 border-b border-beige3 bg-base2 h-14">
         <div className="cursor-pointer" onClick={() => router.back()}>
           {hasBackButton ? (
@@ -55,7 +55,7 @@ export default function Layout({
           </div>
         </div>
       </header>
-      <div className="pt-16">{children}</div>
+      <div className="h-[calc(100vh-7.5rem)] pt-2 mt-14 first-letter:overflow-x-hidden overflow-y-auto">{children}</div>
       {isLoggedIn ? (
         <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
           <div

@@ -1,8 +1,8 @@
+import { Loader } from '@/components';
 import useTweetViewModel from '@/hooks/viewModel/useTweetViewModel';
 
 import CommentFeed from '../comments/CommentFeed';
 import UploadCommentFrom from '../comments/UploadCommentFrom';
-import LoadingSpinner from '../common/LoadingSpinner';
 import { Tweet } from './tweet';
 
 const TweetDetailWithComments = () => {
@@ -14,10 +14,10 @@ const TweetDetailWithComments = () => {
   } = useTweetViewModel();
 
   if (isLoading || !data || !loggedInUser) {
-    return <LoadingSpinner text={'불러오는 중..'} />;
+    return <Loader loaderText="불러오는 중.." />;
   }
   if (isDeleting) {
-    return <LoadingSpinner text="트윗 삭제 중 입니다." />;
+    return <Loader loaderText="트윗 삭제 중 입니다." />;
   }
 
   return (

@@ -1,6 +1,7 @@
 import { LoadingSpinner } from '@/components';
 import FollowLayout from '@/components/follows/FollowLayout';
 import FollowingList from '@/components/follows/FollowingList';
+import { ROUTE_PATH } from '@/constants';
 import useFollow from '@/hooks/api/useFollow';
 import { NextPageWithLayout } from '@/pages/_app';
 import { useRouter } from 'next/router';

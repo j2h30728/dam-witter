@@ -7,15 +7,17 @@ import useMyProfile from '../api/useMyProfile';
 import useLike from '../tweets/useLike';
 export interface TweetsFeedEndpoint {
   endpoint: string;
+  query?: string;
 }
-const useInfiniteTweetsViewModel = ({ endpoint }: TweetsFeedEndpoint) => {
+const useInfiniteTweetsViewModel = ({ endpoint, query }: TweetsFeedEndpoint) => {
   const {
     bottomItemRef,
     data: originTweets,
     isLoading,
     isValidating,
     mutate,
-  } = useGetInfiniteData<TweetResponse>(endpoint);
+  } = useGetInfiniteData<TweetResponse>({ query, url: endpoint });
+
   const responseTweets = originTweets.flatMap(tweet => tweet.data) as TweetResponse[];
 
   const { profile: loggedInUser } = useMyProfile();

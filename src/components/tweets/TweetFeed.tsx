@@ -1,19 +1,20 @@
 import useInfiniteTweetsViewModel, { TweetsFeedEndpoint } from '@/hooks/viewModel/useInfiniteTweetsViewModel';
 import { TweetResponse } from '@/types';
 
-import LoadingSpinner from '../common/LoadingSpinner';
+import Loader from '../common/loader/Loader';
+import LoadingSpinner from '../common/loader/LoadingSpinner';
 import { Tweet } from './tweet';
 
-const TweetFeed = ({ endpoint }: TweetsFeedEndpoint) => {
+const TweetFeed = ({ endpoint, query }: TweetsFeedEndpoint) => {
   const {
     following: { onFollowing },
     like: { onToggleLike },
     loggedInUser,
     tweets: { bottomItemRef, isLoading, isValidating, refreshTweets, responseTweets },
-  } = useInfiniteTweetsViewModel({ endpoint });
+  } = useInfiniteTweetsViewModel({ endpoint, query });
 
   if (isLoading || !responseTweets || !loggedInUser) {
-    return <LoadingSpinner text={'불러오는 중..'} />;
+    return <Loader loaderText={'불러오는 중..'} />;
   }
 
   return (
@@ -25,9 +26,7 @@ const TweetFeed = ({ endpoint }: TweetsFeedEndpoint) => {
           <Tweet.Description modalOpenCallbackFn={refreshTweets} onToggleLike={() => onToggleLike(tweet)} />
         </Tweet>
       ))}
-      <div className="h-52">
-        {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}
-      </div>
+      {isValidating ? <LoadingSpinner text={'불러오는 중..'} /> : <div ref={bottomItemRef}></div>}
     </>
   );
 };
