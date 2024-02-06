@@ -11,6 +11,7 @@ const ROUTE_PATH = {
   TWEET: (tweetId: string) => `/tweet/${tweetId}`,
   TWEETS: '/tweet',
   UPLOAD: '/upload',
+  USER_TWEETS: (userId: string) => `/profile/${userId}/tweets`,
 } as const;
 
 export default ROUTE_PATH;
