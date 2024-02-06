@@ -4,15 +4,24 @@ import useSWRInfinite from 'swr/infinite';
 
 import useIntersectionObserver from '../common/useIntersectionObserver';
 
-const getKey = <T>(index: number, previousPageData: T[] | null, url: string) => {
-  if (previousPageData && previousPageData.length === 0) return null;
-  if (index === 0) return url;
-  return `${url}?pageIndex=${index}&limit=${PAGE_SIZE}`;
+type GetKey = (
+  index: number,
+  previousPageData: ResponseType<any>[] | null,
+  url: string,
+  query?: string
+) => null | string;
+
+const getKey: GetKey = (index, previousPageData, url, query) => {
+  if (index === 0) return `${url}?pageIndex=${index}&limit=${PAGE_SIZE}&${query}`;
+  if (!previousPageData || previousPageData.length === 0 || previousPageData.at(-1)?.data.length < PAGE_SIZE) {
+    return null;
+  }
+  return `${url}?pageIndex=${index}&limit=${PAGE_SIZE}&${query}`;
 };
 
-const useInfiniteScrollData = <T>(url: string) => {
+const useInfiniteScrollData = <T>({ query, url }: { query?: string; url: string }) => {
   const { data, isLoading, isValidating, mutate, setSize } = useSWRInfinite<ResponseType<T[]>[]>((...args) =>
-    getKey(...args, url)
+    getKey(...args, url, query)
   );
   const flattedData = data?.flat() ?? [];
 
