@@ -1,9 +1,7 @@
 import { parameterToString } from '@/libs/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef } from 'react';
-
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 export type Navigation = { href: string; isCurrentPath: boolean; title: string };
 
@@ -25,13 +23,6 @@ const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ na
       }),
       []
     );
-
-    useIsomorphicLayoutEffect(() => {
-      const currentRef = containerRef.current;
-      return () => {
-        if (currentRef) currentRef.scrollTop = 0;
-      };
-    }, [router.query]);
 
     return (
       <>
@@ -55,6 +46,7 @@ const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ na
             'h-[calc(100vh-8rem)] px-2 overflow-y-auto overflow-x-hidden',
             navigation?.length ? '  pt-10' : ''
           )}
+          key={router.pathname}
           ref={containerRef}
         >
           {children}

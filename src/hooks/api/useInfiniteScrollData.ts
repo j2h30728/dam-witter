@@ -13,7 +13,11 @@ type GetKey = (
 
 const getKey: GetKey = (index, previousPageData, url, query) => {
   if (index === 0) return `${url}?pageIndex=${index}&limit=${PAGE_SIZE}&${query}`;
-  if (!previousPageData || previousPageData.length === 0 || previousPageData.at(-1)?.data.length < PAGE_SIZE) {
+  if (
+    !previousPageData ||
+    previousPageData.length === 0 ||
+    previousPageData[previousPageData.length - 1]?.data.length < PAGE_SIZE
+  ) {
     return null;
   }
   return `${url}?pageIndex=${index}&limit=${PAGE_SIZE}&${query}`;
