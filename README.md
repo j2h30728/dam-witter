@@ -89,7 +89,7 @@
 > - **[Feature #21
 >   ‘좋아요’ 버튼 중 복 요청 문제 해결](https://github.com/j2h30728/dam-witter/pull/22)** 사용자가 ‘좋아요’ 버튼을 연속해서 누를 때 발생하는 **중복 API 호출을 최소화하기 위해 `debounce` 기술을 도입**하여, 연속되는 여러 요청 대신 마지막 요청만 서버로 전송하도록 변경했습니다. POST 메서드로만 구현되어 있던 ‘좋아요’ API를 RESTful하게 POST와 DELETE로 분리했습니다. 또한, useId와 tweetId 복합키를 유니크 키로 두어 데이터베이스의 중복 등록 문제를 해결하였습니다.
 
-### 5. 트윗 리스트 무한 스크롤 : **[Feature #32 트윗 리스트를 무한 스크롤 구현](https://github.com/j2h30728/dam-witter/pull/33)**
+### 3. 트윗 리스트 무한 스크롤 : **[Feature #32 트윗 리스트를 무한 스크롤 구현](https://github.com/j2h30728/dam-witter/pull/33)**
 
 - 트윗 리스트(메인페이지)에서 **전체 데이터를 일괄적으로 불러오는 대신, 필요에 따라 추가 데이터를 요청함으로써 성능 부담을 줄였습니다.**
   - 트윗 리스트 API 에서 페이지네이션을 구현하여 클라이언트의 요청에 따라 필요한 데이터만 반환합니다.
@@ -97,7 +97,7 @@
   - 브라우저 리플로우 문제를 방지하고자 스크롤 이벤트가 아닌 Intersection Observer API를 채택했습니다.
 - 추가 데이터를 불러오는 대기 시간 동안의 사용자 경험을 개선하기위해 로딩 스피너의 활용하였습니다.
 
-#### 5.1) 사용자들의 전체 트윗을 불러오는 '전체보기'와 로그인한 사용자가 팔로잉한 사용자들의 트윗을 볼 수 잇는 '팔로잉' 섹션이 존재 :
+#### 3.1) 사용자들의 전체 트윗을 불러오는 '전체보기'와 로그인한 사용자가 팔로잉한 사용자들의 트윗을 볼 수 잇는 '팔로잉' 섹션이 존재 :
 
 **[Feature #55 팔로우한 사용자들의 게시글을 모아 볼 수 있는 기능 #62](https://github.com/j2h30728/dam-witter/pull/62)**
 
@@ -108,7 +108,7 @@
 | ---------------------------------------------------- | ---------------------------------------------------------- |
 | <img src="./images/tweetfeed-all.png" width='300' /> | <img src="./images/tweetfeed-following.png" width="300" /> |
 
-### 6. 스크롤 탑 버튼 구현 :
+### 4. 스크롤 탑 버튼 구현 :
 
 **[Feature #53 무한스크롤로 구현된 트윗리스트에 사용할 탑버튼 구현](https://github.com/j2h30728/dam-witter/pull/54)**
 **[Feature #63 레이아웃 컴포넌트 리팩토링 및 Nested Layout, Scroll to top 생성 #64](https://github.com/j2h30728/dam-witter/pull/64)**
@@ -132,30 +132,41 @@
 
 <p align='center'><img src='./images/top-button.gif' width='300' alt='top button'/></p>
 
-### 7. 레이아웃 네비게이션 버튼 클릭 시 컴포넌트 상단으로 이동
+### 5. 다른 페이지로 라우팅 할 경우, (무한)스크롤이 구현되어야하는 리스트를 감싸는 레이아웃 컴포넌트(Nested Layout)의 스크롤을 최상단 초기화 시킨다.
 
-: **[Feature #63 레이아웃 컴포넌트 리팩토링 및 Nested Layout, Scroll to top 생성 #64](https://github.com/j2h30728/dam-witter/pull/64)**
+아래의 순서로 구현방식을 변경했습니다.
 
-스크롤위치가 최상단이 아니어도 네비게이션을 클릭하면 해당 리스트의 컴포넌트 최상단으로 이동됩니다.
+##### 1. [Feature #63 레이아웃 컴포넌트 리팩토링 및 Nested Layout, Scroll to top 생성 #64](https://github.com/j2h30728/dam-witter/pull/64)
 
-- 같은 컴포넌트를 공유하는 TweetFeed와 FollowList는 레이아웃 네비게이션 버튼을 클릭하게되면 스크롤 위치 또한 공유하게 됩니다.
-  스크롤 위치를 공유하지않고 섹션을 바꿀 때 마다 컴포넌트 최상단으로 올리기 위해 `useRef`와 `useRouter`의 `push` 메서드를 결합하여 사용했습니다.
+Nested Layout의 컴포넌트의 네비게이션을 클릭할 경우 스크롤 값을 초기화 한다.
+
+##### 2. [Feature #65 특정 사용자가 작성한 트윗만을 확인하는 트윗피드 생성 #66](https://github.com/j2h30728/dam-witter/pull/66)
+
+버튼을 통해서 Nested Layout 컴포넌트의 스크롤 값을 초기화 시키는 것이 아닌, 해당 컴포너트가 언마운트 될때마다 최상단으로 초기화를 시킨다.
+하지만, 컴포넌트가unmount 될 때와 새로 렌더링 될때 간극이 존재하여 최상단으로 초기화된 상태로 렌더되지 않기 때문에 useLayoutEffect 를 사용해서 페인팅 작업 전에 스크롤을 최상단으로 끌어올린다.
+
+##### 3. **[[최종, 현재 적용] Feature #65 페이지 라우티시 스크롤을 최상단을 초기화 하는 방식을 변경한다. (useLayoutEffect 제거) #68](https://github.com/j2h30728/dam-witter/pull/68)**
+
+useLayoutEffect 를 사용하여 페인팅 이전에 스크롤을 최상단으로 올리는 방식에서 pathname 에 따라 고유한 키값을 주는 방식으로 변경한다.
+리액트 바깥에서 제어하는 useLayoutEffect를 쓰는 것보다, **key 값을 사용하여 리액트 라이프 사이클 내부에서 관리한다.**
+
+- 같은 컴포넌트를 공유하는 TweetFeed와 FollowList는 스크롤 위치를 공유하게 됩니다.
+  스크롤 위치를 공유 하지않고 섹션 및 pathname을 바꿀 때 마다 컴포넌트 최상단으로 올리기 위해 레이아웃 컴포넌트에 pathname을 key값을 넣어 주었습니다.
 
   ```ts
-  const handleNavigation = async (href: string) => {
-    await router.push(href);
-    if (containerRef.current) containerRef.current.scrollTop = 0;
-  };
+  <div key={router.pathname} ref={containerRef}>
+    {children}
+  </div>
   ```
 
   <p align='center' ><img width='300' src='./images/nestedlayout.gif' alt='nested layout'></p>
 
-### 8. 내용
+### 6. 내용
 
 - 개인정보보호를 위하여 이메일을 masking 처리 하였습니다.
 - 트윗과 코멘트 작성시간은 ‘분, 시간, 일, 주’ 단위로 기재 됩니다.
 
-### 9. 삭제 기능
+### 7. 삭제 기능
 
 - 작성자에게만 삭제 버튼을 렌더함하며, 트윗과 코멘트는 **작성자만 삭제** 할 수 있습니다.
 
