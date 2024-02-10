@@ -1,10 +1,14 @@
 import { postFetcher } from '@/api/fetchers';
-import { ROUTE_PATH } from '@/constants';
+import { TitleLogo } from '@/components';
+import useMyProfile from '@/hooks/api/useMyProfile';
 import { parameterToString } from '@/libs/client';
 import { useRouter } from 'next/router';
-import { AiOutlineHome, AiOutlineLeft, AiOutlineLogout, AiOutlinePlusCircle, AiOutlineUser } from 'react-icons/ai';
+import { AiOutlineLeft, AiOutlineLogout } from 'react-icons/ai';
 import { cache } from 'swr/_internal';
 import useSWRMutation from 'swr/mutation';
+
+import DesktopSidebar from './DesktopSidebar';
+import MobileNavigation from './MobileNavigation';
 
 export default function Layout({
   children,
@@ -24,18 +28,23 @@ export default function Layout({
       cache.delete('/api/users/profile');
     },
   });
+  const { profile } = useMyProfile();
 
   return (
-    <div className="container relative w-full max-w-xl mx-auto border-solid bg-beige0 border-x-4 border-base">
-      <header className="fixed top-0 z-10 flex items-center justify-between w-full max-w-xl px-10 border-b border-beige3 bg-base2 h-14">
-        <div className="cursor-pointer" onClick={() => router.back()}>
+    <div className="relative w-full mx-auto border-solid md:flex">
+      <header className="fixed top-0 z-10 flex items-center justify-between w-full px-10 mx-auto border-b-2 border-beige2 bg-base2 h-14 ">
+        <div className="cursor-pointer md:hidden" onClick={() => router.back()}>
           {hasBackButton ? (
-            <AiOutlineLeft className={parameterToString(' stroke-beige1 fill-beige1')} size={25} strokeWidth={40} />
+            <AiOutlineLeft className=" stroke-beige2 fill-beige2" size={25} strokeWidth={40} />
           ) : (
             <div className="w-[25px]"></div>
           )}
         </div>
-        <div className="text-xl font-bold text-gray-800 cursor-default text-beige1 ">{title}</div>
+        <div className="items-baseline hidden gap-5 md:flex">
+          <TitleLogo />
+          <h1 className="text-4xl outline-text font-hanalei-fill text-symbol1">Dam-witter</h1>
+        </div>
+        <div className="text-xl font-bold cursor-default text-beige1 ">{title}</div>
         <div
           onClick={() => {
             if (confirm('로그아웃 하시겠습니까?')) {
@@ -46,48 +55,29 @@ export default function Layout({
         >
           <div
             className={parameterToString(
-              'flex flex-col items-center justify-between gap-1 text-xs font-medium text-white',
+              'flex flex-col items-center justify-between gap-1 text-md font-medium text-white',
               isLoggedIn ? '' : 'hidden'
             )}
           >
-            <AiOutlineLogout className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-            <span>로그아웃</span>
+            <AiOutlineLogout className=" stroke-beige2 fill-beige2" size={25} strokeWidth={40} />
+            <span className="text-xs">로그아웃</span>
           </div>
         </div>
       </header>
+      {isLoggedIn && profile ? (
+        <>
+          <DesktopSidebar loggedInUser={profile} />
+          <MobileNavigation />
+        </>
+      ) : null}
       <div
         className={parameterToString(
           isLoggedIn ? 'h-[calc(100vh-7.5rem)]' : 'h-[calc(100vh-3.5rem)]',
-          'pt-2 mt-14 first-letter:overflow-x-hidden overflow-y-auto'
+          'mx-auto pt-2 mt-14 first-letter:overflow-x-hidden overflow-y-auto md:ml-72 md:right-0 md:h-[calc(100vh-3.5rem)] w-full bg-beige0 border-x-4 border-base w-xl '
         )}
       >
         {children}
       </div>
-      {isLoggedIn ? (
-        <nav className="fixed bottom-0 z-10 flex items-center justify-between w-full h-16 max-w-xl px-10 text-xs text-gray-700 border-t border-beige3 bg-base2">
-          <div
-            className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
-            onClick={() => router.push(ROUTE_PATH.HOME)}
-          >
-            <AiOutlineHome className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-            <span>홈</span>
-          </div>
-          <div
-            className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
-            onClick={() => router.push(ROUTE_PATH.TWEETS + ROUTE_PATH.UPLOAD)}
-          >
-            <AiOutlinePlusCircle className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-            <span>트윗추가</span>
-          </div>
-          <div
-            className="flex flex-col items-center justify-between gap-1 font-medium text-white cursor-pointer"
-            onClick={() => router.push(ROUTE_PATH.MY_PROFILE)}
-          >
-            <AiOutlineUser className=" stroke-beige1 fill-beige1" size={25} strokeWidth={40} />
-            <span>마이페이지</span>
-          </div>
-        </nav>
-      ) : null}
     </div>
   );
 }
