@@ -11,12 +11,12 @@ const TweetFeedLayout = ({ children, navigation }: { children: React.ReactNode; 
   };
 
   return (
-    <>
+    <div className="relative mx-auto md:max-w-3xl">
       <NestedLayout navigation={navigation} ref={nestedLayoutRef}>
         {children}
       </NestedLayout>
       <ScrollTopButton onClick={handleScrollToTop} />
-    </>
+    </div>
   );
 };
 
