@@ -1,9 +1,9 @@
-import { TitleLogo } from '@/components';
 import useLayoutViewModel from '@/hooks/viewModel/useLayoutViewModel';
 import { parameterToString } from '@/libs/client';
-import { AiOutlineLeft, AiOutlineLogout } from 'react-icons/ai';
+import { AiOutlineLogout } from 'react-icons/ai';
 
 import DesktopSidebar from './DesktopSidebar';
+import HeaderNavigation from './HeaderNavigation';
 import MobileNavigation from './MobileNavigation';
 
 export default function Layout({
@@ -21,25 +21,7 @@ export default function Layout({
   return (
     <div className="relative w-full mx-auto border-solid md:flex bg-beige0">
       <header className="fixed top-0 z-10 flex items-center justify-between w-full px-10 mx-auto border-b-2 border-beige2 bg-base2 h-14 ">
-        <div>
-          <div className="flex items-center gap-5">
-            {hasBackButton ? (
-              <AiOutlineLeft
-                className="cursor-pointer stroke-beige2 fill-beige2"
-                onClick={handleBack}
-                size={25}
-                strokeWidth={40}
-              />
-            ) : (
-              <div className="w-[25px]"></div>
-            )}
-            <div className="items-center hidden gap-5 md:flex">
-              <TitleLogo />
-              <h1 className="text-4xl outline-text font-hanalei-fill text-symbol1">Dam-witter</h1>
-            </div>
-          </div>
-        </div>
-
+        <HeaderNavigation handleBack={handleBack} hasBackButton={!!hasBackButton} />
         <div className="text-xl font-bold cursor-default text-beige1 ">{title}</div>
         <div className="cursor-pointer" onClick={handleLogOut}>
           <div
@@ -61,8 +43,8 @@ export default function Layout({
       ) : null}
       <div
         className={parameterToString(
-          isLoggedIn ? 'h-[calc(100vh-7.5rem)]  md:ml-72' : 'h-[calc(100vh-3.5rem)] w-full',
-          'mx-auto pt-2 mt-14 overflow-x-hidden overflow-y-auto md:h-[calc(100vh-3.5rem)] w-full '
+          isLoggedIn ? 'h-[calc(100vh-7.5rem)]  md:ml-72' : 'h-[calc(100vh-3.5rem)]',
+          'mx-auto pt-2 mt-14 overflow-x-hidden overflow-y-auto md:h-[calc(100vh-3.5rem)] w-full'
         )}
       >
         {children}

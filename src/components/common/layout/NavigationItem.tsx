@@ -1,5 +1,5 @@
+import useRouteToPath from '@/hooks/common/useRouteToPath';
 import { parameterToString } from '@/libs/client';
-import { useRouter } from 'next/router';
 
 const styles = {
   aside: 'flex-row  font-md gap-3',
@@ -7,7 +7,7 @@ const styles = {
   footer: 'flex-col font-sm gap-1',
 };
 
-const Navigation = ({
+const NavigationItem = ({
   navigate,
   symbol,
   title,
@@ -18,12 +18,10 @@ const Navigation = ({
   title: string;
   type: 'aside' | 'footer';
 }) => {
-  const router = useRouter();
-
   return (
     <div
       className={parameterToString(type === 'aside' ? styles.aside : styles.footer, styles.base)}
-      onClick={() => router.push(navigate)}
+      onClick={useRouteToPath(navigate)}
     >
       {symbol}
       <span>{title}</span>
@@ -31,4 +29,4 @@ const Navigation = ({
   );
 };
 
-export default Navigation;
+export default NavigationItem;
