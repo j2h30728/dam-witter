@@ -21,16 +21,17 @@ const TweetDetailWithComments = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-col px-5">
       <Tweet loggedInUserId={loggedInUser.id} tweet={data}>
         <Tweet.Author onFollowing={onFollowing} />
         <Tweet.DeleteButton loggedInUserId={loggedInUser?.id} onDelete={onDelete} />
-        <Tweet.Content />
+        <Tweet.BasicTweetContent />
+        <Tweet.DesktopTweetContent />
         <Tweet.Description modalOpenCallbackFn={refreshTweet} onToggleLike={onToggleLike} />
       </Tweet>
       <UploadCommentFrom />
       <CommentFeed loggedInUserId={loggedInUser.id} tweetComments={data.comments} />
-    </>
+    </div>
   );
 };
 export default TweetDetailWithComments;
