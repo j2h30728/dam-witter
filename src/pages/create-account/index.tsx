@@ -13,7 +13,7 @@ const CreateAccount: NextPageWithLayout = () => {
   } = useCreateAccount();
 
   return (
-    <div className="flex flex-col items-center px-3 sub-layout">
+    <div className="flex flex-col items-center px-3 mx-auto md:max-w-3xl">
       <Symbol className="m-16" height={130} width={130} />
       <form className="flex flex-col w-full gap-1 px-10" onSubmit={onSubmit}>
         <Input

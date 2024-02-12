@@ -25,8 +25,8 @@ const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ na
     );
 
     return (
-      <>
-        <nav className="fixed z-10 flex justify-around w-full max-w-xl pt-3 text-lg text-center top-14 bg-beige0 ">
+      <div className="relative max-w-3xl mx-auto">
+        <nav className="fixed z-20 flex justify-around w-full pt-3 text-lg text-center md:w-[calc(100vw-18rem)] md:max-w-3xl top-14 bg-beige0 ">
           {navigation?.map(nav => (
             <Link
               className={parameterToString(
@@ -43,7 +43,7 @@ const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ na
         </nav>
         <div
           className={parameterToString(
-            'h-[calc(100vh-8rem)] px-2 overflow-y-auto overflow-x-hidden',
+            'h-[calc(100vh-8rem)] md:h-[calc(100vh-4em)]  px-2 overflow-y-auto overflow-x-hidden',
             navigation?.length ? '  pt-10' : ''
           )}
           key={router.pathname}
@@ -51,7 +51,7 @@ const NestedLayout = forwardRef<NestedLayoutHandle, React.PropsWithChildren<{ na
         >
           {children}
         </div>
-      </>
+      </div>
     );
   }
 );

@@ -14,7 +14,7 @@ const Upload: NextPageWithLayout = () => {
   } = useUploadTweet();
 
   return (
-    <form className="flex flex-col items-center justify-around px-2 h-fit" onSubmit={onSubmit}>
+    <form className="flex flex-col items-center justify-around px-2 mx-auto h-fit md:max-w-3xl" onSubmit={onSubmit}>
       <label
         className="relative flex items-center justify-center w-full h-56 border-2 border-dashed rounded-lg cursor-pointer border-beige3"
         htmlFor="image"
