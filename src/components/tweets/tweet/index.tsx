@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 import { Author } from './Author';
-import { Content, ContentWithLink } from './Content';
+import { BasicTweetContent, ContentWithLink, DesktopTweetContent } from './Content';
 import { DeleteButton } from './DeleteButton';
 import { Description } from './Description';
 import { TweetContext, tweetContext } from './useTweetContext';
@@ -16,4 +16,11 @@ export const TweetRoot = ({ children, loggedInUserId, tweet }: PropsWithChildren
   );
 };
 
-export const Tweet = Object.assign(TweetRoot, { Author, Content, ContentWithLink, DeleteButton, Description });
+export const Tweet = Object.assign(TweetRoot, {
+  Author,
+  BasicTweetContent,
+  ContentWithLink,
+  DeleteButton,
+  Description,
+  DesktopTweetContent,
+});

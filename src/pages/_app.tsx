@@ -5,6 +5,7 @@ import { getFetcher } from '@/api/fetchers';
 import DefaultErrorBoundary from '@/components/common/DefaultErrorBoundary';
 import { toastMessage } from '@/libs/client/toastMessage';
 import '@/styles/globals.css';
+import { Hanalei_Fill } from 'next/font/google';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,6 +18,8 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
+
+const hanaleiFill = Hanalei_Fill({ subsets: ['latin'], variable: '--font-hanalei-fill', weight: '400' });
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? (page => page);
@@ -31,7 +34,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       }}
     >
       <ErrorBoundary FallbackComponent={DefaultErrorBoundary}>
-        {getLayout(<Component {...pageProps} />)}
+        <main className={`${hanaleiFill.variable} font-sans`}>{getLayout(<Component {...pageProps} />)}</main>
         <ToastContainer />
       </ErrorBoundary>
     </SWRConfig>

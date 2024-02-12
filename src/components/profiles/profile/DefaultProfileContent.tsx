@@ -8,7 +8,7 @@ const DefaultProfileContent = ({ children }: { children?: React.ReactNode }) => 
   const { profile } = useProfileContext();
   const styles = {
     count:
-      'w-full p-2 text-center text-brown2 hover:text-yellow3 hover:font-extrabold text-brown2 hover:scale-150 hover:text-yellow3 hover:ease-in-out hover:transition hover:duration-300',
+      'w-full p-2 text-center text-brown2 font-semibold hover:text-yellow3 hover:font-extrabold text-brown2 hover:scale-150 hover:text-yellow3 hover:ease-in-out hover:transition hover:duration-300',
     link: 'flex flex-col items-center sm:gap-3 rounded-sm aspect-square border-b border-base3',
   };
 
@@ -20,7 +20,7 @@ const DefaultProfileContent = ({ children }: { children?: React.ReactNode }) => 
         <small className="text-stone-500">{profile.email}</small>
       </div>
       <div className="flex flex-col items-center self-start justify-center w-full sm:gap-10 sm:mt-14">
-        <div className="flex flex-col justify-center gap-2 mb-1 text-lg w-fit sm:w-full sm:gap-10 sm:flex-row">
+        <div className="flex flex-col justify-center gap-2 mb-1 text-sm sm:text-lg w-fit sm:w-full sm:gap-10 sm:flex-row">
           <Link className={styles.link} href={ROUTE_PATH.USER_TWEETS(profile.profile?.userId || '')}>
             <p>게시물</p>
             <p className={styles.count}>{profile.tweets.length}</p>

@@ -31,3 +31,11 @@
   flex-direction: column;
   margin-top: 1.25rem; /* mt-5 */
 }
+
+.outline-text {
+  text-shadow:
+    -1px -1px 0 #633b2e,
+    1px -1px 0 #633b2e,
+    -1px 1px 0 #633b2e,
+    1px 1px 0 #633b2e;
+}

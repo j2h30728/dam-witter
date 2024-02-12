@@ -19,7 +19,7 @@ const LikedUsersModal = ({
         <h3 className="mt-5 text-xl font-bold text-center text-base3">좋아하는 사람</h3>
         <div className="flex flex-col h-[65%] gap-3 my-5 overflow-y-auto overflow-x-hidden">
           {likedUser.map(user => (
-            <UserInformationItem key={user.id} user={user} />
+            <UserInformationItem isAnimation key={user.id} user={user} />
           ))}
         </div>
         <Button className="mb-3" onClick={onClose} size="sm">

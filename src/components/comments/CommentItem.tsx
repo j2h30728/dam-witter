@@ -27,7 +27,7 @@ const CommentItem = ({
         <span className="font-semibold">{comment.user.name}</span>
       </div>
       <span className="w-1/2">{comment.text}</span>
-      <small className="ml-auto w-fit text-stone-500">{formatDate(comment.createdAt)}</small>
+      <small className="ml-auto text-xs w-fit text-stone-500">{formatDate(comment.createdAt)}</small>
       {isAuthor && (
         <AiFillDelete className="cursor-pointer fill-stone-400" onClick={() => onRemove(comment.id)} size={20} />
       )}
