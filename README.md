@@ -28,6 +28,7 @@
 
 ### 제작 : 2023.7.17 ~ 고도화 및 리팩토링 진행 중
 
+- 반응형 디자인 적용
 - 인증 로직 구현 (회원 가입, 로그인)
 - 트윗에 대한 Creat / Read / Delete 구현
 - 코멘트에 대한 Create / Read / Delete 구현
@@ -58,6 +59,8 @@
 >   8. 팔로잉 기능 구현 :
 >      - [Feature #47 팔로잉 기능 추가](https://github.com/j2h30728/dam-witter/pull/48) : 2024.01.22~2024.01.23
 >      - [Feature #49 팔로우, 팔로잉 리스트를 렌더 기능 및 페이지 구현](https://github.com/j2h30728/dam-witter/pull/50) : 2024.01.23
+>   9. 반응형 디자인 구현 :
+>      - [Feature #67 반응형 디자인 적용](https://github.com/j2h30728/dam-witter/pull/69) : 2024.02.10 ~ 2024.02.12
 > </details>
 
 ### 추가 기능구현 :
@@ -67,8 +70,26 @@
   - 추가
     - 프로필 페이지 구현
     - 트윗을 좋아요한 사람에 대한 리스트 구현
+- **[반응형 디자인 구현](https://github.com/j2h30728/dam-witter/pull/48)** : 2024.02.10 ~ 12
 
 ## 프로젝트 프리뷰 및 상세 내용
+
+## [반응형 디자인](https://github.com/j2h30728/dam-witter/pull/48)
+
+- 기본 레이아웃 피그마 구현 : [피그마 링크](https://www.figma.com/file/73mx1GPzSkFKBeEYUDu3Ut/dam-witter?type=design&node-id=0%3A1&mode=design&t=KOF6KEOZ3PjFr05L-1)
+
+#### 기본 레이아웃 적용 (mobile / desktop)
+
+| 구분     | mobile                                                                                                                          | desktop                                                                                                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| 피그마   | <img alt="image" width="350" src="https://github.com/j2h30728/dam-witter/assets/60846068/0186189e-f30a-4a7d-8a11-aab019384b96"> | <img alt="image" width="550" src="https://github.com/j2h30728/dam-witter/assets/60846068/29163408-09a4-4a2d-8c64-c87da6b52ca0">  |
+| 실제구현 | <img width="300" alt="image" src="https://github.com/j2h30728/dam-witter/assets/60846068/400483d8-58a7-4e1b-919a-2301e13e466e"> | <img  width="550" alt="image" src="https://github.com/j2h30728/dam-witter/assets/60846068/a6a3b743-c30f-496b-9d31-14727d10f1bc"> |
+
+#### 트윗 상세페이지에서는 세가지의 디자인을 확인할 수 있다.
+
+| mobile                                                                                                                          | tablet                                                                                                                           | desktop                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="350" alt="image" src="https://github.com/j2h30728/dam-witter/assets/60846068/1d7affcf-c11b-4f3e-982e-c93bb3d4901d"> | <img  width="550" alt="image" src="https://github.com/j2h30728/dam-witter/assets/60846068/bb993168-573e-42f7-8286-473306622cf3"> | <img  width="550" alt="image" src="https://github.com/j2h30728/dam-witter/assets/60846068/32f696f2-e158-4f71-b7c0-856bc9925ea0"> |
 
 ## 트윗
 
