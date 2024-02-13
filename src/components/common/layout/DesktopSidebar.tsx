@@ -47,7 +47,7 @@ const DesktopSidebar = ({ loggedInUser }: { loggedInUser: ProfileResponse }) => 
         className="flex-row items-center self-center justify-between mb-3 text-white cursor-pointer"
         onClick={useRouteToPath(ROUTE_PATH.MY_PROFILE)}
       >
-        <UserInformationItem user={loggedInUser} />
+        <UserInformationItem isLoggedInUser user={loggedInUser} />
       </div>
     </nav>
   );

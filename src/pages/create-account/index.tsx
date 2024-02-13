@@ -53,7 +53,7 @@ const CreateAccount: NextPageWithLayout = () => {
           disabled={isCreateAccountMutating}
           errorMassage={isError.confirmPassword}
           isValidated
-          label="ConfirmPassword"
+          label="Confirm Password"
           name="confirmPassword"
           onChange={onChange}
           placeholder="Your confirmPassword"

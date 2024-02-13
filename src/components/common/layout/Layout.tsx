@@ -5,6 +5,7 @@ import { AiOutlineLogout } from 'react-icons/ai';
 import DesktopSidebar from './DesktopSidebar';
 import HeaderNavigation from './HeaderNavigation';
 import MobileNavigation from './MobileNavigation';
+import NavigationItem from './NavigationItem';
 
 export default function Layout({
   children,
@@ -23,15 +24,14 @@ export default function Layout({
       <header className="fixed top-0 z-10 flex items-center justify-between w-full px-10 mx-auto border-b-2 border-beige2 bg-base2 h-14 ">
         <HeaderNavigation handleBack={handleBack} hasBackButton={!!hasBackButton} />
         <div className="text-xl font-bold cursor-default text-beige1 ">{title}</div>
-        <div className="cursor-pointer" onClick={handleLogOut}>
-          <div
-            className={parameterToString(
-              'flex flex-col items-center justify-between gap-1 text-md font-medium text-white',
-              isLoggedIn ? '' : 'hidden'
-            )}
-          >
-            <AiOutlineLogout className=" stroke-beige2 fill-beige2" size={25} strokeWidth={40} />
-            <span className="text-xs">로그아웃</span>
+        <div className="w-[25%]">
+          <div className="cursor-pointer md:hidden">
+            <NavigationItem
+              navigate={handleLogOut}
+              symbol={<AiOutlineLogout className=" stroke-beige2 fill-beige2 text-[30px] " strokeWidth={40} />}
+              title="로그아웃"
+              type="footer"
+            />
           </div>
         </div>
       </header>
