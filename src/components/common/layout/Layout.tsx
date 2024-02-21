@@ -24,11 +24,11 @@ export default function Layout({
       <header className="fixed top-0 z-10 flex items-center justify-between w-full px-10 mx-auto border-b-2 border-beige2 bg-base2 h-14 ">
         <HeaderNavigation handleBack={handleBack} hasBackButton={!!hasBackButton} />
         <div className="text-xl font-bold cursor-default text-beige1 ">{title}</div>
-        <div className="w-[25%]">
-          <div className="cursor-pointer md:hidden">
+        <div className="w-[50px]">
+          <div className="ml-auto text-xs cursor-pointer md:hidden">
             <NavigationItem
               navigate={handleLogOut}
-              symbol={<AiOutlineLogout className=" stroke-beige2 fill-beige2 text-[30px] " strokeWidth={40} />}
+              symbol={<AiOutlineLogout className="stroke-beige2 fill-beige2 text-[30px]" strokeWidth={40} />}
               title="로그아웃"
               type="footer"
             />
