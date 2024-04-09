@@ -6,16 +6,16 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
   id        String    @id @default(uuid())
   email     String    @unique
   name      String
-  password  String 
+  password  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   tweets    Tweet[]
@@ -23,66 +23,69 @@ model User {
   comments  Comment[]
   profile   Profile?
 
-  followers  Follow[] @relation("following")
-  following  Follow[] @relation("follower")
+  followers Follow[] @relation("following")
+  following Follow[] @relation("follower")
 }
 
 model Profile {
-  id     String  @id @default(uuid())
+  id     String @id @default(uuid())
   bio    String
   avatar String
-  user   User    @relation(fields: [userId], references: [id], onDelete:Cascade)
-  userId String  @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
   @@index([userId])
 }
 
 model Tweet {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   text      String
   image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   likes     Like[]
   comments  Comment[]
-  user      User     @relation(fields: [userId],references: [id], onDelete:Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+
   @@index([userId])
 }
 
 model Like {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId],references: [id], onDelete:Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  tweet     Tweet    @relation(fields: [tweetId],references: [id], onDelete:Cascade)
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
   tweetId   String
+
+  @@unique([tweetId, userId], name: "tweetId_userId")
   @@index([userId])
   @@index([tweetId])
-  @@unique([tweetId, userId], name: "tweetId_userId")
-
 }
 
 model Comment {
   id        String   @id @default(uuid())
   text      String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId],references: [id], onDelete:Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  tweet     Tweet    @relation(fields: [tweetId],references: [id], onDelete:Cascade)
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
   tweetId   String
+
   @@index([userId])
   @@index([tweetId])
 }
 
 model Follow {
-  id           String   @id @default(uuid())
-  followerId   String  
-  followingId  String  
-  createdAt    DateTime @default(now())
+  id          String   @id @default(uuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
 
-  follower     User @relation("follower", fields: [followerId], references: [id], onDelete:Cascade)
-  following    User @relation("following", fields: [followingId], references: [id], onDelete:Cascade)
+  follower  User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
-  @@index([followingId])
   @@unique([followerId, followingId], name: "follower_following")
+  @@index([followingId])
 }
